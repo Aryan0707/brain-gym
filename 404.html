@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>B.R.A.I.N.</title>
+<meta name="theme-color" content="#0a0b0d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="B.R.A.I.N.">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══ app bar ══ -->
+  <header class="appbar">
+    <div class="brand"><span class="glyph">◉</span><span class="name">B.R.A.I.N.</span></div>
+    <div class="meters">
+      <div class="meter"><b id="mStreak">0</b><i>streak</i></div>
+      <div class="meter"><b id="mXP">0</b><i>xp</i></div>
+      <button class="langbtn" id="langBtn">Both</button>
+      <span class="hiddenids"><b id="mLevel">1</b><i id="mRank">Dull Blade</i></span>
+    </div>
+    <div class="langpop" id="langSeg" hidden>
+      <button data-lang="all" class="on">Both</button>
+      <button data-lang="hi">हिंदी</button>
+      <button data-lang="en">English</button>
+    </div>
+  </header>
+
+  <!-- ══ screens ══ -->
+  <main class="screens">
+
+    <!-- TODAY -->
+    <section id="screen-today" class="screen active">
+      <div class="hero">
+        <div>
+          <h1 id="sessTitle">Today</h1>
+          <p class="muted" id="sessSub">3 reps. Watch, recall, rate.</p>
+          <p class="lvl" id="heroLvl">Level 1 · Dull Blade</p>
+        </div>
+        <div class="ring">
+          <svg viewBox="0 0 42 42">
+            <circle cx="21" cy="21" r="18" class="bg"/>
+            <circle cx="21" cy="21" r="18" class="fg" id="ringFg"/>
+          </svg>
+          <span id="ringTxt">0/3</span>
+        </div>
+      </div>
+      <div id="dueSection"></div>
+      <div id="sessionCards" class="list"></div>
+      <div class="emptystate" id="sessDone" hidden>
+        <h2>Session complete 🧠</h2>
+        <p class="muted" id="sessDoneSub"></p>
+        <button class="btn" data-tab-go="progress">See capacity</button>
+        <button class="btn ghost" id="btnExtra">Extra rep</button>
+      </div>
+    </section>
+
+    <!-- LIBRARY -->
+    <section id="screen-library" class="screen">
+      <div class="searchrow">
+        <input id="q" placeholder="Search title, channel…" autocomplete="off" enterkeyhint="search">
+      </div>
+      <div class="chiprow" id="modChips"></div>
+      <div class="segrow">
+        <div class="seg" id="srcSeg">
+          <button data-src="all" class="on">All</button>
+          <button data-src="yt">YouTube</button>
+          <button data-src="ig">Reels</button>
+        </div>
+        <div class="seg" id="tierSeg">
+          <button data-tier="all" class="on">Any</button>
+          <button data-tier="drill">≤15m</button>
+          <button data-tier="deep">Deep</button>
+        </div>
+      </div>
+      <details class="fold addreel">
+        <summary>＋ Add an Instagram reel</summary>
+        <div class="addrow">
+          <input id="reelUrl" placeholder="paste reel link…" autocomplete="off" inputmode="url">
+          <select id="reelMod"></select>
+          <select id="reelLang"><option value="hi">हिंदी</option><option value="en" selected>English</option></select>
+          <button class="btn" id="btnAddReel">Add</button>
+        </div>
+        <p class="muted" id="addMsg">Hindi reels are the gap — Instagram search is closed without login. Paste any Hindi reel and it joins your sessions.</p>
+      </details>
+      <div id="libCards" class="grid"></div>
+    </section>
+
+    <!-- PROGRESS -->
+    <section id="screen-progress" class="screen">
+      <h2 class="sh">Brain capacity</h2>
+      <div id="capacities" class="caps"></div>
+      <h2 class="sh">Numbers that matter</h2>
+      <div class="statgrid" id="statGrid"></div>
+      <h2 class="sh">Review queue</h2>
+      <div id="queueList" class="queue"></div>
+      <h2 class="sh">Notebook</h2>
+      <div id="notebook" class="notebook"></div>
+      <details class="fold data">
+        <summary>Data &amp; backup</summary>
+        <p class="muted">Everything lives on this device. Nothing is uploaded.</p>
+        <div class="addrow">
+          <button class="btn ghost" id="btnExport">Export</button>
+          <button class="btn ghost" id="btnImport">Import</button>
+          <button class="btn ghost red" id="btnReset">Reset</button>
+        </div>
+        <input type="file" id="fileIn" accept=".json" hidden>
+      </details>
+    </section>
+  </main>
+
+  <!-- ══ trainer ══ -->
+  <section id="screen-train" class="trainer">
+    <header class="trainbar">
+      <button class="back" id="btnBack" aria-label="Back">‹</button>
+      <div class="trainmeta">
+        <span class="chip" id="tMod"></span>
+        <span class="chip" id="tLang"></span>
+        <span class="chip" id="tDur"></span>
+      </div>
+      <a class="opener" id="tOpen" target="_blank" rel="noopener" aria-label="Open original">↗</a>
+    </header>
+    <div class="trainScroll">
+      <div class="player"><iframe id="frame" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+      <h2 id="tTitle"></h2>
+      <p class="muted" id="tChannel"></p>
+      <div class="why" id="tWhy"></div>
+
+      <div class="rep">
+        <label class="replabel">Write the one idea. If you can't write it, you didn't get it.</label>
+        <div class="promptline" id="tPrompt"></div>
+        <textarea id="tNote" rows="3" placeholder="The idea, in my own words…"></textarea>
+
+        <div class="checks">
+          <label><input type="checkbox" id="c1"> I followed the whole thing</label>
+          <label><input type="checkbox" id="c2"> I can explain it out loud to someone</label>
+          <label><input type="checkbox" id="c3"> I can name a place I'd use it</label>
+        </div>
+
+        <label class="replabel">How well can you explain this right now?</label>
+        <div class="rate" id="rate">
+          <button data-r="1">1<i>lost</i></button>
+          <button data-r="2">2<i>shaky</i></button>
+          <button data-r="3">3<i>got it</i></button>
+          <button data-r="4">4<i>solid</i></button>
+          <button data-r="5">5<i>teach</i></button>
+        </div>
+        <button class="btn big" id="btnFinish" disabled>Finish rep</button>
+        <p class="muted" id="schedHint"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ tab bar ══ -->
+  <nav class="tabbar">
+    <button class="tab active" data-tab="today">
+      <svg viewBox="0 0 24 24"><path d="M12 2.5 21 11h-3v9h-4.5v-6h-3v6H6v-9H3z"/></svg>
+      <span>Today <i id="mDue">0</i></span>
+    </button>
+    <button class="tab" data-tab="library">
+      <svg viewBox="0 0 24 24"><path d="M4 4h6.5v6.5H4zM13.5 4H20v6.5h-6.5zM4 13.5h6.5V20H4zM13.5 13.5H20V20h-6.5z"/></svg>
+      <span>Library <i id="libCount">0/0</i></span>
+    </button>
+    <button class="tab" data-tab="progress">
+      <svg viewBox="0 0 24 24"><path d="M5 20V10h3v10zM10.5 20V4h3v16zM16 20v-7h3v7z"/></svg>
+      <span>Progress</span>
+    </button>
+  </nav>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
