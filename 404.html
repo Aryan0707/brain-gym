@@ -144,9 +144,19 @@
       <div class="why" id="tWhy"></div>
 
       <div class="rep">
-        <label class="replabel">Write the one idea. If you can't write it, you didn't get it.</label>
+        <label class="replabel" for="tNote">Write the idea from memory before you check yourself</label>
         <div class="promptline" id="tPrompt"></div>
         <textarea id="tNote" rows="3" placeholder="The idea, in my own words…"></textarea>
+        <div class="recall-check" id="recallCheck" hidden>
+          <button class="btn ghost" id="btnReveal" disabled>Reveal key points</button>
+          <p class="muted">Your note locks when you reveal the key points. Mark only what you wrote before seeing them.</p>
+          <fieldset id="keyPoints" hidden>
+            <legend>Which points were in your note?</legend>
+            <div id="pointList"></div>
+            <p class="muted">None? Leave every box empty. The lesson will return today.</p>
+          </fieldset>
+        </div>
+        <p class="muted" id="selfRatedNote" hidden>This lesson has no checked answer key yet. Your review is based on your own rating.</p>
 
         <div class="checks">
           <label><input type="checkbox" id="c1"> I followed the whole thing</label>

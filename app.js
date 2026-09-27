@@ -15,6 +15,24 @@ let q = '';
 let extra = false;
 let current = null;           // vid in trainer
 let pendingRating = 0;
+let recallRevealed = false;
+let noteSnapshot = '';
+const hasRecallNote = () => $('#tNote').value.trim().length >= 15;
+const matchedPoints = () => document.querySelectorAll('#pointList input:checked').length;
+const effectiveRating = () => Math.min(pendingRating,
+  current?.recallKeys?.length ? [1, 2, 3, 5][matchedPoints()] : 5);
+function updateRecallHint(){
+  if (!pendingRating) return;
+  const interval = INTERVAL[effectiveRating()];
+  $('#schedHint').textContent = current?.recallKeys?.length
+    ? `${matchedPoints()}/${current.recallKeys.length} points recalled. Review ${interval ? 'in ' + interval + ' days' : 'again today'}. Self-checked, not automatically graded.`
+    : `Self-rated review: ${interval ? 'in ' + interval + ' days' : 'again today'}.`;
+}
+function updateFinishState(){
+  $('#btnReveal').disabled = !hasRecallNote() || recallRevealed;
+  $('#btnFinish').disabled = !pendingRating || !hasRecallNote() ||
+    (!!current?.recallKeys?.length && !recallRevealed);
+}
 
 /* ── helpers ───────────────────────────────────────────── */
 const $ = s => document.querySelector(s);
@@ -234,9 +252,13 @@ function renderProgress(){
   const total = Object.keys(S.done).length;
   const avg = total ? (Object.values(S.done).reduce((s, d) => s + (d.avg || 0), 0) / total).toFixed(1) : '—';
   const overall = Math.round(Object.keys(LIB.modules).reduce((s, m) => s + capacity(m), 0) / Object.keys(LIB.modules).length);
+  const checked = S.log.filter(l => l.recall);
+  const checkedSummary = checked.length
+    ? `${checked.reduce((n, l) => n + l.recall.matched, 0)}/${checked.reduce((n, l) => n + l.recall.total, 0)}`
+    : '—';
   const stats = [
     [overall + '%', 'brain capacity'], [total, 'videos trained'],
-    [Math.round(minutesTrained()), 'minutes'], [S.streak.cur, 'day streak'],
+    [checkedSummary, 'self-checked recall'], [S.streak.cur, 'day streak'],
     [S.streak.best, 'best streak'], [avg, 'avg recall rating'],
     [S.log.length, 'total reps'], [dueList().length, 'due now'],
   ];
@@ -252,7 +274,7 @@ function renderProgress(){
   const notes = [...S.notes].reverse().slice(0, 60);
   $('#notebook').innerHTML = notes.length
     ? notes.map(n => `<div class="note"><div class="h"><b>${esc(n.title)}</b>
-        <span class="chip">${n.rating}/5</span><span>${n.at.slice(0, 10)}</span></div>
+        <span class="chip">${n.recall ? `${n.recall.matched}/${n.recall.total} checked` : `${n.rating}/5 self-rated`}</span><span>${n.at.slice(0, 10)}</span></div>
         <div class="b">${esc(n.text)}</div></div>`).join('')
     : '<p class="muted">No ideas written down yet. The notebook is where the training actually sticks.</p>';
 }
@@ -260,49 +282,62 @@ function renderProgress(){
 /* ── trainer ───────────────────────────────────────────── */
 function openTrainer(id){
   const v = vid(id); if (!v) return;
-  current = v; pendingRating = 0;
+  current = v; pendingRating = 0; recallRevealed = false; noteSnapshot = '';
   $('#frame').src = embedSrc(v);
   document.querySelector('.player').classList.toggle('vertical', !!v.vertical);
   $('#tOpen').href = watchUrl(v);
-  $('#tOpen').textContent = v.src === 'ig' ? 'Open on Instagram ↗' : 'Open on YouTube ↗';
+  $('#tOpen').textContent = v.src === 'ig' ? 'Reel ↗' : 'Watch ↗';
+  $('#tOpen').setAttribute('aria-label', v.src === 'ig' ? 'Open on Instagram' : 'Open on YouTube');
   $('#tTitle').textContent = v.title;
   $('#tChannel').textContent = v.channel;
   $('#tMod').textContent = LIB.modules[v.module][0];
   $('#tMod').style.color = LIB.modules[v.module][1];
-  $('#tLang').textContent = v.lang === 'hi' ? 'हिंदी / Hinglish' : 'English';
+  $('#tLang').textContent = v.lang === 'hi' ? 'Hindi' : 'English';
   $('#tDur').textContent = v.dur ? mins(v.dur) : (v.src === 'ig' ? 'reel' : '—');
   $('#tWhy').textContent = v.why;
   $('#tPrompt').textContent = '› ' + v.prompt;
-  const last = S.notes.filter(n => n.id === v.id).slice(-1)[0];
-  $('#tNote').value = last ? last.text : '';
+  $('#tNote').value = '';
+  $('#tNote').disabled = false;
+  $('#recallCheck').hidden = !v.recallKeys?.length;
+  $('#selfRatedNote').hidden = !!v.recallKeys?.length;
+  $('#keyPoints').hidden = true;
+  $('#pointList').innerHTML = (v.recallKeys || []).map((point, i) =>
+    `<label class="recall-point"><input type="checkbox" value="${i}"><span>${esc(point)}</span></label>`).join('');
   $('#c1').checked = $('#c2').checked = $('#c3').checked = false;
   document.querySelectorAll('#rate button').forEach(b => b.classList.toggle('on', false));
   $('#btnFinish').disabled = true;
   $('#schedHint').textContent = S.done[v.id]
     ? `Rep ${S.done[v.id].reps + 1} · last rating ${S.done[v.id].avg}/5`
-    : 'First rep. Rate yourself honestly — that is what schedules the next review.';
+    : 'Write from memory first. Your note and review result set the next practice date.';
+  updateFinishState();
   go('train');
 }
 
 function finishRep(){
-  const v = current; if (!v || !pendingRating) return;
+  const v = current;
+  if (!v || !pendingRating || !hasRecallNote() || (v.recallKeys?.length && !recallRevealed)) return;
+  const matched = v.recallKeys?.length ? matchedPoints() : null;
+  // A self-check is not an automatic grade. Cap optimistic ratings when key ideas were missed.
+  const effective = effectiveRating();
   const t = todayKey();
-  const note = $('#tNote').value.trim();
+  const note = recallRevealed ? noteSnapshot : $('#tNote').value.trim();
   const d = S.done[v.id] || { reps:0, sum:0, avg:0, nextDue:null, first:null };
-  d.reps += 1; d.sum += pendingRating; d.avg = +(d.sum / d.reps).toFixed(1);
+  d.reps += 1; d.sum += effective; d.avg = +(d.sum / d.reps).toFixed(1);
   d.first = d.first || t;
   d.last = t;
-  d.nextDue = todayKey(new Date(Date.now() + INTERVAL[pendingRating] * DAY));
+  d.nextDue = todayKey(new Date(Date.now() + INTERVAL[effective] * DAY));
   d.checks = [$('#c1').checked, $('#c2').checked, $('#c3').checked];
   S.done[v.id] = d;
 
-  S.log.push({ id:v.id, at:new Date().toISOString(), rating:pendingRating });
-  S.xp += 10 + pendingRating * 2;
-  if (note) S.notes.push({ id:v.id, title:v.title, text:note, rating:pendingRating, at:new Date().toISOString() });
+  S.log.push({ id:v.id, at:new Date().toISOString(), rating:effective, selfRating:pendingRating,
+    recall: matched === null ? null : { matched, total:v.recallKeys.length } });
+  S.xp += 10 + effective * 2;
+  S.notes.push({ id:v.id, title:v.title, text:note, rating:effective, at:new Date().toISOString(),
+    recall: matched === null ? null : { matched, total:v.recallKeys.length } });
   bumpStreak();
   save();
 
-  toast(`+${10 + pendingRating * 2} xp · ${INTERVAL[pendingRating] ? 'review in ' + INTERVAL[pendingRating] + 'd' : 'comes back today'}`);
+  toast(`+${10 + effective * 2} xp · ${INTERVAL[effective] ? 'review in ' + INTERVAL[effective] + 'd' : 'comes back today'}`);
   go('today');
   renderAll();
 }
@@ -378,15 +413,24 @@ function wire(){
   }, true);
   $('#q').oninput = e => { q = e.target.value.toLowerCase().trim(); renderLibrary(); };
   $('#btnBack').onclick = () => { go('today'); renderAll(); };
+  $('#tNote').oninput = updateFinishState;
+  $('#btnReveal').onclick = () => {
+    if (!hasRecallNote() || !current?.recallKeys?.length || recallRevealed) return;
+    noteSnapshot = $('#tNote').value.trim();
+    recallRevealed = true;
+    $('#tNote').disabled = true;
+    $('#keyPoints').hidden = false;
+    updateFinishState();
+    updateRecallHint();
+  };
+  $('#pointList').onchange = updateRecallHint;
   $('#btnExtra').onclick = () => { extra = true; S.extra += 1; save(); renderAll(); };
   $('#rate').onclick = e => {
     const b = e.target.closest('button'); if (!b) return;
     pendingRating = +b.dataset.r;
     document.querySelectorAll('#rate button').forEach(x => x.classList.toggle('on', x === b));
-    $('#btnFinish').disabled = false;
-    $('#schedHint').textContent = INTERVAL[pendingRating]
-      ? `Scheduled: you will see this again in ${INTERVAL[pendingRating]} day(s).`
-      : 'Scheduled: back in the queue today. A rep you rated 1 does not count as learned.';
+    updateFinishState();
+    updateRecallHint();
   };
   $('#btnFinish').onclick = finishRep;
 

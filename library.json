@@ -40,7 +40,12 @@
    "prompt": "Critical thinking, in my own words, means...",
    "thumb": "https://i.ytimg.com/vi/iKU6hhJM0-A/mqdefault.jpg",
    "src": "yt",
-   "vertical": false
+   "vertical": false,
+   "recallKeys": [
+    "Find the core meaning of a claim instead of accepting a complicated explanation at face value.",
+    "Look at the same topic from different sources or angles, not just one explanation.",
+    "Connect subjects such as history and science instead of treating them as isolated facts."
+   ]
   },
   {
    "id": "MUVdv6mK3Lc",
@@ -115,7 +120,12 @@
    "prompt": "Which of the 5 I already do / which I add:",
    "thumb": "https://i.ytimg.com/vi/dItUGF8GdTw/mqdefault.jpg",
    "src": "yt",
-   "vertical": false
+   "vertical": false,
+   "recallKeys": [
+    "First define the question clearly, then gather relevant information.",
+    "Test the information by asking about assumptions, evidence and logical interpretation.",
+    "Consider consequences and other viewpoints before deciding."
+   ]
   },
   {
    "id": "Qt4f7QrfRRc",
@@ -130,7 +140,12 @@
    "prompt": "The slippery slope I hear most in real life:",
    "thumb": "https://i.ytimg.com/vi/Qt4f7QrfRRc/mqdefault.jpg",
    "src": "yt",
-   "vertical": false
+   "vertical": false,
+   "recallKeys": [
+    "A slippery slope argues that an initial step will inevitably lead to an extreme outcome.",
+    "Each step in a long chain can fail, so even likely individual steps do not make the final outcome certain.",
+    "Examine alternative outcomes instead of focusing only on the extreme prediction."
+   ]
   },
   {
    "id": "vNDYUlxNIAA",

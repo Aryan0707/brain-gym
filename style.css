@@ -319,7 +319,8 @@ h2.sh,.secthead{font-size:12px;color:#c4cec9;letter-spacing:.06em;text-transform
 .trainbar{padding-inline:16px}
 .trainmeta{min-width:0}
 .trainmeta .chip{white-space:nowrap}
-.opener{font-size:13px;min-height:44px;display:flex;align-items:center}
+.trainmeta #tDur{display:none}
+.opener{font-size:12px;white-space:nowrap;flex:0 0 auto;min-height:44px;display:flex;align-items:center}
 #tTitle{font-size:21px}
 .why{background:#17261d;border-color:var(--acc);color:#d0e9d5}
 .rep{padding:18px}
@@ -365,6 +366,16 @@ textarea::placeholder,input::placeholder{color:#b9c4bb;opacity:1}
 @media(min-width:600px){
   .grid .card .thumb{aspect-ratio:16/9}
 }
+.recall-check{background:#18241e;border:1px solid #385244;border-radius:14px;padding:15px;margin:14px 0}
+.recall-check .btn{width:100%;margin-bottom:9px}
+.recall-check>.muted{font-size:12px;line-height:1.5}
+#keyPoints{border:0;padding:0;margin:17px 0 0;min-width:0}
+#keyPoints legend{font-size:15px;font-weight:700;color:var(--fg);margin-bottom:12px}
+.recall-point{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-top:1px solid #385244;font-size:14px;line-height:1.45;cursor:pointer}
+.recall-point input{flex:0 0 auto;width:20px;height:20px;margin:1px 0;accent-color:var(--acc)}
+#keyPoints .muted{font-size:12px;margin-top:10px}
+#tNote:disabled{opacity:1;color:var(--fg);background:#18201c}
+#selfRatedNote{font-size:12px;margin:10px 0}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
