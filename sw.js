@@ -1,6 +1,6 @@
 /* B.R.A.I.N. service worker — caches the app shell only.
    Video embeds are cross-origin and always go to the network. */
-const CACHE = 'brain-v3';
+const CACHE = 'brain-v4';
 const SHELL = ['./','index.html','style.css','app.js','library.json','manifest.json',
                'icons/icon-192.png','icons/icon-512.png','icons/apple-touch-icon.png'];
 

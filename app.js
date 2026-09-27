@@ -190,10 +190,10 @@ function renderToday(){
     ? `<h2 class="sh">Today's reps</h2><div class="list">${picks.map(v => cardHTML(v, 'new')).join('')}</div>`
     : '<p class="muted">Every video in this language filter is done. Switch the filter or run reviews.</p>';
   const left = Math.max(0, TARGET + S.extra - repsToday());
-  $('#sessTitle').textContent = left ? `Today's session — ${left} rep${left > 1 ? 's' : ''} left` : 'Session complete';
+  $('#sessTitle').textContent = left ? `${left} rep${left > 1 ? 's' : ''} to go` : 'Session complete';
   $('#sessSub').textContent = due.length
-    ? `${due.length} video${due.length > 1 ? 's' : ''} from earlier just came due. Clear those first.`
-    : '3 reps. Watch, recall, rate. Nothing else counts.';
+    ? `${due.length} review${due.length > 1 ? 's' : ''} ready. Start with what you learned before.`
+    : 'Watch. Recall. Rate. Repeat.';
   $('#ringTxt').textContent = `${repsToday()}/${TARGET + S.extra}`;
 }
 

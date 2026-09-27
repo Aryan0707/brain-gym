@@ -40,9 +40,10 @@
     <!-- TODAY -->
     <section id="screen-today" class="screen active">
       <div class="hero">
-        <div>
+        <div class="hero-copy">
+          <span class="hero-kicker">Your daily practice</span>
           <h1 id="sessTitle">Today</h1>
-          <p class="muted" id="sessSub">3 reps. Watch, recall, rate.</p>
+          <p class="muted" id="sessSub">Watch, recall, rate.</p>
           <p class="lvl" id="heroLvl">Level 1 · Dull Blade</p>
         </div>
         <div class="ring">
@@ -56,7 +57,7 @@
       <div id="dueSection"></div>
       <div id="sessionCards" class="list"></div>
       <div class="emptystate" id="sessDone" hidden>
-        <h2>Session complete 🧠</h2>
+        <h2>Session complete</h2>
         <p class="muted" id="sessDoneSub"></p>
         <button class="btn" data-tab-go="progress">See capacity</button>
         <button class="btn ghost" id="btnExtra">Extra rep</button>
@@ -65,22 +66,28 @@
 
     <!-- LIBRARY -->
     <section id="screen-library" class="screen">
+      <h2 class="screen-heading">Explore videos</h2>
+      <p class="screen-intro">Choose a lesson, then prove what you learned.</p>
       <div class="searchrow">
-        <input id="q" placeholder="Search title, channel…" autocomplete="off" enterkeyhint="search">
+        <label class="sr-only" for="q">Search videos</label>
+        <input id="q" placeholder="Search title or creator" autocomplete="off" enterkeyhint="search">
       </div>
       <div class="chiprow" id="modChips"></div>
-      <div class="segrow">
-        <div class="seg" id="srcSeg">
-          <button data-src="all" class="on">All</button>
-          <button data-src="yt">YouTube</button>
-          <button data-src="ig">Reels</button>
+      <details class="fold filters">
+        <summary>Source and length filters</summary>
+        <div class="segrow">
+          <div class="seg" id="srcSeg">
+            <button data-src="all" class="on">All</button>
+            <button data-src="yt">YouTube</button>
+            <button data-src="ig">Reels</button>
+          </div>
+          <div class="seg" id="tierSeg">
+            <button data-tier="all" class="on">Any</button>
+            <button data-tier="drill">≤15m</button>
+            <button data-tier="deep">Deep</button>
+          </div>
         </div>
-        <div class="seg" id="tierSeg">
-          <button data-tier="all" class="on">Any</button>
-          <button data-tier="drill">≤15m</button>
-          <button data-tier="deep">Deep</button>
-        </div>
-      </div>
+      </details>
       <details class="fold addreel">
         <summary>＋ Add an Instagram reel</summary>
         <div class="addrow">
@@ -96,6 +103,8 @@
 
     <!-- PROGRESS -->
     <section id="screen-progress" class="screen">
+      <h2 class="screen-heading">Your progress</h2>
+      <p class="screen-intro">Ideas kept, not videos watched.</p>
       <h2 class="sh">Brain capacity</h2>
       <div id="capacities" class="caps"></div>
       <h2 class="sh">Numbers that matter</h2>
