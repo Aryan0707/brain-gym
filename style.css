@@ -2278,3 +2278,57 @@ button, .btn, .tab, .back, .opener, .lesson-row, .recall-point,
 .prompt-mode{display:inline-block;margin:0 0 6px;padding:2px 10px;border-radius:999px;
   font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--accent, #5ee7a0);
   background:color-mix(in srgb, currentColor 14%, transparent)}
+
+/* ═══ Phase 5 integration — styles for the markup main.js actually renders ═══
+   (earlier blocks target .thumb/.info/.name/.bar-fill, which JS never emits) */
+
+/* lesson rows: #libCards keeps a legacy .grid class whose .card rule stacks columns */
+.grid .lesson-row, .lesson-row.card {
+  flex-direction: row; align-items: center; text-align: left;
+  width: 100%; color: var(--fg); font: inherit;
+}
+.row-group { gap: var(--s2, 8px); }
+.row-art { display: grid; place-items: center; }
+.row-art.reel-art { background: var(--accent-tint); color: var(--accent); }
+.row-art svg, .row-chevron { width: 18px; height: 18px; }
+.row-copy strong {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  font-size: var(--t-sub, 15px); font-weight: 600; line-height: 1.3;
+}
+.row-copy small { display: block; margin-top: 2px; font-size: var(--t-cap, 12px); color: var(--muted); }
+
+/* module chips scroll sideways; never let flex squash them into circles */
+.module-chips .module-chip { flex: 0 0 auto; width: auto; }
+.module-chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--mod); }
+
+/* search: legacy "#q { padding }" id rule would sit under the icon */
+.search-row #q { padding-left: 40px; }
+
+/* trainer source link: JS injects an unsized <svg> */
+.opener svg { width: 18px; height: 18px; }
+
+/* progress stat tiles: <b>value</b><span>label</span><small>sub</small> */
+.stat span, .stat small { display: block; }
+.stat span { font-size: var(--t-foot, 13px); color: var(--fg-2); }
+.stat small { margin-top: 2px; font-size: var(--t-cap, 12px); color: var(--muted); }
+
+/* progress module rows: <button> label · figure, bar underneath */
+button.module-row {
+  display: grid; grid-template-columns: 1fr auto; row-gap: var(--s2, 8px);
+  width: 100%; min-height: 0; margin: 0; padding: var(--s3, 12px) 0;
+  background: none; border: 0; border-radius: 0; box-shadow: none;
+  color: var(--fg); font: inherit; text-align: left;
+}
+button.module-row + button.module-row { border-top: 1px solid var(--line); }
+.module-row .module-label { display: flex; align-items: center; gap: var(--s2, 8px); }
+.module-row .module-label i { width: 10px; height: 10px; border-radius: 50%; background: var(--mod); }
+.module-row .module-progress { display: block; font-size: var(--t-sub, 15px); color: var(--fg-2); font-variant-numeric: tabular-nums; }
+.module-row .module-progress small { margin-left: 4px; font-size: var(--t-cap, 12px); color: var(--muted); }
+.module-row .bar {
+  grid-column: 1 / -1; display: block; height: 6px;
+  background: var(--surface-2); border-radius: var(--r-pill, 999px); overflow: hidden;
+}
+.module-row .bar i { display: block; height: 100%; background: var(--mod); border-radius: inherit; }
+
+/* ≤360px legacy ".list .card { flex-direction: row }" squeezes the Today hero; keep it stacked */
+.list .today-feature { flex-direction: column; align-items: stretch; }

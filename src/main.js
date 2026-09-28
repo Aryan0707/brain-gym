@@ -288,7 +288,8 @@ function lessonRow(v, mode='library'){
     <span class="row-art${v.src === 'ig' ? ' reel-art' : ''}">${v.src === 'ig'
       ? '<svg aria-hidden="true"><use href="#i-play"></use></svg>'
       : `<img loading="lazy" draggable="false" src="${esc(v.thumb)}" alt="">`}</span>
-    <span class="row-copy"><strong>${esc(v.title)}</strong><small>${esc(label)}</small></span>
+    <span class="row-copy"><strong>${esc(v.title)}</strong><small>${esc(mode === 'library'
+      ? `${durLabel(v)} · ${v.lang === 'hi' ? 'हिंदी' : 'English'}` : label)}</small></span>
     ${mode === 'library' ? `<span class="row-state">${esc(label)}</span>` : ''}
     <svg class="row-chevron" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
   </button>${v.custom && mode==='library' ? `<button class="remove-reel" data-rm="${esc(v.id)}" aria-label="Remove ${esc(v.title)}"><svg aria-hidden="true"><use href="#i-x"></use></svg></button>` : ''}</div>`;
