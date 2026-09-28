@@ -9,17 +9,19 @@
  */
 import { $, DAY, TARGET, KEY, RANKS, todayKey, days, mins, durLabel,
          embedSrc, watchUrl, keyOf, segmentDuration, esc, toast } from './util.js';
-import { LIB, loadLibrary, vid, rehydrateReel } from './library.js';
+import { LIB, loadLibrary, vid, rehydrateReel, clearCustom } from './library.js';
 import { parseLink, linkFromSearch } from './intake.js';
 import { blank, save, loadState, sanitizeState, migrateV1toV2,
          loadDraft, saveDraft, clearDraft, pruneDrafts,
          backupCurrent, restoreLatestBackup } from './state.js';
-import { nextReview, previewText, retention, isDue, RELEARN_HOURS,
+import { nextReview, previewText, dueLabel, retention, isDue, RELEARN_HOURS,
          HOUR_MS, DAY_MS, localMidnight } from './scheduler.js';
 import { firstRepsToday, repsToday, newRepsToday, repeatedToday, dueList, capacity,
-         displayStreak, bumpStreak, pickSession, interleave } from './session.js';
+         displayStreak, bumpStreak, pickSession, interleave, rollDay } from './session.js';
 import { watchSatisfied, accumulateWatch } from './watch.js';
 import { PROMPT_MODES, choosePromptMode, promptFor } from './learn.js';
+import { buildShelves, depthOf } from './notebook.js';
+import { initAi, resetExplain } from './ai.js';
 
 /* ── mutable UI/session state ──────────────────────────── */
 let S = null;
@@ -28,7 +30,6 @@ let modFilter = 'all';
 let tierFilter = 'all';
 let srcFilter = 'all';
 let q = '';
-let extra = false;
 let current = null;
 let pendingRating = 0;
 let recallRevealed = false;
@@ -38,11 +39,16 @@ let trainerStep = '';
 let watch = { pct:0, ended:false, verified:false, override:false };
 let watchedSeconds = 0, previousVideoTime = null, pollWatch = null, ytPlayer = null;
 let ytAPIPromise = null, rewatching = false;
-let activeTab = 'today', activeRoute = 'today', openSheetName = null, sheetOpener = null;
-const scrollPositions = { today:0, library:0, progress:0 };
+let activeTab = 'library', activeRoute = 'library', openSheetName = null, sheetOpener = null;
+let trainerPushed = false;   // true when the trainer's history entry was pushed by us
+const scrollPositions = { library:0, progress:0 };
 let installedPrompt = null, noteQuery = '';
+const lastOf = a => a[a.length - 1];
 const routeQuery = route => `?go=${encodeURIComponent(route)}`;
-const routeFromURL = () => new URLSearchParams(location.search).get('go') || 'today';
+const routeFromURL = () => {
+  const r = new URLSearchParams(location.search).get('go') || 'library';
+  return r === 'today' ? 'library' : r;
+};
 const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const motion = fn => {
   if (!document.startViewTransition || reduceMotion()) { fn(); return null; }
@@ -249,7 +255,7 @@ function updateAddPreview(){
     : link.src === 'ig' ? '✓ Instagram reel' : `✓ YouTube ${link.shorts ? 'Short' : 'video'}`;
 }
 function removeReel(id){
-  LIB.videos = LIB.videos.filter(v => v.id !== id);
+  LIB.videos = LIB.videos.filter(v => !(v.custom && v.id === id));
   S.custom = S.custom.filter(c => c.id !== id);
   delete S.done[id];
   save(S); renderAll(); toast('reel removed');
@@ -262,27 +268,21 @@ function renderChrome(){
   const L = level();
   $('#mLevel').textContent = L;
   $('#mRank').textContent = RANKS[L - 1];
-  $('#heroLvl').textContent = `Level ${L} · ${RANKS[L - 1]}`;
-  $('#mDue').textContent = dueList(S).length;
+  const dueCount = dueList(S).length;
+  $('#mDue').textContent = dueCount; $('#mDue').hidden = !dueCount;
   if ($('#navAction')) {
     const action=$('#navAction');
     const name=action.dataset.screen || activeTab;
-    action.innerHTML = name==='today'
-      ? `<svg aria-hidden="true"><use href="#i-flame"></use></svg><span>${displayStreak(S)}</span>`
-      : `<svg aria-hidden="true"><use href="#i-${name==='library'?'plus':'settings'}"></use></svg>`;
-    action.setAttribute('aria-label', name==='today'?'View streak and progress':name==='library'?'Add a reel or YouTube link':'Open settings');
+    action.innerHTML = `<svg aria-hidden="true"><use href="#i-${name==='library'?'plus':'settings'}"></use></svg>`;
+    action.setAttribute('aria-label', name==='library'?'Add a reel or YouTube link':'Open settings');
   }
-  const t = newRepsToday(S), goal = TARGET + S.extra;
-  const off = 113 - Math.min(1, t / goal) * 113;
-  $('#ringFg').style.strokeDashoffset = off;
-  $('#ringTxt').textContent = `${t}/${goal}`;
 }
 function level(){ return Math.min(8, 1 + Math.floor(S.xp / 150)); }
 
 function lessonRow(v, mode='library'){
   const id = keyOf(v), d = S.done[id], mod = LIB.modules[v.module];
   const due = d && isDue(d, Date.now());
-  const label = mode === 'library' ? (!d ? 'New' : due ? 'Due' : `✓ ${Math.max(1,Math.ceil((d.dueAt-Date.now())/DAY_MS))}d`)
+  const label = mode === 'library' ? (!d ? 'New' : dueLabel(d, Date.now()))
     : due ? 'Review · due today' : `${mod[0]} · ${durLabel(v)}`;
   return `<div class="row-item"><button class="lesson-row card" data-open="${esc(id)}" aria-label="${esc(v.title)}. ${esc(label)}">
     <span class="row-art${v.src === 'ig' ? ' reel-art' : ''}">${v.src === 'ig'
@@ -294,64 +294,23 @@ function lessonRow(v, mode='library'){
     <svg class="row-chevron" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
   </button>${v.custom && mode==='library' ? `<button class="remove-reel" data-rm="${esc(v.id)}" aria-label="Remove ${esc(v.title)}"><svg aria-hidden="true"><use href="#i-x"></use></svg></button>` : ''}</div>`;
 }
-function featureCard(v, position, total){
-  const id = keyOf(v), due = !!S.done[id], mod = LIB.modules[v.module];
-  return `<article class="today-feature card" style="--mod:${esc(mod[1])}">
-    <div class="feature-art${v.src === 'ig' ? ' reel-art' : ''}">${v.src === 'ig'
-      ? '<svg aria-hidden="true"><use href="#i-play"></use></svg>'
-      : `<img src="${esc(v.thumb)}" alt="" draggable="false">`}</div>
-    <div class="feature-body"><p class="feature-eyebrow">Up next · ${position} of ${total}</p>
-      <h2>${esc(v.title)}</h2>
-      <p class="feature-meta">${esc(mod[0])} · ${esc(durLabel(v))} · ${v.lang === 'hi' ? 'हिंदी' : 'English'}</p>
-      <div class="feature-segments" role="img" aria-label="${newRepsToday(S)} of ${TARGET + S.extra} new done">${
-        Array.from({length:TARGET + S.extra},(_,i)=>`<i class="${i<newRepsToday(S)?'complete':''}"></i>`).join('')}</div>
-      <button class="btn big" data-open="${esc(id)}">${due ? 'Review' : 'Start rep'}</button>
-    </div></article>`;
-}
-function renderToday(){
-  const goal = TARGET + S.extra, newDone = newRepsToday(S);
-  const done = newDone >= goal;
-  $('#screen-today').classList.toggle('is-done', done);
-  const picks = pickSession(S, lang, extra && done);
-  const reviews = picks.filter(v => S.done[keyOf(v)]);
-  const fresh = picks.filter(v => !S.done[keyOf(v)]);
-  if ($('#todaySkeleton')) $('#todaySkeleton').hidden = true;
-  $('#dueSection').innerHTML = '';
-  $('#sessionCards').innerHTML = '';
-  const reviewList = reviews.length
-    ? `<h2 class="sh">Reviews due · quick recall</h2><div class="row-group">${reviews.slice(0,6).map(v=>lessonRow(v,'today')).join('')}</div>`
-      + (reviews.length > 6 ? `<p class="muted">+${reviews.length - 6} more after these</p>` : '')
-    : '';
-  $('#ringTxt').textContent = `${newDone}/${goal}`;
-  if (done && !(extra && fresh.length)) {
-    $('#sessDone').hidden = false;
-    const xpToday = S.log.filter(l => l.day === todayKey()).reduce((n,l)=>n+(l.repeat ? 2 : 10+l.rating*2),0);
-    const tomorrow = Object.values(S.done).filter(d=>d.dueAt > Date.now() && d.dueAt < Date.now()+2*DAY_MS).length;
-    $('#sessDoneSub').textContent = `${newDone} new videos done · +${xpToday} xp today · ${tomorrow} reviews tomorrow`;
-    $('#sessionCards').innerHTML = reviewList;
-    return;
-  }
-  $('#sessDone').hidden = true;
-  const lead = fresh[0] || reviews[0];
-  if (lead) {
-    const moreNew = fresh.slice(1, goal - newDone);
-    $('#sessionCards').innerHTML = featureCard(lead, Math.min(newDone + 1, goal), goal)
-      + (moreNew.length ? `<h2 class="sh">Also new today</h2><div class="row-group">${moreNew.map(v=>lessonRow(v,'today')).join('')}</div>` : '')
-      + (fresh[0] ? reviewList : '');
-  } else {
-    $('#sessionCards').innerHTML = `<div class="emptystate"><p>You've trained every lesson in ${lang==='hi'?'हिंदी':lang==='en'?'English':'this library'}. New videos arrive every morning.</p><button class="btn ghost" data-open-sheet="filters">Switch language</button></div>`;
-  }
-  const left = Math.max(0, goal - newDone);
-  $('#sessTitle').textContent = left ? `${left} new video${left > 1 ? 's' : ''} to go` : 'Session complete';
-  $('#sessSub').textContent = reviews.length ? `${reviews.length} review${reviews.length > 1 ? 's' : ''} due on top.` : 'Watch. Recall. Rate. Repeat.';
-}
-
 /* ── render: library ───────────────────────────────────── */
+function renderReviews(){
+  // Hidden while searching or filtering: then the user is looking for something specific.
+  const due = (q || modFilter !== 'all') ? []
+    : dueList(S).map(x => x.v).filter(v => (lang === 'all' || v.lang === lang) && !repeatedToday(S, keyOf(v)));
+  $('#dueSection').innerHTML = due.length
+    ? `<h2 class="sh">Reviews due · ${due.length}</h2><div class="row-group">${due.slice(0,5).map(v=>lessonRow(v,'review')).join('')}</div>`
+      + (due.length > 5 ? `<button class="btn ghost" data-tab-go="progress">See all ${due.length} in Progress</button>` : '')
+    : '';
+}
 function renderLibrary(){
+  if ($('#bootSkeleton')) $('#bootSkeleton').hidden = true;
+  renderReviews();
   const mods = ['all', ...Object.keys(LIB.modules)];
   $('#modChips').innerHTML = mods.map(m => {
     const label = m === 'all' ? 'All modules' : LIB.modules[m][0];
-    return `<button data-mod="${m}" class="module-chip${modFilter === m ? ' on' : ''}" ${m==='all'?'':`style="--mod:${esc(LIB.modules[m][1])}"`}>${m==='all'?'':'<i aria-hidden="true"></i>'}${esc(label)}</button>`;
+    return `<button data-mod="${esc(m)}" class="module-chip${modFilter === m ? ' on' : ''}" ${m==='all'?'':`style="--mod:${esc(LIB.modules[m][1])}"`}>${m==='all'?'':'<i aria-hidden="true"></i>'}${esc(label)}</button>`;
   }).join('');
   const list = LIB.videos.filter(v =>
     (modFilter === 'all' || v.module === modFilter) &&
@@ -392,13 +351,24 @@ function renderProgress(){
     [S.notes.length,'Ideas kept',checkedSummary],
   ].map(([value,label,sub])=>`<div class="stat"><b>${value}</b><span>${label}</span><small>${esc(sub)}</small></div>`).join('');
   const due = dueList(S);
-  $('#queueList').innerHTML = due.length ? `<div class="row-group">${due.map(x=>lessonRow(x.v,'today')).join('')}</div>`
+  $('#queueList').innerHTML = due.length ? `<div class="row-group">${due.map(x=>lessonRow(x.v,'review')).join('')}</div>`
     : '<p class="muted">Queue empty. Everything is scheduled ahead.</p>';
-  const notes = [...S.notes].reverse().filter(n => !noteQuery || (n.text+' '+n.title).toLowerCase().includes(noteQuery)).slice(0,60);
-  $('#notebook').innerHTML = notes.length
-    ? notes.map(n=>`<details class="note"><summary><time>${esc(n.day || n.at?.slice(0,10) || '')}</time><strong>${esc(n.title)}</strong>
-        <span class="note-excerpt">${esc(n.text)}</span><small>${n.recall ? `${n.recall.matched}/${n.recall.total} checked` : `${n.rating}/5 self-rated`}</small></summary><p>${esc(n.text)}</p></details>`).join('')
-    : '<p class="muted">No ideas written down yet. Your notebook fills after a rep.</p>';
+  const shelves = buildShelves({ videos:LIB.videos, modules:LIB.modules, notes:S.notes, done:S.done, query:noteQuery });
+  const noteMeta = n => n.recall ? `${n.recall.matched}/${n.recall.total} checked`
+    : Number.isFinite(n.rating) ? `${n.rating}/5 self-rated` : '';
+  const noteDay = n => n.day || n.at?.slice(0,10) || '';
+  $('#notebook').innerHTML = shelves.length
+    ? shelves.map(s=>`<section class="shelf" style="--mod:${esc(s.color)}">
+        <h3 class="shelf-h"><i aria-hidden="true"></i>${esc(s.name)} <small>${s.items.length} learned</small></h3>
+        ${s.items.map(({v,card,notes})=>{ const last = lastOf(notes);
+          return `<details class="note shelf-item"><summary>
+            <span class="depth-tag">${v.removed ? 'removed' : ['reel','drill','deep'][depthOf(v)]}</span><strong>${esc(v.title)}</strong>
+            <small>${card ? `${card.reps} rep${card.reps>1?'s':''} · ${card.avg}/5` : ''}${last ? `${card?' · ':''}${noteMeta(last)}` : ''}</small>
+            ${last ? `<span class="note-excerpt">${esc(last.text)}</span>` : ''}</summary>
+            <ol class="note-history">${notes.map(n=>`<li><time>${esc(noteDay(n))}</time> <small>${noteMeta(n)}</small><p>${esc(n.text)}</p></li>`).join('')}</ol>
+            ${v.removed ? '' : `<button class="btn ghost" data-open="${esc(keyOf(v))}">Practise again</button>`}</details>`;}).join('')}
+      </section>`).join('')
+    : `<p class="muted">${noteQuery ? 'No notes match that search.' : 'No ideas written down yet. Your notebook fills after a rep.'}</p>`;
   if ($('#progressEmpty')) $('#progressEmpty').hidden = S.log.length > 0;
 }
 
@@ -407,6 +377,7 @@ function openTrainer(id, {historyMode='push'}={}){
   const v = vid(id); if (!v) return;
   stopPlayer();
   current = v; pendingRating = 0; recallRevealed = false; noteSnapshot = '';
+  resetExplain();
   rewatching = false;
   watch = { pct:0, ended:false, verified:false, override:false };
   watchedSeconds = 0;
@@ -426,7 +397,7 @@ function openTrainer(id, {historyMode='push'}={}){
   const card = S.done[keyOf(v)];
   const pastModes = S.log.filter(l => l.id === keyOf(v) && !l.repeat).map(l => l.mode || 'recall');
   promptMode = choosePromptMode({ reps: card?.reps || 0, lapses: card?.lapses || 0,
-    lastRating: S.log.findLast(l => l.id === keyOf(v))?.rating ?? null, pastModes });
+    lastRating: lastOf(S.log.filter(l => l.id === keyOf(v)))?.rating ?? null, pastModes });
   if (!PROMPT_MODES[promptMode]) promptMode = 'recall';
   $('#tPromptMode').textContent = PROMPT_MODES[promptMode].label;
   $('#tPromptMode').hidden = promptMode === 'recall';
@@ -445,6 +416,7 @@ function openTrainer(id, {historyMode='push'}={}){
   $('#schedHint').textContent = S.done[keyOf(v)]
     ? `Rep ${S.done[keyOf(v)].reps + 1} · last rating ${S.done[keyOf(v)].avg}/5`
     : 'Your self-check sets the next practice date.';
+  trainerPushed = historyMode === 'push';
   go('train',{historyMode});
   setTrainerStep(S.done[keyOf(v)] ? 'recall' : 'watch');
   updateWatchUI();
@@ -535,7 +507,8 @@ function finishRep(){
 
 /* ── routing + wiring ──────────────────────────────────── */
 function go(name, { historyMode='push', focus=true }={}){
-  if (!['today','library','progress','train'].includes(name)) return;
+  if (name === 'today') name = 'library';   // old links, shortcuts, muscle memory
+  if (!['library','progress','train'].includes(name)) return;
   const wasSheetOpen = !!openSheetName;
   if (openSheetName) closeSheet({historyMode:'none'});
   if (name !== 'train' && activeRoute === name) {
@@ -569,7 +542,7 @@ function go(name, { historyMode='push', focus=true }={}){
     if (transition) transition.updateCallbackDone.then(restore).catch(restore);
     else restore();
   }
-  if ($('#navTitle')) $('#navTitle').textContent = name === 'train' ? 'Training' : ({today:'Today',library:'Library',progress:'Progress'})[name];
+  if ($('#navTitle')) $('#navTitle').textContent = name === 'train' ? 'Training' : ({library:'Library',progress:'Progress'})[name];
   if ($('#navAction')) { $('#navAction').dataset.screen = name; renderChrome(); }
   if ($('#langSeg')) $('#langSeg').hidden = true;
   if ($('#langBtn')) $('#langBtn').textContent = lang === 'all' ? 'Both' : (lang === 'hi' ? 'हिंदी' : 'English');
@@ -614,20 +587,43 @@ function showInstallPrompt(){
 function handlePopState(){
   const route = routeFromURL();
   if (openSheetName) closeSheet({historyMode:'none'});
-  if (route.startsWith('sheet/')) { openSheet(route.slice(6),null,{historyMode:'none'}); return; }
+  if (route.startsWith('sheet/')) {
+    const name = route.slice(6);
+    if (name === 'import') go(activeRoute === 'train' ? activeTab : activeRoute, {historyMode:'replace'});
+    else openSheet(name,null,{historyMode:'none'});
+    return;
+  }
   if (route.startsWith('train/')) {
     const id = route.slice(6);
     if (vid(id)) openTrainer(id, {historyMode:'none'});
-    else go('today',{historyMode:'none'});
+    else go('library',{historyMode:'none'});
     return;
   }
-  go(['today','library','progress'].includes(route) ? route : 'today',{historyMode:'none'});
+  go(route === 'progress' ? 'progress' : 'library',{historyMode:'none'});
 }
-function renderAll(){ renderChrome(); renderToday(); renderLibrary(); renderProgress(); }
+function renderAll(){ renderChrome(); renderLibrary(); renderProgress(); }
+
+/* Leave the trainer. history.back() only over an entry this app pushed: a
+ * deep-linked or shared lesson has the previous site behind it, not our tabs. */
+function leaveTrainer(){
+  if (trainerPushed) history.back();
+  else go(activeTab, {historyMode:'replace'});
+}
+
+/* iOS keeps a suspended PWA in memory for days: on return, roll the day and
+ * redraw so the Library shows this morning's reviews, not yesterday's.
+ * renderAll never touches the trainer, so an in-progress note is safe. */
+function onResume(){
+  if (document.visibilityState !== 'visible' || !S) return;
+  if (rollDay(S)) save(S);
+  renderAll();
+}
 
 function wire(){
   document.querySelectorAll('.tabbar .tab').forEach(b => b.onclick = () => go(b.dataset.tab));
   addEventListener('popstate', handlePopState);
+  document.addEventListener('visibilitychange', onResume);
+  addEventListener('pageshow', e => { if (e.persisted) onResume(); });
   window.visualViewport?.addEventListener('resize', keyboardInset);
   window.visualViewport?.addEventListener('scroll', keyboardInset);
   addEventListener('resize', keyboardInset);
@@ -639,7 +635,7 @@ function wire(){
   addEventListener('touchend', e => {
     if (!edge) return;
     const p=e.changedTouches[0], dx=p.clientX-edge.x, dy=p.clientY-edge.y;
-    if (dx>80 && Math.abs(dx)>Math.abs(dy)*1.5) history.back();
+    if (dx>80 && Math.abs(dx)>Math.abs(dy)*1.5) leaveTrainer();
     edge=null;
   }, {passive:true});
   document.body.addEventListener('click', e => {
@@ -656,8 +652,7 @@ function wire(){
   if ($('#noteSearch')) $('#noteSearch').oninput = e => {noteQuery=e.target.value.toLowerCase().trim();renderProgress();};
   if ($('#navAction')) $('#navAction').onclick = e => {
     const action = $('#navAction').dataset.screen;
-    if (action === 'today') go('progress');
-    else if (action === 'library') openAddSheet('', e.currentTarget);
+    if (action === 'library') openAddSheet('', e.currentTarget);
     else openSheet('settings',e.currentTarget);
   };
   if ($('#filterButton')) $('#filterButton').onclick = e => openSheet('filters',e.currentTarget);
@@ -695,10 +690,10 @@ function wire(){
     renderLibrary();
   };
   $('#reelMod').innerHTML = Object.keys(LIB.modules)
-    .map(m => `<option value="${m}">${LIB.modules[m][0]}</option>`).join('');
+    .map(m => `<option value="${esc(m)}">${esc(LIB.modules[m][0])}</option>`).join('');
   $('#btnAddReel').onclick = () => {
-    addLink($('#reelUrl').value, $('#reelMod').value, $('#reelLang').value, $('#addMsg'));
-    $('#reelUrl').value = '';
+    if (addLink($('#reelUrl').value, $('#reelMod').value, $('#reelLang').value, $('#addMsg')))
+      $('#reelUrl').value = '';
   };
   $('#reelUrl').onkeydown = e => { if (e.key === 'Enter') $('#btnAddReel').click(); };
   $('#addReelMod').innerHTML = $('#reelMod').innerHTML;
@@ -718,7 +713,7 @@ function wire(){
     if (rm) { e.stopPropagation(); removeReel(rm.dataset.rm); }
   }, true);
   $('#q').oninput = e => { q = e.target.value.toLowerCase().trim(); renderLibrary(); };
-  $('#btnBack').onclick = () => { if (history.length > 1) history.back(); else go(activeTab,{historyMode:'replace'}); renderAll(); };
+  $('#btnBack').onclick = () => { leaveTrainer(); renderAll(); };
   $('#tNote').oninput = e => { saveDraft(current && keyOf(current), e.target.value); updateFinishState(); };
   $('#btnWatched').onclick = () => {
     if (trainerStep !== 'watch' || $('#btnWatched').disabled) return;
@@ -742,9 +737,8 @@ function wire(){
     updateWatchUI();
   };
   $('#btnNextRep').onclick = () => { const id = $('#btnNextRep').dataset.next; if (id) openTrainer(id); };
-  $('#btnDone').onclick = () => { go('today'); renderAll(); };
+  $('#btnDone').onclick = () => { go(activeTab); renderAll(); };
   $('#pointList').onchange = updateRecallHint;
-  $('#btnExtra').onclick = () => { extra = true; S.extra += 1; save(S); renderAll(); };
   $('#rate').onclick = e => {
     const b = e.target.closest('button'); if (!b) return;
     pendingRating = +b.dataset.r;
@@ -785,18 +779,24 @@ function wire(){
           S = candidate;
           const migrated = migrateV1toV2(S);
           S = migrated.S;
-          S.custom.forEach(rehydrateReel);
+          clearCustom(); S.custom.forEach(rehydrateReel);
+          rollDay(S);
           save(S); renderAll();
           toast(dropped ? `imported · ${dropped} invalid reel${dropped>1?'s':''} skipped` : 'imported');
         } catch (err) {
           console.error(err);
           const restored = restoreLatestBackup('preimport');
-          if (restored) { S = restored; save(S); renderAll(); }
+          if (restored) {
+            S = migrateV1toV2(restored).S;
+            clearCustom(); S.custom.forEach(rehydrateReel);
+            save(S); renderAll();
+          }
           toast('import failed — reverted');
         }
         e.target.value = '';
       };
     };
+    r.onerror = () => { toast('could not read that file — nothing was changed'); e.target.value = ''; };
     r.readAsText(f);
   };
   $('#btnReset').onclick = e => openSheet('reset',e.currentTarget);
@@ -804,7 +804,8 @@ function wire(){
   if ($('#resetConfirm')) $('#resetConfirm').onclick = () => {
     if ($('#resetInput').value !== 'RESET') return;
     backupCurrent('prereset');
-    S = blank(); save(S); renderAll(); closeSheet();
+    S = blank(); rollDay(S); clearCustom();
+    save(S); renderAll(); closeSheet();
     $('#resetInput').value=''; $('#resetConfirm').disabled=true; toast('progress reset');
   };
   if ($('#storagePersist')) $('#storagePersist').onclick = async () => {
@@ -824,47 +825,63 @@ function wire(){
       const el = $('#'+sheetIDs[openSheetName]);
       const controls = [...el.querySelectorAll('button:not([disabled]):not([hidden]),input:not([disabled]):not([hidden]),select:not([disabled]):not([hidden])')].filter(x=>x.getClientRects().length);
       if (!controls.length) return;
-      if (e.shiftKey && document.activeElement===controls[0]) {e.preventDefault();controls.at(-1).focus();}
-      else if (!e.shiftKey && document.activeElement===controls.at(-1)) {e.preventDefault();controls[0].focus();}
+      if (e.shiftKey && document.activeElement===controls[0]) {e.preventDefault();lastOf(controls).focus();}
+      else if (!e.shiftKey && document.activeElement===lastOf(controls)) {e.preventDefault();controls[0].focus();}
     }
   });
   addEventListener('keydown', e => {
-    if (e.target.matches('input,textarea,[contenteditable]')) return;
+    // Already handled (Escape closed a sheet), a sheet owns the keys, or a browser shortcut.
+    if (e.defaultPrevented || openSheetName || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target.matches('input,textarea,select,[contenteditable]')) return;
     const trainerOpen = $('#screen-train').classList.contains('active');
     if (e.key === 'Escape' && trainerOpen) { e.preventDefault(); $('#btnBack').click(); return; }
     if (trainerOpen) {
-      if (/^[1-5]$/.test(e.key)) {
+      // Rating keys only on the rating step: never pick a rating the user has not seen.
+      if (trainerStep === 'check' && /^[1-5]$/.test(e.key)) {
         const btn = document.querySelector(`#rate [data-r="${e.key}"]`);
         if (btn) { e.preventDefault(); btn.click(); }
       }
       return;
     }
-    if (e.key === '1') go('today');
-    if (e.key === '2') go('library');
-    if (e.key === '3') go('progress');
+    if (e.key === '1') go('library');
+    if (e.key === '2') go('progress');
   });
 }
 
 /* ── boot ──────────────────────────────────────────────── */
 (async function boot(){
-  await loadLibrary();
+  try { await loadLibrary(); }
+  catch (err) {
+    // No lessons means nothing to render; say why instead of leaving a skeleton.
+    console.error(err);
+    if ($('#bootSkeleton')) $('#bootSkeleton').hidden = true;
+    $('#libCards').innerHTML = `<div class="emptystate"><p>${navigator.onLine === false
+      ? 'You are offline and the lessons are not saved on this device yet. Connect once, then they work offline.'
+      : 'The lesson library could not be loaded.'}</p><button class="btn" type="button" id="bootRetry">Try again</button></div>`;
+    $('#bootRetry').onclick = () => location.reload();
+    addEventListener('online', () => location.reload(), { once:true });
+    return;
+  }
   const loaded = loadState();
   S = loaded.S;
   if (loaded.event === 'corrupt') setTimeout(() => toast('Saved data was unreadable — a copy was kept.'), 300);
   const mig = migrateV1toV2(S); S = mig.S;
   S.custom.forEach(rehydrateReel);
-  if (S.sessionDate !== todayKey()) { S.sessionDate = todayKey(); S.extra = 0; extra = false; }
+  rollDay(S);
   pruneDrafts();
   save(S);
   wire();
+  initAi(() => current);
   renderAll();
-  history.replaceState({route:routeFromURL()},'',location.href);
+  // A retired ?go=today link is rewritten so the address bar shows where you are.
+  const legacyToday = new URLSearchParams(location.search).get('go') === 'today';
+  history.replaceState({route:routeFromURL()},'',legacyToday ? routeQuery('library') : location.href);
   const initial = routeFromURL();
   if (initial.startsWith('train/') || initial.startsWith('sheet/') || ['library','progress'].includes(initial))
     handlePopState();
   else {
-    $('[data-tab="today"]').setAttribute('aria-current','page');
-    if ($('#navAction')) $('#navAction').dataset.screen='today';
+    $('[data-tab="library"]').setAttribute('aria-current','page');
+    if ($('#navAction')) $('#navAction').dataset.screen='library';
   }
   // Shared link (?add=…, or Android share-target ?url=/?text=): prefill the add sheet.
   const shared = linkFromSearch(location.search);
@@ -902,7 +919,7 @@ function wire(){
     }).catch(() => {});
   }
   fetch('version.json').then(r=>r.ok?r.json():null).then(v=>{
-    if ($('#settingsVersion') && v) $('#settingsVersion').textContent = v.version || v.commit || 'Local build';
+    if ($('#settingsVersion')) $('#settingsVersion').textContent = v?.version || v?.commit || 'Local build';
   }).catch(()=>{if ($('#settingsVersion')) $('#settingsVersion').textContent='Local build';});
   console.log(`B.R.A.I.N. v${S.v} · ${LIB.videos.length} videos · ${Object.keys(LIB.modules).length} modules`);
 
@@ -910,7 +927,7 @@ function wire(){
   window.__bg = {
     openTrainer, todayKey, repsToday: () => repsToday(S), newRepsToday: () => newRepsToday(S), LIB,
     S: () => S, setS: (next) => { S = next; save(S); renderAll(); },
-    nextReview, previewText, retention, isDue, capacity: (m) => capacity(S, m),
+    nextReview, previewText, dueLabel, retention, isDue, capacity: (m) => capacity(S, m),
     dueList: () => dueList(S), pickSession: (extraRep) => pickSession(S, lang, !!extraRep),
     localMidnight, HOUR_MS, DAY_MS, RELEARN_HOURS,
     migrateV1toV2, sanitizeState: (raw) => sanitizeState(raw, LIB),

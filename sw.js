@@ -10,7 +10,7 @@
 */
 
 // deploy.sh stamps CACHE with the build version so every deploy gets a fresh shell cache.
-const CACHE = 'brain-25eb8ee-202609282043';
+const CACHE = 'brain-a1d7f0b-202609282240';
 const SHELL_CACHE = CACHE;
 const API_CACHE  = 'brain-api-v2';
 
@@ -19,7 +19,7 @@ const SHELL = [
   './', 'index.html', 'style.css', 'manifest.json',
   'src/main.js', 'src/util.js', 'src/library.js', 'src/state.js',
   'src/scheduler.js', 'src/session.js', 'src/watch.js',
-  'src/intake.js', 'src/learn.js',
+  'src/intake.js', 'src/learn.js', 'src/notebook.js', 'src/ai.js',
   'icons/icon-192.png', 'icons/icon-512.png',
   'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'
 ];
@@ -41,26 +41,36 @@ async function networkFirstTimeout(req, cacheName, ms) {
     }
   } catch { /* fall through to cache */ }
 
+  // Never answer a data request with the HTML shell: r.json() would throw.
   const cached = await caches.match(req);
-  return cached || caches.match('./index.html');
+  return cached || new Response('offline', { status: 503, statusText: 'Offline' });
 }
 
 /** Stale-while-revalidate: serve cache immediately, then refresh in the
  *  background.  On cold miss, wait for network.  Only res.ok is cached. */
 async function staleWhileRevalidate(req, cacheName) {
-  const cached = await caches.match(req);
+  // Every in-app URL (?go=train/…, ?add=…) is the same shell page: store and
+  // look it up by path so the cache holds one copy, not one per URL visited.
+  const nav = req.mode === 'navigate';
+  const key = nav ? new URL(req.url).pathname : req;
+  const cached = await caches.match(key);
 
-  const net = fetch(req).then(res => {
+  // Revalidate with the server: a heuristically-cached old module next to a new
+  // one breaks the ES-module graph. Navigate requests cannot be re-initialised.
+  const net = fetch(nav ? req : new Request(req, { cache: 'no-cache' })).then(res => {
     if (res.ok) {
       const copy = res.clone();
-      caches.open(cacheName).then(c => c.put(req, copy));
+      caches.open(cacheName).then(c => c.put(key, copy));
     }
     return res;
   }).catch(() => null);
 
   if (cached) { net; return cached; }   // bg update, return cached now
   const live = await net;                // cold miss — wait
-  return live || caches.match('./index.html');
+  if (live) return live;
+  // Offline: a page falls back to the shell; a script or image must fail
+  // honestly rather than receive HTML (a MIME error that hides the cause).
+  return nav ? caches.match('./index.html') : Response.error();
 }
 
 /** Tell every open window an update is waiting. */
@@ -75,7 +85,13 @@ function notifyClients(msg) {
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(SHELL_CACHE)
-      .then(c => c.addAll(SHELL))
+      // cache:'reload' skips the HTTP cache (GitHub Pages: max-age=600) so a
+      // deploy never precaches a mix of old and new modules.
+      .then(c => c.addAll(SHELL.map(u => new Request(u, { cache: 'reload' }))))
+      // The first page load fetched library.json before this SW controlled it,
+      // so seed the API cache now or the app cannot boot offline.
+      .then(() => caches.open(API_CACHE))
+      .then(c => c.add(new Request('library.json', { cache: 'reload' })))
       .then(() => {
         // After the shell is cached, if there are open pages this is an
         // update — tell them a new version is waiting.

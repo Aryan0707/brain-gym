@@ -17,12 +17,13 @@ export const PROMPT_MODES = {
  *   pastModes   modes used on earlier reps, oldest first
  */
 export function choosePromptMode({ reps, lapses, lastRating, pastModes }){
+  const lastMode = pastModes[pastModes.length - 1];   // index, not Array#at: iOS < 15.4
   // First time: the lesson's own prompt is the only one written for this idea.
   if (!reps) return 'recall';
   // Shaky or relapsing: plain words expose exactly where the gap is.
-  if ((lastRating ?? 3) <= 2 || lapses > 0 && pastModes.at(-1) !== 'feynman') return 'feynman';
+  if ((lastRating ?? 3) <= 2 || lapses > 0 && lastMode !== 'feynman') return 'feynman';
   // Secure: alternate straight recall with connecting it to what I already know.
-  return pastModes.at(-1) === 'connect' ? 'recall' : 'connect';
+  return lastMode === 'connect' ? 'recall' : 'connect';
 }
 
 export function promptFor(v, mode){

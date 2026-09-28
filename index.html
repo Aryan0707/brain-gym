@@ -50,9 +50,9 @@
 
 <!-- ══ top nav (sticky) ══ -->
 <header class="top-nav appbar" id="topNav">
-  <h1 class="nav-title" id="navTitle">Today</h1>
-  <button class="nav-action btn-icon" id="navAction" data-screen="today" aria-label="Screen action" onclick="">
-    <svg width="20" height="20"><use href="#i-flame"/></svg>
+  <h1 class="nav-title" id="navTitle">Library</h1>
+  <button class="nav-action btn-icon" id="navAction" data-screen="library" aria-label="Add a reel or YouTube link">
+    <svg width="20" height="20"><use href="#i-plus"/></svg>
   </button>
   <!-- legacy IDs kept for main.js compat; hidden, JS sets textContent -->
   <span class="legacy-hidden" id="mStreak">0</span>
@@ -70,84 +70,21 @@
 <!-- ══ screens (document-scrolling container) ══ -->
 <main class="screens">
 
-  <!-- ── TODAY ── -->
-  <section id="screen-today" class="screen active">
+  <!-- ── LIBRARY ── -->
+  <section id="screen-library" class="screen active">
 
     <!-- loading skeleton (visible pre-boot, hidden by JS after library.json loads) -->
-    <div class="skeleton" id="todaySkeleton">
-      <div class="skeleton-box" style="aspect-ratio:16/9"></div>
+    <div class="skeleton" id="bootSkeleton">
+      <div class="skeleton-line w-80"></div>
       <div class="skeleton-line w-60"></div>
       <div class="skeleton-line w-80"></div>
-      <div class="skeleton-line w-40"></div>
       <div class="skeleton-line w-50"></div>
-      <div class="skeleton-line w-35"></div>
+      <div class="skeleton-line w-80"></div>
       <div class="skeleton-line w-45"></div>
-      <div class="skeleton-line w-30"></div>
     </div>
 
-    <!-- feature card (up-next) — parent renders .today-feature.card with .feature-art/.feature-body -->
-    <div class="today-feature card" id="featureCard" hidden>
-      <div class="feature-art">
-        <img src="" alt="">
-        <div class="feature-duration"></div>
-        <div class="feature-play"><svg width="36" height="36"><use href="#i-play"/></svg></div>
-      </div>
-      <div class="feature-body">
-        <span class="feature-eyebrow">Up next</span>
-        <h1 class="feature-title" id="sessTitle">Today</h1>
-        <div class="feature-meta">
-          <span class="chip" id="featureModChip"></span>
-          <span class="feature-dur"></span>
-        </div>
-        <div class="feature-segments">
-          <span class="segment-bar"></span>
-          <span class="segment-bar"></span>
-          <span class="segment-bar"></span>
-        </div>
-        <p class="muted" id="sessSub">Watch, recall, rate.</p>
-        <button class="btn big" id="featureStart">Start rep</button>
-      </div>
-    </div>
-
-    <!-- legacy hero / ring (hidden; JS sets textContent on IDs for compat) -->
-    <div class="hero legacy-hidden">
-      <div class="hero-copy">
-        <span class="hero-kicker">Your daily practice</span>
-        <h1>Today</h1>
-        <p class="muted">Watch, recall, rate.</p>
-        <p class="lvl" id="heroLvl">Level 1 · Dull Blade</p>
-      </div>
-      <div class="ring">
-        <svg viewBox="0 0 42 42">
-          <circle cx="21" cy="21" r="18" class="bg"/>
-          <circle cx="21" cy="21" r="18" class="fg" id="ringFg"/>
-        </svg>
-        <span id="ringTxt">0/3</span>
-      </div>
-    </div>
-
-    <!-- due section -->
+    <!-- reviews due — rendered by JS, hidden while searching or filtering -->
     <div id="dueSection"></div>
-
-    <!-- session cards — parent renders .row-item > .lesson-row.card -->
-    <div id="sessionCards" class="list"></div>
-
-    <!-- session complete -->
-    <div class="emptystate" id="sessDone" hidden>
-      <h2>Session complete</h2>
-      <p class="muted" id="sessDoneSub"></p>
-      <button class="btn" data-tab-go="progress">See progress</button>
-      <button class="btn ghost" id="btnExtra">One more rep</button>
-    </div>
-
-    <!-- empty -->
-    <div class="emptystate" id="todayEmpty" hidden>
-      <p class="muted">You've trained every lesson in this language. Switch language or run reviews.</p>
-    </div>
-  </section>
-
-  <!-- ── LIBRARY ── -->
-  <section id="screen-library" class="screen">
     <div class="search-row">
       <svg class="search-icon" width="18" height="18"><use href="#i-search"/></svg>
       <label class="sr-only" for="q">Search videos</label>
@@ -160,7 +97,7 @@
     <div class="module-chips" id="modChips"></div>
 
     <div class="library-toolbar">
-      <button class="btn ghost btn-filter" id="filterButton" aria-label="Filters" data-open-sheet="filtersSheet">
+      <button class="btn ghost btn-filter" id="filterButton" aria-label="Filters">
         <svg width="16" height="16"><use href="#i-sliders"/></svg>
         <span>Filters</span>
         <span class="filter-badge" id="filterCount" hidden>0</span>
@@ -232,7 +169,7 @@
     <!-- empty progress -->
     <div class="emptystate" id="progressEmpty" hidden>
       <p class="muted">Your progress starts with one rep.</p>
-      <button class="btn" data-tab-go="today">Start your first rep</button>
+      <button class="btn" data-tab-go="library">Pick your first lesson</button>
     </div>
   </section>
 
@@ -269,6 +206,10 @@
       <h2 id="tTitle"></h2>
       <p class="muted" id="tChannel"></p>
       <div class="why" id="tWhy"></div>
+      <div class="explain" data-explain id="explainWatch">
+        <button class="btn ghost explain-btn">Explain it simpler</button>
+        <div class="explain-out" aria-live="polite" hidden></div>
+      </div>
       <p class="muted" id="watchStatus" aria-live="polite"></p>
       <!-- action bar: buttons LIVE here for test visibility -->
       <div class="trainer-action-bar">
@@ -316,6 +257,10 @@
           <button data-r="5" aria-pressed="false"><b>5</b><span>could teach</span></button>
         </div>
         <p class="muted" id="schedHint" aria-live="polite"></p>
+        <div class="explain" data-explain id="explainCheck">
+          <button class="btn ghost explain-btn">Explain it simpler</button>
+          <div class="explain-out" aria-live="polite" hidden></div>
+        </div>
         <button class="btn ghost" id="btnRewatch">
           <svg width="16" height="16"><use href="#i-rewatch"/></svg>
           <span>Rewatch</span>
@@ -351,13 +296,9 @@
 
 <!-- ══ tab bar (fixed bottom) ══ -->
 <nav class="tabbar">
-  <button class="tab active" data-tab="today" aria-current="page">
-    <svg width="22" height="22"><use href="#i-home"/></svg>
-    <span>Today <i id="mDue">0</i></span>
-  </button>
-  <button class="tab" data-tab="library">
+  <button class="tab active" data-tab="library" aria-current="page">
     <svg width="22" height="22"><use href="#i-grid"/></svg>
-    <span>Library</span>
+    <span>Library <i id="mDue" hidden>0</i></span>
   </button>
   <button class="tab" data-tab="progress">
     <svg width="22" height="22"><use href="#i-chart"/></svg>
@@ -435,6 +376,15 @@
         <button data-lang="en">English</button>
       </div>
     </div>
+    <div class="sheet-section" id="aiSettings">
+      <label class="sheet-label" for="aiKey">AI explanations · OpenRouter key</label>
+      <input id="aiKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk-or-v1-…">
+      <p class="muted" id="aiKeyStatus" aria-live="polite"></p>
+      <div class="ai-key-actions">
+        <button class="btn ghost" id="aiKeySave">Save key</button>
+        <button class="btn ghost danger" id="aiKeyRemove" hidden>Remove</button>
+      </div>
+    </div>
     <div class="sheet-section sheet-btn-list">
       <button class="btn ghost sheet-btn" id="btnExport">
         <svg width="18" height="18"><use href="#i-upload"/></svg>
@@ -463,7 +413,7 @@
       <p class="muted">Version <span id="settingsVersion">—</span></p>
     </div>
     <div class="sheet-section">
-      <button class="btn ghost sheet-btn danger" id="btnReset" data-open-sheet="resetSheet">
+      <button class="btn ghost sheet-btn danger" id="btnReset">
         <span>Reset all data</span>
       </button>
     </div>
@@ -534,6 +484,27 @@
   </div>
 </div>
 
+<script>
+/* Self-heal a mixed module graph. If a cached old module sits next to a fresh
+ * one, linking throws a SyntaxError ("does not provide an export named …")
+ * before main.js runs, and Today stays a skeleton forever. Re-fetch every
+ * shell file past the HTTP cache and the SW cache, then reload — once per 30 s. */
+addEventListener('error', function (e) {
+  if (window.__bg || !(e.error instanceof SyntaxError)) return;
+  var KEY = 'bg-heal', now = Date.now();
+  try { if (now - (+sessionStorage.getItem(KEY) || 0) < 30000) return; sessionStorage.setItem(KEY, now); }
+  catch (_) { return; }
+  var files = ['index.html', 'style.css', 'src/main.js', 'src/util.js', 'src/library.js',
+    'src/state.js', 'src/scheduler.js', 'src/session.js', 'src/watch.js',
+    'src/intake.js', 'src/learn.js', 'src/notebook.js', 'src/ai.js'];
+  var clear = window.caches ? caches.keys().then(function (ks) {
+    return Promise.all(ks.map(function (k) { return caches.delete(k); }));
+  }) : Promise.resolve();
+  clear.then(function () {
+    return Promise.all(files.map(function (f) { return fetch(f, { cache: 'reload' }).catch(function () {}); }));
+  }).then(function () { location.reload(); });
+});
+</script>
 <script type="module" src="src/main.js"></script>
 </body>
 </html>

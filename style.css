@@ -55,6 +55,7 @@
 
 html {
   overflow-x: hidden;
+  overscroll-behavior-y: contain;
   /* document scrolls naturally — no height:100% lock */
 }
 
@@ -69,9 +70,11 @@ body {
   text-size-adjust: 100%;
   /* body padding for fixed tab bar */
   padding-bottom: calc(var(--tabbar-h) + var(--safe-b));
+  min-height: 100vh;   /* iOS < 15.4 has no dvh */
   min-height: 100dvh;
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
+  /* No overflow here: with html's overflow-x set, body's overflow is not passed
+     to the viewport, so body became a scroll box that never scrolls and the
+     sticky .top-nav stuck to it — the header scrolled away with the page. */
 }
 
 button, input, textarea, select {
@@ -162,6 +165,7 @@ h2.sh           { font-size: 12px; color: var(--fg-2); letter-spacing: .04em; te
 /* screens (document-flow container — scrolls with body) */
 .screens {
   /* no overflow:auto here — document scrolls */
+  min-height: calc(100vh - var(--tabbar-h) - var(--safe-b) - 48px - var(--safe-t));
   min-height: calc(100dvh - var(--tabbar-h) - var(--safe-b) - 48px - var(--safe-t));
 }
 
@@ -336,7 +340,9 @@ h2.sh           { font-size: 12px; color: var(--fg-2); letter-spacing: .04em; te
 /* ── cards (grid + list) ── */
 .grid {
   display: grid;
-  grid-template-columns: 1fr;
+  /* minmax(0, …): a bare 1fr never shrinks below its widest row, which pushed
+     the Library 40px past a 320px screen and made phones zoom out. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--s3, 12px);
 }
 
@@ -805,7 +811,9 @@ h2.sh           { font-size: 12px; color: var(--fg-2); letter-spacing: .04em; te
   display: flex;
   align-items: center;
   gap: var(--s2, 8px);
+  min-width: 0;
 }
+.row-item > .lesson-row { min-width: 0; flex: 1 1 auto; }
 
 .row-item .lesson-row {
   flex: 1;
@@ -1432,6 +1440,34 @@ input::placeholder, textarea::placeholder {
 .note-details[open] > summary {
   border-bottom: 1px solid var(--line);
 }
+
+/* ── organized notebook: module shelf → videos shallow-to-deep → note history ── */
+.shelf { display: flex; flex-direction: column; gap: 9px; }
+.shelf + .shelf { margin-top: var(--s4, 16px); }
+.shelf-h {
+  display: flex; align-items: center; gap: var(--s2, 8px);
+  margin: 0; font-size: var(--t-sub, 15px);
+}
+.shelf-h i { width: 10px; height: 10px; border-radius: 50%; background: var(--mod); flex: none; }
+.shelf-h small { color: var(--muted); font-size: var(--t-cap, 12px); font-weight: 400; }
+.shelf-item { border-left: 3px solid var(--mod); }
+.shelf-item > summary { list-style: none; cursor: pointer; display: grid; gap: 3px; }
+.shelf-item > summary::-webkit-details-marker { display: none; }
+.shelf-item > summary strong { font-size: var(--t-foot, 13px); overflow-wrap: anywhere; }
+.shelf-item > summary small { color: var(--muted); font-size: var(--t-cap, 12px); }
+.shelf-item .note-excerpt {
+  color: var(--fg-2); font-size: 13px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.shelf-item[open] .note-excerpt { display: none; }
+.depth-tag {
+  justify-self: start; text-transform: uppercase; letter-spacing: .06em;
+  font-size: 10px; color: var(--mod); font-weight: 600;
+}
+.note-history { list-style: none; margin: 10px 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.note-history li { border-top: 1px solid var(--line); padding-top: 8px; }
+.note-history time, .note-history small { color: var(--muted); font-size: var(--t-cap, 12px); }
+.note-history p { margin: 4px 0 0; font-size: 13px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* ── toast ── */
 .toast {
@@ -2277,6 +2313,7 @@ button, .btn, .tab, .back, .opener, .lesson-row, .recall-point,
 /* recall prompt mode tag (learn.js) */
 .prompt-mode{display:inline-block;margin:0 0 6px;padding:2px 10px;border-radius:999px;
   font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--accent, #5ee7a0);
+  background:rgba(94,231,160,.14);   /* Safari < 16.2 has no color-mix */
   background:color-mix(in srgb, currentColor 14%, transparent)}
 
 /* ═══ Phase 5 integration — styles for the markup main.js actually renders ═══
@@ -2332,3 +2369,29 @@ button.module-row + button.module-row { border-top: 1px solid var(--line); }
 
 /* ≤360px legacy ".list .card { flex-direction: row }" squeezes the Today hero; keep it stacked */
 .list .today-feature { flex-direction: column; align-items: stretch; }
+
+/* #statGrid carries both .stat-tiles and the legacy .statgrid, whose 2- and
+   4-column rules left an orphan tile or an empty cell. It always holds 3 tiles. */
+.stat-tiles.statgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.stat-tiles.statgrid .stat { min-width: 0; overflow-wrap: anywhere; }
+
+/* ── in-app AI: "Explain it simpler" (Watch + Check steps) and its key in Settings ── */
+.explain { margin: var(--s3, 12px) 0; display: flex; flex-direction: column; gap: var(--s2, 8px); }
+.explain-btn { align-self: flex-start; }
+.explain-out {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm, 10px);
+  padding: 12px 13px; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere;
+}
+.explain-out p { margin: 0 0 8px; }
+.explain-out p:last-child { margin-bottom: 0; }
+.explain-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s2, 8px); }
+.explain-meta small { color: var(--muted); font-size: var(--t-cap, 12px); }
+.linkish {
+  background: none; border: 0; padding: 4px 0; min-height: 32px; color: var(--accent, var(--fg));
+  font: inherit; font-size: var(--t-foot, 13px); text-decoration: underline; cursor: pointer;
+}
+#aiKey {
+  width: 100%; box-sizing: border-box; padding: 10px 12px; font: inherit; font-size: 16px;
+  color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm, 10px);
+}
+.ai-key-actions { display: flex; gap: var(--s2, 8px); margin-top: var(--s2, 8px); }

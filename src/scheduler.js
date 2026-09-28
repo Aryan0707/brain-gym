@@ -62,6 +62,20 @@ export function previewText(card, effectiveRating, nowMs){
   return `on ${fmt}`;
 }
 
+/* Short status tag for a card already in the deck, shown on each Library row
+ * (e.g. "Due", "✓ 5d"). Space is tight: aim for ≤ 8 characters.
+ *
+ * Card states to cover:
+ *   isDue(card, nowMs)            → ready to review now
+ *   card.relearning && !due       → rated 1, back within RELEARN_HOURS (hours, not days)
+ *   otherwise                     → scheduled; card.dueAt is a local midnight N days out
+ */
+export function dueLabel(card, nowMs){
+  if (isDue(card, nowMs)) return 'Due';
+  if (card.relearning) return `↻ ${Math.max(1, Math.ceil((card.dueAt - nowMs) / HOUR_MS))}h`;
+  return `✓ ${Math.max(1, Math.ceil((card.dueAt - nowMs) / DAY_MS))}d`;
+}
+
 function baseCard(){
   return { reps:0, lapses:0, ease:EASE_START, interval:0, dueAt:null,
            first:null, last:null, sum:0, avg:0, relearning:false };

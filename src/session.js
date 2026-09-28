@@ -38,6 +38,14 @@ export function capacity(S, moduleKey, nowMs = Date.now()){
   return Math.round((sum / all.length) * 100);
 }
 
+/* day rollover: a new calendar day drops yesterday's bonus videos. Returns true if it rolled. */
+export function rollDay(S, today = todayKey()){
+  if (S.sessionDate === today) return false;
+  S.sessionDate = today;
+  S.extra = 0;
+  return true;
+}
+
 /* streak ──────────────────────────────────────────────── */
 export function displayStreak(S){
   const last = S.streak?.last;

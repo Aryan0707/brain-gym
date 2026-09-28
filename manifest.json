@@ -17,9 +17,9 @@
   },
   "shortcuts": [
     {
-      "name": "Start today's rep",
-      "short_name": "Today",
-      "url": "./?go=today&start=1"
+      "name": "Start a rep",
+      "short_name": "Start",
+      "url": "./?start=1"
     },
     {
       "name": "Review queue",

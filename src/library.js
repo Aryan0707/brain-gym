@@ -4,11 +4,16 @@ export const LIB = { modules:{}, videos:[] };
 
 export async function loadLibrary(){
   const r = await fetch('library.json');
+  if (!r.ok) throw new Error(`library.json: HTTP ${r.status}`);
   const data = await r.json();
+  if (!data?.modules || !Array.isArray(data.videos)) throw new Error('library.json: bad shape');
   LIB.modules = data.modules;
   LIB.videos  = data.videos.slice();
   return LIB;
 }
+
+/* Drop every user-added video (before an import or reset replaces S.custom). */
+export function clearCustom(){ LIB.videos = LIB.videos.filter(v => !v.custom); }
 
 export const vid = key => LIB.videos.find(v => keyOf(v) === key);
 
@@ -22,6 +27,9 @@ export function reelIdFrom(url){
  * saves (reels only) keep working. The name stays for import/test callers. */
 export function rehydrateReel(c){
   if (LIB.videos.find(v => v.id === c.id)) return;
+  // A content update can rename or drop a module; re-file the video rather than
+  // leave it pointing at a module every renderer would fail to look up.
+  if (!LIB.modules[c.module]) c.module = Object.keys(LIB.modules)[0];
   if (c.src === 'yt') {
     LIB.videos.push({
       id: c.id, module: c.module, lang: c.lang, custom: true, src: 'yt', vertical: !!c.shorts,
