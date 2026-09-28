@@ -10,6 +10,12 @@ export function firstRepsToday(S){
 }
 export const repsToday = S => firstRepsToday(S).length;
 
+/* Daily goal = NEW videos started today (first ever rep). Reviews ride on top. */
+export function newRepsToday(S){
+  const t = todayKey();
+  return new Set(firstRepsToday(S).filter(l => S.done[l.id]?.first === t).map(l => l.id)).size;
+}
+
 export function repeatedToday(S, id){
   const t = todayKey();
   return S.log.some(l => l.id === id && (l.day || l.at?.slice(0,10)) === t);
@@ -66,16 +72,18 @@ export function pickSession(S, lang, extraRep, nowMs = Date.now()){
   const okLang = v => lang === 'all' || v.lang === lang;
   const push = v => { if (v && !seen.has(keyOf(v))) { seen.add(keyOf(v)); picks.push(v); } };
 
-  // Interleave reviews: most overdue first, but not two from the same module.
+  // Every due review, interleaved: most overdue first, no two from one module in a row.
   const due = dueList(S, nowMs).filter(x => okLang(x.v) && !repeatedToday(S, keyOf(x.v))).map(x => x.v);
-  interleave(due).slice(0, 2).forEach(push);
+  interleave(due).forEach(push);
+  const reviews = picks.length;
 
   // Weakest module first; inside a module, shortest first (a reel primes the deep video).
   const fresh = LIB.videos.filter(v => !S.done[keyOf(v)] && okLang(v));
   const cap = Object.fromEntries(Object.keys(LIB.modules).map(m => [m, capacity(S, m, nowMs)]));
   const cand = [...fresh].sort((a, b) => (cap[a.module] ?? 0) - (cap[b.module] ?? 0) || lengthOf(a) - lengthOf(b));
   let lastLang = null;
-  const target = Math.max(1, TARGET + S.extra - repsToday(S) + (extraRep ? 1 : 0));
+  // Reviews never eat the daily new-video goal.
+  const target = reviews + Math.max(extraRep ? 1 : 0, TARGET + S.extra - newRepsToday(S) + (extraRep ? 1 : 0));
   while (picks.length < target && cand.length) {
     const pool = cand.filter(v => !seen.has(keyOf(v)) && !picks.some(p => p.module === v.module));
     const usable = pool.length ? pool : cand.filter(v => !seen.has(keyOf(v)));

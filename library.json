@@ -1182,6 +1182,51 @@
    "thumb": "https://i.ytimg.com/vi/27UjxV4yBTc/mqdefault.jpg",
    "src": "yt",
    "vertical": false
+  },
+  {
+   "id": "foLf5Bi9qXs",
+   "module": "energy",
+   "lang": "en",
+   "title": "How does caffeine keep us awake? - Hanan Qasim",
+   "channel": "TED-Ed",
+   "dur": 315,
+   "views": 5869263,
+   "tier": "drill",
+   "why": "Caffeine keeps you awake by blocking adenosine, the chemical that builds sleep pressure all day.",
+   "prompt": "How caffeine tricks my brain into feeling awake, and the catch:",
+   "thumb": "https://i.ytimg.com/vi/foLf5Bi9qXs/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false
+  },
+  {
+   "id": "UMAELCrJxt0",
+   "module": "money",
+   "lang": "en",
+   "title": "What is Inflation?",
+   "channel": "The School of Life",
+   "dur": 480,
+   "views": 2023698,
+   "tier": "drill",
+   "why": "Inflation comes from rising costs, excess demand or printed money, and it quietly erodes the value of savings.",
+   "prompt": "Where inflation comes from, and what it does to my savings:",
+   "thumb": "https://i.ytimg.com/vi/UMAELCrJxt0/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false
+  },
+  {
+   "id": "DNXnX-ybBjI",
+   "module": "people",
+   "lang": "hi",
+   "title": "रिश्ते टूटने के दर्द से कैसे निकलें? | Sadhguru Hindi",
+   "channel": "Sadhguru Hindi",
+   "dur": 454,
+   "views": 148940,
+   "tier": "drill",
+   "why": "Why a broken relationship hurts so much, and how to come out of that pain with grace.",
+   "prompt": "Rishta tootne ka dard itna kyun hota hai — aur main usse kaise nikalunga:",
+   "thumb": "https://i.ytimg.com/vi/DNXnX-ybBjI/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false
   }
  ],
  "reel_note": "Instagram embeds verified in-browser (video element rendered). Signed IG CDN thumbnail URLs expire, so reels render a text tile instead."

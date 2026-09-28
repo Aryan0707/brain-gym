@@ -16,7 +16,7 @@ import { blank, save, loadState, sanitizeState, migrateV1toV2,
          backupCurrent, restoreLatestBackup } from './state.js';
 import { nextReview, previewText, retention, isDue, RELEARN_HOURS,
          HOUR_MS, DAY_MS, localMidnight } from './scheduler.js';
-import { firstRepsToday, repsToday, repeatedToday, dueList, capacity,
+import { firstRepsToday, repsToday, newRepsToday, repeatedToday, dueList, capacity,
          displayStreak, bumpStreak, pickSession, interleave } from './session.js';
 import { watchSatisfied, accumulateWatch } from './watch.js';
 import { PROMPT_MODES, choosePromptMode, promptFor } from './learn.js';
@@ -272,7 +272,7 @@ function renderChrome(){
       : `<svg aria-hidden="true"><use href="#i-${name==='library'?'plus':'settings'}"></use></svg>`;
     action.setAttribute('aria-label', name==='today'?'View streak and progress':name==='library'?'Add a reel or YouTube link':'Open settings');
   }
-  const t = repsToday(S), goal = TARGET + S.extra;
+  const t = newRepsToday(S), goal = TARGET + S.extra;
   const off = 113 - Math.min(1, t / goal) * 113;
   $('#ringFg').style.strokeDashoffset = off;
   $('#ringTxt').textContent = `${t}/${goal}`;
@@ -303,38 +303,47 @@ function featureCard(v, position, total){
     <div class="feature-body"><p class="feature-eyebrow">Up next · ${position} of ${total}</p>
       <h2>${esc(v.title)}</h2>
       <p class="feature-meta">${esc(mod[0])} · ${esc(durLabel(v))} · ${v.lang === 'hi' ? 'हिंदी' : 'English'}</p>
-      <div class="feature-segments" role="img" aria-label="${repsToday(S)} of ${TARGET + S.extra} done">${
-        Array.from({length:TARGET + S.extra},(_,i)=>`<i class="${i<repsToday(S)?'complete':''}"></i>`).join('')}</div>
+      <div class="feature-segments" role="img" aria-label="${newRepsToday(S)} of ${TARGET + S.extra} new done">${
+        Array.from({length:TARGET + S.extra},(_,i)=>`<i class="${i<newRepsToday(S)?'complete':''}"></i>`).join('')}</div>
       <button class="btn big" data-open="${esc(id)}">${due ? 'Review' : 'Start rep'}</button>
     </div></article>`;
 }
 function renderToday(){
-  const done = repsToday(S) >= TARGET + S.extra;
+  const goal = TARGET + S.extra, newDone = newRepsToday(S);
+  const done = newDone >= goal;
   $('#screen-today').classList.toggle('is-done', done);
-  const due = dueList(S).filter(x => lang === 'all' || x.v.lang === lang).map(x => x.v);
-  const picks = pickSession(S, lang, S.extra > 0 || extra);
-  const queue = [...new Map([...due,...picks].map(v=>[keyOf(v),v])).values()];
+  const picks = pickSession(S, lang, extra && done);
+  const reviews = picks.filter(v => S.done[keyOf(v)]);
+  const fresh = picks.filter(v => !S.done[keyOf(v)]);
   if ($('#todaySkeleton')) $('#todaySkeleton').hidden = true;
   $('#dueSection').innerHTML = '';
   $('#sessionCards').innerHTML = '';
-  if (done && !extra) {
+  const reviewList = reviews.length
+    ? `<h2 class="sh">Reviews due · quick recall</h2><div class="row-group">${reviews.slice(0,6).map(v=>lessonRow(v,'today')).join('')}</div>`
+      + (reviews.length > 6 ? `<p class="muted">+${reviews.length - 6} more after these</p>` : '')
+    : '';
+  $('#ringTxt').textContent = `${newDone}/${goal}`;
+  if (done && !(extra && fresh.length)) {
     $('#sessDone').hidden = false;
     const xpToday = S.log.filter(l => l.day === todayKey()).reduce((n,l)=>n+(l.repeat ? 2 : 10+l.rating*2),0);
     const tomorrow = Object.values(S.done).filter(d=>d.dueAt > Date.now() && d.dueAt < Date.now()+2*DAY_MS).length;
-    $('#sessDoneSub').textContent = `${repsToday(S)} of ${TARGET+S.extra} done · +${xpToday} xp today · ${tomorrow} reviews tomorrow`;
+    $('#sessDoneSub').textContent = `${newDone} new videos done · +${xpToday} xp today · ${tomorrow} reviews tomorrow`;
+    $('#sessionCards').innerHTML = reviewList;
     return;
   }
   $('#sessDone').hidden = true;
-  if (queue.length) {
-    $('#sessionCards').innerHTML = featureCard(queue[0], Math.min(repsToday(S)+1,TARGET+S.extra), TARGET+S.extra)
-      + (queue.length > 1 ? `<h2 class="sh">Also today</h2><div class="row-group">${queue.slice(1,4).map(v=>lessonRow(v,'today')).join('')}</div>` : '');
+  const lead = fresh[0] || reviews[0];
+  if (lead) {
+    const moreNew = fresh.slice(1, goal - newDone);
+    $('#sessionCards').innerHTML = featureCard(lead, Math.min(newDone + 1, goal), goal)
+      + (moreNew.length ? `<h2 class="sh">Also new today</h2><div class="row-group">${moreNew.map(v=>lessonRow(v,'today')).join('')}</div>` : '')
+      + (fresh[0] ? reviewList : '');
   } else {
-    $('#sessionCards').innerHTML = `<div class="emptystate"><p>You've trained every lesson in ${lang==='hi'?'हिंदी':lang==='en'?'English':'this library'}. Switch language or run reviews.</p><button class="btn ghost" data-open-sheet="filters">Switch language</button></div>`;
+    $('#sessionCards').innerHTML = `<div class="emptystate"><p>You've trained every lesson in ${lang==='hi'?'हिंदी':lang==='en'?'English':'this library'}. New videos arrive every morning.</p><button class="btn ghost" data-open-sheet="filters">Switch language</button></div>`;
   }
-  const left = Math.max(0, TARGET + S.extra - repsToday(S));
-  $('#sessTitle').textContent = left ? `${left} rep${left > 1 ? 's' : ''} to go` : 'Session complete';
-  $('#sessSub').textContent = due.length ? `${due.length} review${due.length > 1 ? 's' : ''} ready.` : 'Watch. Recall. Rate. Repeat.';
-  $('#ringTxt').textContent = `${repsToday(S)}/${TARGET + S.extra}`;
+  const left = Math.max(0, goal - newDone);
+  $('#sessTitle').textContent = left ? `${left} new video${left > 1 ? 's' : ''} to go` : 'Session complete';
+  $('#sessSub').textContent = reviews.length ? `${reviews.length} review${reviews.length > 1 ? 's' : ''} due on top.` : 'Watch. Recall. Rate. Repeat.';
 }
 
 /* ── render: library ───────────────────────────────────── */
@@ -511,10 +520,12 @@ function finishRep(){
   save(S);
   if (S.log.length === 1) navigator.storage?.persist?.().catch(() => {});
   renderAll();
-  $('#doneRing').textContent = `${repsToday(S)}/${TARGET + S.extra}`;
+  $('#doneRing').textContent = `${newRepsToday(S)}/${TARGET + S.extra}`;
   $('#doneXP').textContent = `+${xp} xp${isRepeat ? ' · same-day repeat (goal unchanged)' : ''}`;
   $('#doneDue').textContent = isRepeat ? 'Schedule unchanged' : `Back ${nextText}`;
-  const next = pickSession(S, lang, false).find(x => keyOf(x) !== id && !repeatedToday(S, keyOf(x)));
+  const nextPool = pickSession(S, lang, false).filter(x => keyOf(x) !== id && !repeatedToday(S, keyOf(x)));
+  const wantNew = newRepsToday(S) < TARGET + S.extra;   // new videos first until today's goal is met
+  const next = (wantNew && nextPool.find(x => !S.done[keyOf(x)])) || nextPool[0];
   $('#btnNextRep').hidden = !next;
   $('#btnNextRep').dataset.next = next ? keyOf(next) : '';
   setTrainerStep('done');
@@ -897,7 +908,7 @@ function wire(){
 
   // ── test hook: same surface as Phase 0/1 plus the pure functions. ──
   window.__bg = {
-    openTrainer, todayKey, repsToday: () => repsToday(S), LIB,
+    openTrainer, todayKey, repsToday: () => repsToday(S), newRepsToday: () => newRepsToday(S), LIB,
     S: () => S, setS: (next) => { S = next; save(S); renderAll(); },
     nextReview, previewText, retention, isDue, capacity: (m) => capacity(S, m),
     dueList: () => dueList(S), pickSession: (extraRep) => pickSession(S, lang, !!extraRep),
