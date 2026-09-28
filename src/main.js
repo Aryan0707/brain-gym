@@ -1,0 +1,911 @@
+/* B.R.A.I.N. main entry — boots the app, wires the DOM, owns render.
+ *
+ * Pure logic lives in scheduler.js / state.js / session.js / library.js / util.js.
+ * This file is the only one that touches the DOM. Split further in Phase 5
+ * when the mobile UI is rewritten.
+ *
+ * Test surface: `window.__bg` and `window.LIB`/`openTrainer`/`todayKey` are set
+ * at the end of boot(). Do not remove — tests target those names.
+ */
+import { $, DAY, TARGET, KEY, RANKS, todayKey, days, mins, durLabel,
+         embedSrc, watchUrl, keyOf, segmentDuration, esc, toast } from './util.js';
+import { LIB, loadLibrary, vid, rehydrateReel } from './library.js';
+import { parseLink, linkFromSearch } from './intake.js';
+import { blank, save, loadState, sanitizeState, migrateV1toV2,
+         loadDraft, saveDraft, clearDraft, pruneDrafts,
+         backupCurrent, restoreLatestBackup } from './state.js';
+import { nextReview, previewText, retention, isDue, RELEARN_HOURS,
+         HOUR_MS, DAY_MS, localMidnight } from './scheduler.js';
+import { firstRepsToday, repsToday, repeatedToday, dueList, capacity,
+         displayStreak, bumpStreak, pickSession, interleave } from './session.js';
+import { watchSatisfied, accumulateWatch } from './watch.js';
+import { PROMPT_MODES, choosePromptMode, promptFor } from './learn.js';
+
+/* ── mutable UI/session state ──────────────────────────── */
+let S = null;
+let lang = 'all';
+let modFilter = 'all';
+let tierFilter = 'all';
+let srcFilter = 'all';
+let q = '';
+let extra = false;
+let current = null;
+let pendingRating = 0;
+let recallRevealed = false;
+let promptMode = 'recall';
+let noteSnapshot = '';
+let trainerStep = '';
+let watch = { pct:0, ended:false, verified:false, override:false };
+let watchedSeconds = 0, previousVideoTime = null, pollWatch = null, ytPlayer = null;
+let ytAPIPromise = null, rewatching = false;
+let activeTab = 'today', activeRoute = 'today', openSheetName = null, sheetOpener = null;
+const scrollPositions = { today:0, library:0, progress:0 };
+let installedPrompt = null, noteQuery = '';
+const routeQuery = route => `?go=${encodeURIComponent(route)}`;
+const routeFromURL = () => new URLSearchParams(location.search).get('go') || 'today';
+const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const motion = fn => {
+  if (!document.startViewTransition || reduceMotion()) { fn(); return null; }
+  const transition = document.startViewTransition(fn);
+  // Rapid tab changes can skip a view transition; that is not an app error.
+  transition.ready.catch(() => {});
+  transition.finished.catch(() => {});
+  return transition;
+};
+function keyboardInset(){
+  const vv = window.visualViewport;
+  const inset = vv ? Math.max(0, window.innerHeight - vv.height - vv.offsetTop) : 0;
+  document.documentElement.style.setProperty('--kb', `${inset}px`);
+}
+function setHistory(route, mode='push'){
+  if (mode === 'none') return;
+  history[mode === 'replace' ? 'replaceState' : 'pushState']({ route }, '', routeQuery(route));
+}
+function setBackgroundInert(trainer){
+  for (const node of [$('.appbar') || $('.top-nav'), $('.screens'), $('.tabbar')]) if (node) node.inert = trainer;
+}
+function focusRoute(name){
+  const title = name === 'train' ? $('#stepLabel') : document.querySelector(`#screen-${name} h1, #screen-${name} h2`);
+  if (title) { title.tabIndex = -1; title.focus({preventScroll:true}); }
+}
+
+
+/* ── video watch tracking ───────────────────────────────── */
+function youtubeAPI(){
+  if (window.YT?.Player) return Promise.resolve(window.YT);
+  if (ytAPIPromise) return ytAPIPromise;
+  ytAPIPromise = new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error('YouTube API timeout')), 7000);
+    window.onYouTubeIframeAPIReady = () => { clearTimeout(timeout); resolve(window.YT); };
+    const script = document.createElement('script');
+    script.src = 'https://www.youtube.com/iframe_api';
+    script.onerror = () => { clearTimeout(timeout); reject(new Error('YouTube API blocked')); };
+    document.head.append(script);
+  }).catch(err => { ytAPIPromise = null; throw err; });
+  return ytAPIPromise;
+}
+function stopPlayer(){
+  clearInterval(pollWatch); pollWatch = null; previousVideoTime = null;
+  if (ytPlayer) { try { ytPlayer.pauseVideo(); ytPlayer.destroy(); } catch {} ytPlayer = null; }
+  const node = $('#ytPlayer');
+  if (node) node.replaceWith(Object.assign(document.createElement('div'), { id:'ytPlayer' }));
+  else $('.player').prepend(Object.assign(document.createElement('div'), { id:'ytPlayer' }));
+  $('#frame').src = 'about:blank';
+  $('#frame').hidden = false;
+}
+function updateWatchUI(){
+  if (!current) return;
+  if (current.src === 'ig') {
+    $('#watchStatus').textContent = 'Instagram has no watch tracking. Your completion is self-reported.';
+  } else {
+    $('#watchStatus').textContent = watch.ended ? 'Video ended.'
+      : `${Math.floor(watch.pct * 100)}% watched · 80% or end unlocks recall.`;
+  }
+  $('#btnWatched').disabled = !rewatching && !watchSatisfied({ src:current.src, ...watch });
+}
+async function startPlayer(v){
+  stopPlayer();
+  const key = keyOf(v);
+  const fallback = $('#frame');
+  fallback.src = embedSrc(v);
+  if (v.src === 'ig') return;
+  try {
+    const YT = await youtubeAPI();
+    if (!current || keyOf(current) !== key || trainerStep !== 'watch') return;
+    const knownLength = segmentDuration(v);
+    fallback.src = 'about:blank'; fallback.hidden = true;
+    ytPlayer = new YT.Player('ytPlayer', {
+      host:'https://www.youtube-nocookie.com', videoId:v.id,
+      playerVars:{ playsinline:1, rel:0, modestbranding:1,
+        ...(Number.isFinite(v.start) ? { start:v.start } : {}),
+        ...(Number.isFinite(v.end) ? { end:v.end } : {}) },
+      events:{
+        onStateChange(e){
+          if (e.data === YT.PlayerState.PLAYING) {
+            previousVideoTime = e.target.getCurrentTime();
+            clearInterval(pollWatch);
+            pollWatch = setInterval(() => {
+              if (!current || keyOf(current) !== key || trainerStep !== 'watch') return;
+              try {
+                const t = e.target.getCurrentTime();
+                watchedSeconds = accumulateWatch(watchedSeconds, previousVideoTime, t);
+                previousVideoTime = t;
+                const length = knownLength || e.target.getDuration?.() || 0;
+                watch.pct = length ? Math.min(1, watchedSeconds / length) : 0;
+                updateWatchUI();
+              } catch {}
+            }, 1000);
+          } else {
+            clearInterval(pollWatch); pollWatch = null; previousVideoTime = null;
+            if (e.data === YT.PlayerState.ENDED) {
+              watch.ended = true; watch.pct = 1; updateWatchUI();
+            }
+          }
+        },
+        onError(){
+          stopPlayer(); fallback.src = embedSrc(v);
+          $('#watchStatus').textContent = 'Player unavailable. Use self-report after watching.';
+          $('#btnWatchedExternal').textContent = 'I watched it (self-report)';
+        },
+      },
+    });
+  } catch {
+    $('#watchStatus').textContent = 'Watch tracking unavailable. Use self-report after watching.';
+    $('#btnWatchedExternal').textContent = 'I watched it (self-report)';
+  }
+}
+function setTrainerStep(step){
+  trainerStep = step;
+  for (const name of ['watch','recall','check','done'])
+    $(`#step${name[0].toUpperCase()}${name.slice(1)}`).hidden = step !== name;
+  const titles = { watch:'1 · Watch', recall:'Recall · from memory', check:'Check & rate', done:'Done' };
+  $('#stepLabel').textContent = titles[step];
+  $('#tOpen').hidden = step === 'recall' || step === 'done';
+  if (step !== 'watch') stopPlayer();
+  if (step === 'recall') {
+    updateFinishState();
+    setTimeout(() => $('#tNote').focus(), 0);
+  }
+  if (step === 'watch') startPlayer(current);
+  window.scrollTo({top:0,behavior:'instant'});
+  if ($('#trainSteps')) {
+    $('#trainSteps').setAttribute('aria-label', `Step ${({watch:1,recall:2,check:3,done:3})[step]} of 3, ${step}`);
+    $('#trainSteps').dataset.step = step;
+  }
+  if ($('#trainerAction')) $('#trainerAction').dataset.step = step;
+  if ($('#trainerSecondary')) $('#trainerSecondary').dataset.step = step;
+}
+
+/* ── trainer helpers ───────────────────────────────────── */
+let earlierNotes = [];
+const recallSource = () => current?.recallKeys?.length ? 'curated'
+  : (S?.done[keyOf(current)] && earlierNotes.length ? 'own-note' : null);
+const hasRecallNote = () => $('#tNote').value.trim().length >= 15;
+const matchedPoints = () => document.querySelectorAll('#pointList input:checked').length;
+const effectiveRating = () => recallSource() === 'curated'
+  ? Math.min(pendingRating, [1, 2, 3, 5][matchedPoints()])
+  : recallSource() === 'own-note' && !matchedPoints() ? Math.min(pendingRating, 2)
+  : pendingRating;
+
+function currentPreview(){
+  if (!current || !pendingRating) return '';
+  const card = S.done[keyOf(current)] || null;
+  return previewText(card, effectiveRating(), Date.now());
+}
+
+function updateRecallHint(){
+  if (!pendingRating) return;
+  const preview = currentPreview();
+  const source = recallSource();
+  $('#schedHint').textContent = source === 'curated'
+    ? `${matchedPoints()}/${current.recallKeys.length} points recalled. Review ${preview}. Self-checked, not automatically graded.`
+    : source === 'own-note'
+      ? `Your earlier note: ${matchedPoints() ? 'core present' : 'core missing (rating capped at 2)'}. Review ${preview}. Self-checked.`
+      : `Self-rated review: ${preview}.`;
+}
+function updateFinishState(){
+  const left = Math.max(0, 15 - $('#tNote').value.trim().length);
+  $('#noteCounter').textContent = left ? `${left} more character${left === 1 ? '' : 's'}` : 'Ready to check';
+  $('#btnCheck').disabled = !hasRecallNote() || recallRevealed;
+  $('#btnFinish').disabled = trainerStep !== 'check' || !pendingRating || !recallRevealed;
+}
+
+/* ── addLink/removeReel: any Instagram or YouTube link ─── */
+function addLink(raw, module, langCode, msg = $('#addReelMsg')){
+  const link = parseLink(raw);
+  const say = (text, err=false) => { if (msg) { msg.textContent = text; msg.className = err ? 'muted err' : 'muted'; } };
+  if (!link) { say('That is not an Instagram reel or YouTube link.', true); return false; }
+  if (!LIB.modules[module]) { say('Pick a module first.', true); return false; }
+  const { id, src } = link;
+  if (openSheetName) closeSheet({historyMode:'replace'});
+  if (vid(id)) { toast('already in your library'); openTrainer(id); return true; }
+  const item = { id, module, lang: langCode, ...(src === 'yt' ? { src, ...(link.shorts ? { shorts:true } : {}) } : {}) };
+  rehydrateReel(item);
+  S.custom.push(item);
+  save(S);
+  try { localStorage.setItem('braingym.lastAdd', JSON.stringify({ module, lang: langCode })); } catch {}
+  say('');
+  toast(src === 'ig' ? 'reel added — if it will not play, Instagram blocks embedding it' : 'video added');
+  renderAll();
+  openTrainer(id);
+  return true;
+}
+/* Prefill the add sheet: a shared link, plus the module/language used last time. */
+function openAddSheet(prefill = '', opener = document.activeElement){
+  let last = {};
+  try { last = JSON.parse(localStorage.getItem('braingym.lastAdd') || '{}'); } catch {}
+  $('#addReelUrl').value = prefill;
+  if (LIB.modules[last.module]) $('#addReelMod').value = last.module;
+  if (['hi','en'].includes(last.lang)) $('#addReelLang').value = last.lang;
+  updateAddPreview();
+  openSheet('addReel', opener);
+}
+function updateAddPreview(){
+  const raw = $('#addReelUrl').value, link = parseLink(raw);
+  $('#addReelMsg').className = raw && !link ? 'muted err' : 'muted';
+  $('#addReelMsg').textContent = !raw.trim() ? ''
+    : !link ? 'Not recognised — paste an Instagram reel or YouTube link.'
+    : vid(link.id) ? 'Already in your library — Add opens it.'
+    : link.src === 'ig' ? '✓ Instagram reel' : `✓ YouTube ${link.shorts ? 'Short' : 'video'}`;
+}
+function removeReel(id){
+  LIB.videos = LIB.videos.filter(v => v.id !== id);
+  S.custom = S.custom.filter(c => c.id !== id);
+  delete S.done[id];
+  save(S); renderAll(); toast('reel removed');
+}
+
+/* ── render: chrome ────────────────────────────────────── */
+function renderChrome(){
+  $('#mStreak').textContent = displayStreak(S);
+  $('#mXP').textContent = S.xp;
+  const L = level();
+  $('#mLevel').textContent = L;
+  $('#mRank').textContent = RANKS[L - 1];
+  $('#heroLvl').textContent = `Level ${L} · ${RANKS[L - 1]}`;
+  $('#mDue').textContent = dueList(S).length;
+  if ($('#navAction')) {
+    const action=$('#navAction');
+    const name=action.dataset.screen || activeTab;
+    action.innerHTML = name==='today'
+      ? `<svg aria-hidden="true"><use href="#i-flame"></use></svg><span>${displayStreak(S)}</span>`
+      : `<svg aria-hidden="true"><use href="#i-${name==='library'?'plus':'settings'}"></use></svg>`;
+    action.setAttribute('aria-label', name==='today'?'View streak and progress':name==='library'?'Add a reel or YouTube link':'Open settings');
+  }
+  const t = repsToday(S), goal = TARGET + S.extra;
+  const off = 113 - Math.min(1, t / goal) * 113;
+  $('#ringFg').style.strokeDashoffset = off;
+  $('#ringTxt').textContent = `${t}/${goal}`;
+}
+function level(){ return Math.min(8, 1 + Math.floor(S.xp / 150)); }
+
+function lessonRow(v, mode='library'){
+  const id = keyOf(v), d = S.done[id], mod = LIB.modules[v.module];
+  const due = d && isDue(d, Date.now());
+  const label = mode === 'library' ? (!d ? 'New' : due ? 'Due' : `✓ ${Math.max(1,Math.ceil((d.dueAt-Date.now())/DAY_MS))}d`)
+    : due ? 'Review · due today' : `${mod[0]} · ${durLabel(v)}`;
+  return `<div class="row-item"><button class="lesson-row card" data-open="${esc(id)}" aria-label="${esc(v.title)}. ${esc(label)}">
+    <span class="row-art${v.src === 'ig' ? ' reel-art' : ''}">${v.src === 'ig'
+      ? '<svg aria-hidden="true"><use href="#i-play"></use></svg>'
+      : `<img loading="lazy" draggable="false" src="${esc(v.thumb)}" alt="">`}</span>
+    <span class="row-copy"><strong>${esc(v.title)}</strong><small>${esc(label)}</small></span>
+    ${mode === 'library' ? `<span class="row-state">${esc(label)}</span>` : ''}
+    <svg class="row-chevron" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+  </button>${v.custom && mode==='library' ? `<button class="remove-reel" data-rm="${esc(v.id)}" aria-label="Remove ${esc(v.title)}"><svg aria-hidden="true"><use href="#i-x"></use></svg></button>` : ''}</div>`;
+}
+function featureCard(v, position, total){
+  const id = keyOf(v), due = !!S.done[id], mod = LIB.modules[v.module];
+  return `<article class="today-feature card" style="--mod:${esc(mod[1])}">
+    <div class="feature-art${v.src === 'ig' ? ' reel-art' : ''}">${v.src === 'ig'
+      ? '<svg aria-hidden="true"><use href="#i-play"></use></svg>'
+      : `<img src="${esc(v.thumb)}" alt="" draggable="false">`}</div>
+    <div class="feature-body"><p class="feature-eyebrow">Up next · ${position} of ${total}</p>
+      <h2>${esc(v.title)}</h2>
+      <p class="feature-meta">${esc(mod[0])} · ${esc(durLabel(v))} · ${v.lang === 'hi' ? 'हिंदी' : 'English'}</p>
+      <div class="feature-segments" role="img" aria-label="${repsToday(S)} of ${TARGET + S.extra} done">${
+        Array.from({length:TARGET + S.extra},(_,i)=>`<i class="${i<repsToday(S)?'complete':''}"></i>`).join('')}</div>
+      <button class="btn big" data-open="${esc(id)}">${due ? 'Review' : 'Start rep'}</button>
+    </div></article>`;
+}
+function renderToday(){
+  const done = repsToday(S) >= TARGET + S.extra;
+  $('#screen-today').classList.toggle('is-done', done);
+  const due = dueList(S).filter(x => lang === 'all' || x.v.lang === lang).map(x => x.v);
+  const picks = pickSession(S, lang, S.extra > 0 || extra);
+  const queue = [...new Map([...due,...picks].map(v=>[keyOf(v),v])).values()];
+  if ($('#todaySkeleton')) $('#todaySkeleton').hidden = true;
+  $('#dueSection').innerHTML = '';
+  $('#sessionCards').innerHTML = '';
+  if (done && !extra) {
+    $('#sessDone').hidden = false;
+    const xpToday = S.log.filter(l => l.day === todayKey()).reduce((n,l)=>n+(l.repeat ? 2 : 10+l.rating*2),0);
+    const tomorrow = Object.values(S.done).filter(d=>d.dueAt > Date.now() && d.dueAt < Date.now()+2*DAY_MS).length;
+    $('#sessDoneSub').textContent = `${repsToday(S)} of ${TARGET+S.extra} done · +${xpToday} xp today · ${tomorrow} reviews tomorrow`;
+    return;
+  }
+  $('#sessDone').hidden = true;
+  if (queue.length) {
+    $('#sessionCards').innerHTML = featureCard(queue[0], Math.min(repsToday(S)+1,TARGET+S.extra), TARGET+S.extra)
+      + (queue.length > 1 ? `<h2 class="sh">Also today</h2><div class="row-group">${queue.slice(1,4).map(v=>lessonRow(v,'today')).join('')}</div>` : '');
+  } else {
+    $('#sessionCards').innerHTML = `<div class="emptystate"><p>You've trained every lesson in ${lang==='hi'?'हिंदी':lang==='en'?'English':'this library'}. Switch language or run reviews.</p><button class="btn ghost" data-open-sheet="filters">Switch language</button></div>`;
+  }
+  const left = Math.max(0, TARGET + S.extra - repsToday(S));
+  $('#sessTitle').textContent = left ? `${left} rep${left > 1 ? 's' : ''} to go` : 'Session complete';
+  $('#sessSub').textContent = due.length ? `${due.length} review${due.length > 1 ? 's' : ''} ready.` : 'Watch. Recall. Rate. Repeat.';
+  $('#ringTxt').textContent = `${repsToday(S)}/${TARGET + S.extra}`;
+}
+
+/* ── render: library ───────────────────────────────────── */
+function renderLibrary(){
+  const mods = ['all', ...Object.keys(LIB.modules)];
+  $('#modChips').innerHTML = mods.map(m => {
+    const label = m === 'all' ? 'All modules' : LIB.modules[m][0];
+    return `<button data-mod="${m}" class="module-chip${modFilter === m ? ' on' : ''}" ${m==='all'?'':`style="--mod:${esc(LIB.modules[m][1])}"`}>${m==='all'?'':'<i aria-hidden="true"></i>'}${esc(label)}</button>`;
+  }).join('');
+  const list = LIB.videos.filter(v =>
+    (modFilter === 'all' || v.module === modFilter) &&
+    (lang === 'all' || v.lang === lang) &&
+    (srcFilter === 'all' || v.src === srcFilter) &&
+    (tierFilter === 'all' || v.tier === tierFilter || (tierFilter === 'drill' && !v.dur)) &&
+    (!q || (v.title + ' ' + v.channel + ' ' + v.why).toLowerCase().includes(q)));
+  $('#libCount').textContent = `${LIB.videos.filter(v => S.done[keyOf(v)]).length}/${LIB.videos.length}`;
+  $('#libCards').innerHTML = list.length
+    ? (modFilter === 'all' ? Object.keys(LIB.modules).map(m => {
+      const matches = list.filter(v => v.module === m);
+      return matches.length ? `<h2 class="sh">${esc(LIB.modules[m][0])}</h2><div class="row-group">${matches.map(v=>lessonRow(v)).join('')}</div>` : '';
+    }).join('') : `<div class="row-group">${list.map(v=>lessonRow(v)).join('')}</div>`)
+    : `<div class="emptystate">No lessons match ${q ? `“${esc(q)}”` : 'your filters'}. <button class="btn ghost" id="emptyClearSearch">Clear search</button></div>`;
+  if ($('#filterCount')) {
+    const count = [srcFilter !== 'all',tierFilter !== 'all',lang !== 'all'].filter(Boolean).length;
+    $('#filterCount').textContent = count; $('#filterCount').hidden = !count;
+  }
+}
+
+/* ── render: progress ──────────────────────────────────── */
+function renderProgress(){
+  $('#capacities').innerHTML = Object.keys(LIB.modules).map(m => {
+    const c = capacity(S, m), mod = LIB.modules[m];
+    const all = LIB.videos.filter(v => v.module === m).length;
+    const seen = LIB.videos.filter(v => v.module === m && S.done[keyOf(v)]).length;
+    return `<button class="module-row" data-module-go="${esc(m)}" style="--mod:${esc(mod[1])}">
+      <span class="module-label"><i aria-hidden="true"></i><strong>${esc(mod[0])}</strong></span>
+      <span class="module-progress">${c}% <small>${seen} of ${all} seen</small></span>
+      <span class="bar"><i style="width:${c}%"></i></span></button>`;
+  }).join('');
+  const checked = S.log.filter(l => l.recall);
+  const checkedSummary = checked.length
+    ? `${checked.reduce((n,l)=>n+l.recall.matched,0)}/${checked.reduce((n,l)=>n+l.recall.total,0)} self-checked recall` : 'No self-checks yet';
+  $('#statGrid').innerHTML = [
+    [displayStreak(S),'Streak',`Best ${S.streak.best}`],
+    [dueList(S).length,'Due now','Reviews ready'],
+    [S.notes.length,'Ideas kept',checkedSummary],
+  ].map(([value,label,sub])=>`<div class="stat"><b>${value}</b><span>${label}</span><small>${esc(sub)}</small></div>`).join('');
+  const due = dueList(S);
+  $('#queueList').innerHTML = due.length ? `<div class="row-group">${due.map(x=>lessonRow(x.v,'today')).join('')}</div>`
+    : '<p class="muted">Queue empty. Everything is scheduled ahead.</p>';
+  const notes = [...S.notes].reverse().filter(n => !noteQuery || (n.text+' '+n.title).toLowerCase().includes(noteQuery)).slice(0,60);
+  $('#notebook').innerHTML = notes.length
+    ? notes.map(n=>`<details class="note"><summary><time>${esc(n.day || n.at?.slice(0,10) || '')}</time><strong>${esc(n.title)}</strong>
+        <span class="note-excerpt">${esc(n.text)}</span><small>${n.recall ? `${n.recall.matched}/${n.recall.total} checked` : `${n.rating}/5 self-rated`}</small></summary><p>${esc(n.text)}</p></details>`).join('')
+    : '<p class="muted">No ideas written down yet. Your notebook fills after a rep.</p>';
+  if ($('#progressEmpty')) $('#progressEmpty').hidden = S.log.length > 0;
+}
+
+/* ── trainer ───────────────────────────────────────────── */
+function openTrainer(id, {historyMode='push'}={}){
+  const v = vid(id); if (!v) return;
+  stopPlayer();
+  current = v; pendingRating = 0; recallRevealed = false; noteSnapshot = '';
+  rewatching = false;
+  watch = { pct:0, ended:false, verified:false, override:false };
+  watchedSeconds = 0;
+  earlierNotes = S.notes.filter(n => n.id === keyOf(v)).slice(-3).reverse();
+  document.querySelector('.player').classList.toggle('vertical', !!v.vertical);
+  $('#tOpen').href = watchUrl(v);
+  $('#tOpen').innerHTML = '<svg aria-hidden="true"><use href="#i-external"></use></svg>';
+  $('#tOpen').setAttribute('aria-label', v.src === 'ig' ? 'Open on Instagram' : 'Open on YouTube');
+  $('#tTitle').textContent = v.title;
+  $('#frame').title = `Lesson video: ${v.title}`;
+  $('#tChannel').textContent = v.channel;
+  $('#tMod').textContent = LIB.modules[v.module][0];
+  $('#tMod').style.setProperty('--mod', LIB.modules[v.module][1]);
+  $('#tLang').textContent = v.lang === 'hi' ? 'Hindi' : 'English';
+  $('#tDur').textContent = segmentDuration(v) ? mins(segmentDuration(v)) : (v.src === 'ig' ? 'reel' : '—');
+  $('#tWhy').textContent = v.why;
+  const card = S.done[keyOf(v)];
+  const pastModes = S.log.filter(l => l.id === keyOf(v) && !l.repeat).map(l => l.mode || 'recall');
+  promptMode = choosePromptMode({ reps: card?.reps || 0, lapses: card?.lapses || 0,
+    lastRating: S.log.findLast(l => l.id === keyOf(v))?.rating ?? null, pastModes });
+  if (!PROMPT_MODES[promptMode]) promptMode = 'recall';
+  $('#tPromptMode').textContent = PROMPT_MODES[promptMode].label;
+  $('#tPromptMode').hidden = promptMode === 'recall';
+  $('#tPrompt').textContent = '› ' + promptFor(v, promptMode);
+  $('#tNote').value = loadDraft(keyOf(v));
+  $('#tNote').disabled = false;
+  $('#tNoteSnapshot').textContent = '';
+  $('#keyPoints').hidden = true;
+  $('#pointList').replaceChildren();
+  $('#selfRatedNote').hidden = true;
+  document.querySelectorAll('#rate button').forEach(b => b.classList.remove('on'));
+  $('#btnFinish').disabled = true;
+  $('#btnWatched').textContent = v.src === 'ig' ? 'I watched the reel (self-report)' : "I've watched it";
+  $('#btnWatchedExternal').hidden = v.src === 'ig';
+  $('#btnWatchedExternal').textContent = 'Watched in the YouTube app';
+  $('#schedHint').textContent = S.done[keyOf(v)]
+    ? `Rep ${S.done[keyOf(v)].reps + 1} · last rating ${S.done[keyOf(v)].avg}/5`
+    : 'Your self-check sets the next practice date.';
+  go('train',{historyMode});
+  setTrainerStep(S.done[keyOf(v)] ? 'recall' : 'watch');
+  updateWatchUI();
+}
+
+function checkRecall(){
+  if (trainerStep !== 'recall' || !hasRecallNote() || recallRevealed) return;
+  noteSnapshot = $('#tNote').value.trim();
+  recallRevealed = true;
+  $('#tNote').disabled = true;
+  $('#tNoteSnapshot').textContent = noteSnapshot;
+  const source = recallSource();
+  const points = source === 'curated' ? current.recallKeys : source === 'own-note'
+    ? ['Today\'s note contains the core of my earlier note.'] : [];
+  $('#keyPoints').hidden = !points.length;
+  $('#selfRatedNote').hidden = !!points.length;
+  $('#pointList').innerHTML = points.map((point, i) =>
+    `<label class="recall-point"><input type="checkbox" value="${i}"><span>${esc(point)}</span></label>`).join('');
+  if (source === 'own-note') {
+    const summary = document.createElement('p');
+    summary.className = 'earlierNote';
+    summary.textContent = `Your earlier note: ${earlierNotes[0].text}`;
+    $('#pointList').prepend(summary);
+    if (earlierNotes.length > 1) {
+      const older = document.createElement('details');
+      older.innerHTML = `<summary>${earlierNotes.length - 1} older note${earlierNotes.length > 2 ? 's' : ''}</summary>`;
+      for (const n of earlierNotes.slice(1)) {
+        const p = document.createElement('p'); p.textContent = n.text; older.append(p);
+      }
+      $('#pointList').append(older);
+    }
+  }
+  setTrainerStep('check');
+  updateFinishState();
+}
+
+function finishRep(){
+  const v = current;
+  if (trainerStep !== 'check' || !v || !pendingRating || !recallRevealed || !noteSnapshot) return;
+  const source = recallSource();
+  const matched = source ? matchedPoints() : null;
+  const effective = effectiveRating();
+  const t = todayKey();
+  const now = Date.now();
+  const id = keyOf(v);
+  const isRepeat = repeatedToday(S, id);
+  const nextText = previewText(S.done[id] || null, effective, now);
+
+  if (!isRepeat) {
+    const prev = S.done[id] || null;
+    const card = nextReview(prev, effective, now);
+    card.reps  = (prev?.reps || 0) + 1;
+    card.sum   = (prev?.sum  || 0) + effective;
+    card.avg   = +(card.sum / card.reps).toFixed(1);
+    card.first = prev?.first || t;
+    card.last  = t;
+    S.done[id] = card;
+  }
+
+  const nowIso = new Date().toISOString();
+  const recall = source ? { matched, total:source === 'curated' ? v.recallKeys.length : 1, source } : null;
+  const logEntry = { id, at:nowIso, day:t, rating:effective, selfRating:pendingRating,
+    recall, mode:promptMode, watch:{ pct:watch.pct, ended:watch.ended, verified:watch.verified } };
+  if (isRepeat) logEntry.repeat = true;
+  S.log.push(logEntry);
+  const xp = isRepeat ? 2 : 10 + effective * 2;
+  S.xp += xp;
+  if (!isRepeat) {
+    S.notes.push({ id, title:v.title, text:noteSnapshot, rating:effective, at:nowIso, day:t, recall, mode:promptMode });
+    bumpStreak(S);
+  }
+  clearDraft(id);
+  save(S);
+  if (S.log.length === 1) navigator.storage?.persist?.().catch(() => {});
+  renderAll();
+  $('#doneRing').textContent = `${repsToday(S)}/${TARGET + S.extra}`;
+  $('#doneXP').textContent = `+${xp} xp${isRepeat ? ' · same-day repeat (goal unchanged)' : ''}`;
+  $('#doneDue').textContent = isRepeat ? 'Schedule unchanged' : `Back ${nextText}`;
+  const next = pickSession(S, lang, false).find(x => keyOf(x) !== id && !repeatedToday(S, keyOf(x)));
+  $('#btnNextRep').hidden = !next;
+  $('#btnNextRep').dataset.next = next ? keyOf(next) : '';
+  setTrainerStep('done');
+  navigator.vibrate?.(12);
+  if (S.log.length === 1) setTimeout(showInstallPrompt,900);
+}
+
+/* ── routing + wiring ──────────────────────────────────── */
+function go(name, { historyMode='push', focus=true }={}){
+  if (!['today','library','progress','train'].includes(name)) return;
+  const wasSheetOpen = !!openSheetName;
+  if (openSheetName) closeSheet({historyMode:'none'});
+  if (name !== 'train' && activeRoute === name) {
+    if (wasSheetOpen) setHistory(name,historyMode);
+    window.scrollTo({top:0, behavior:reduceMotion() ? 'instant' : 'smooth'});
+    return;
+  }
+  if (activeRoute !== 'train' && !activeRoute.startsWith('sheet/'))
+    scrollPositions[activeRoute] = window.scrollY;
+  if (name === 'train' && activeRoute !== 'train') activeTab = activeRoute;
+  const route = name === 'train' ? `train/${keyOf(current)}` : name;
+  activeRoute = name;
+  setHistory(route, historyMode);
+  const transition = motion(() => {
+    document.querySelectorAll('.screen').forEach(s =>
+      s.classList.toggle('active', s.id === 'screen-' + (name === 'train' ? activeTab : name)));
+    document.querySelectorAll('.tabbar .tab').forEach(b => {
+      const selected = b.dataset.tab === (name === 'train' ? activeTab : name);
+      b.classList.toggle('active', selected);
+      if (selected) b.setAttribute('aria-current', 'page');
+      else b.removeAttribute('aria-current');
+    });
+    $('#screen-train').classList.toggle('active', name === 'train');
+  });
+  setBackgroundInert(name === 'train');
+  if (name === 'train') window.scrollTo({top:0,behavior:'instant'});
+  else {
+    stopPlayer();
+    activeTab = name;
+    const restore = () => requestAnimationFrame(() => window.scrollTo({top:scrollPositions[name] || 0,behavior:'instant'}));
+    if (transition) transition.updateCallbackDone.then(restore).catch(restore);
+    else restore();
+  }
+  if ($('#navTitle')) $('#navTitle').textContent = name === 'train' ? 'Training' : ({today:'Today',library:'Library',progress:'Progress'})[name];
+  if ($('#navAction')) { $('#navAction').dataset.screen = name; renderChrome(); }
+  if ($('#langSeg')) $('#langSeg').hidden = true;
+  if ($('#langBtn')) $('#langBtn').textContent = lang === 'all' ? 'Both' : (lang === 'hi' ? 'हिंदी' : 'English');
+  if (focus) requestAnimationFrame(() => focusRoute(name));
+}
+const sheetIDs = {filters:'filtersSheet',settings:'settingsSheet',install:'installSheet',addReel:'addReelSheet',reset:'resetSheet',import:'importConfirm'};
+function openSheet(name, opener=document.activeElement, {historyMode='push'}={}){
+  const id = sheetIDs[name]; if (!id || !$('#' + id)) return;
+  if (openSheetName) closeSheet({historyMode:'none'});
+  sheetOpener = opener;
+  openSheetName = name;
+  setHistory(`sheet/${name}`, historyMode);
+  $('#' + id).hidden = false;
+  for (const node of [$('.appbar') || $('.top-nav'), $('.screens'), $('.tabbar'), $('#screen-train')]) if (node) node.inert = true;
+  const first = $('#' + id).querySelector('button, input, select');
+  first?.focus({preventScroll:true});
+}
+function closeSheet({historyMode='back'}={}){
+  if (!openSheetName) return;
+  const name = openSheetName;
+  $('#' + sheetIDs[name]).hidden = true;
+  openSheetName = null;
+  setBackgroundInert(activeRoute === 'train');
+  $('#screen-train').inert = false;
+  if (historyMode === 'back') history.back();
+  else if (historyMode === 'replace') setHistory(activeRoute === 'train' ? `train/${keyOf(current)}` : activeRoute,'replace');
+  sheetOpener?.focus?.({preventScroll:true});
+  sheetOpener = null;
+}
+function showInstallPrompt(){
+  if (!S?.log.length || !$('#installSheet')) return;
+  const ua = navigator.userAgent;
+  const ios = /iP(hone|ad|od)/.test(ua) && !/CriOS|FxiOS|EdgiOS/.test(ua)
+    && navigator.standalone !== true && !matchMedia('(display-mode: standalone)').matches;
+  if (!ios && !installedPrompt) return;
+  const last = Number(localStorage.getItem('braingym.installPromptAt') || 0);
+  if (Date.now() - last < 14 * DAY_MS) return;
+  localStorage.setItem('braingym.installPromptAt',String(Date.now()));
+  if ($('#installButton')) $('#installButton').hidden = !installedPrompt;
+  openSheet('install', $('#btnDone'));
+}
+function handlePopState(){
+  const route = routeFromURL();
+  if (openSheetName) closeSheet({historyMode:'none'});
+  if (route.startsWith('sheet/')) { openSheet(route.slice(6),null,{historyMode:'none'}); return; }
+  if (route.startsWith('train/')) {
+    const id = route.slice(6);
+    if (vid(id)) openTrainer(id, {historyMode:'none'});
+    else go('today',{historyMode:'none'});
+    return;
+  }
+  go(['today','library','progress'].includes(route) ? route : 'today',{historyMode:'none'});
+}
+function renderAll(){ renderChrome(); renderToday(); renderLibrary(); renderProgress(); }
+
+function wire(){
+  document.querySelectorAll('.tabbar .tab').forEach(b => b.onclick = () => go(b.dataset.tab));
+  addEventListener('popstate', handlePopState);
+  window.visualViewport?.addEventListener('resize', keyboardInset);
+  window.visualViewport?.addEventListener('scroll', keyboardInset);
+  addEventListener('resize', keyboardInset);
+  keyboardInset();
+  let edge = null;
+  addEventListener('touchstart', e => {
+    const p=e.touches[0]; edge = activeRoute==='train' && p?.clientX<=20 ? {x:p.clientX,y:p.clientY} : null;
+  }, {passive:true});
+  addEventListener('touchend', e => {
+    if (!edge) return;
+    const p=e.changedTouches[0], dx=p.clientX-edge.x, dy=p.clientY-edge.y;
+    if (dx>80 && Math.abs(dx)>Math.abs(dy)*1.5) history.back();
+    edge=null;
+  }, {passive:true});
+  document.body.addEventListener('click', e => {
+    const sheet = e.target.closest('[data-open-sheet]');
+    if (sheet) { openSheet(sheet.dataset.openSheet, sheet); return; }
+    const close = e.target.closest('[data-close-sheet]');
+    if (close) { closeSheet(); return; }
+    const mod = e.target.closest('[data-module-go]');
+    if (mod) { modFilter=mod.dataset.moduleGo; renderLibrary(); go('library'); return; }
+    if (e.target.id === 'emptyClearSearch' || e.target.id === 'clearSearch') {
+      q=''; $('#q').value=''; renderLibrary(); return;
+    }
+  });
+  if ($('#noteSearch')) $('#noteSearch').oninput = e => {noteQuery=e.target.value.toLowerCase().trim();renderProgress();};
+  if ($('#navAction')) $('#navAction').onclick = e => {
+    const action = $('#navAction').dataset.screen;
+    if (action === 'today') go('progress');
+    else if (action === 'library') openAddSheet('', e.currentTarget);
+    else openSheet('settings',e.currentTarget);
+  };
+  if ($('#filterButton')) $('#filterButton').onclick = e => openSheet('filters',e.currentTarget);
+  if ($('#streakButton')) $('#streakButton').onclick = () => go('progress');
+  if ($('#langBtn')) $('#langBtn').onclick = e => { e.stopPropagation(); $('#langSeg').hidden = !$('#langSeg').hidden; };
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#langSeg') && !e.target.closest('#langBtn')) $('#langSeg').hidden = true;
+  });
+  document.body.addEventListener('click', e => {
+    const t = e.target.closest('[data-open]');
+    if (t) { openTrainer(t.dataset.open); return; }
+    const m = e.target.closest('[data-mod]');
+    if (m) { modFilter = m.dataset.mod; renderLibrary(); return; }
+    const tg = e.target.closest('[data-tab-go]');
+    if (tg) { go(tg.dataset.tabGo); return; }
+  });
+  $('#langSeg').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    lang = b.dataset.lang;
+    document.querySelectorAll('#langSeg button').forEach(x => x.classList.toggle('on', x === b));
+    $('#langBtn').textContent = lang === 'all' ? 'Both' : (lang === 'hi' ? 'हिंदी' : 'English');
+    $('#langSeg').hidden = true;
+    renderAll();
+  };
+  $('#tierSeg').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    tierFilter = b.dataset.tier;
+    document.querySelectorAll('#tierSeg button').forEach(x => x.classList.toggle('on', x === b));
+    renderLibrary();
+  };
+  $('#srcSeg').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    srcFilter = b.dataset.src;
+    document.querySelectorAll('#srcSeg button').forEach(x => x.classList.toggle('on', x === b));
+    renderLibrary();
+  };
+  $('#reelMod').innerHTML = Object.keys(LIB.modules)
+    .map(m => `<option value="${m}">${LIB.modules[m][0]}</option>`).join('');
+  $('#btnAddReel').onclick = () => {
+    addLink($('#reelUrl').value, $('#reelMod').value, $('#reelLang').value, $('#addMsg'));
+    $('#reelUrl').value = '';
+  };
+  $('#reelUrl').onkeydown = e => { if (e.key === 'Enter') $('#btnAddReel').click(); };
+  $('#addReelMod').innerHTML = $('#reelMod').innerHTML;
+  $('#addReelUrl').oninput = updateAddPreview;
+  $('#addReelUrl').onkeydown = e => { if (e.key === 'Enter') $('#addReelConfirm').click(); };
+  $('#addReelConfirm').onclick = () => addLink($('#addReelUrl').value, $('#addReelMod').value, $('#addReelLang').value);
+  $('#addReelCancel').onclick = () => closeSheet();
+  // iOS shows its own "Paste" callout here; the read only happens on this tap.
+  $('#addReelPaste').hidden = !navigator.clipboard?.readText;
+  $('#addReelPaste').onclick = async () => {
+    try { $('#addReelUrl').value = (await navigator.clipboard.readText()).trim(); }
+    catch { $('#addReelMsg').textContent = 'Clipboard blocked — long-press the box and choose Paste.'; return; }
+    updateAddPreview();
+  };
+  document.body.addEventListener('click', e => {
+    const rm = e.target.closest('[data-rm]');
+    if (rm) { e.stopPropagation(); removeReel(rm.dataset.rm); }
+  }, true);
+  $('#q').oninput = e => { q = e.target.value.toLowerCase().trim(); renderLibrary(); };
+  $('#btnBack').onclick = () => { if (history.length > 1) history.back(); else go(activeTab,{historyMode:'replace'}); renderAll(); };
+  $('#tNote').oninput = e => { saveDraft(current && keyOf(current), e.target.value); updateFinishState(); };
+  $('#btnWatched').onclick = () => {
+    if (trainerStep !== 'watch' || $('#btnWatched').disabled) return;
+    if (rewatching) { rewatching = false; setTrainerStep('check'); return; }
+    watch.verified = current.src === 'yt' && !watch.override && (watch.ended || watch.pct >= .8);
+    setTrainerStep('recall');
+  };
+  $('#btnWatchedExternal').onclick = () => {
+    if (trainerStep !== 'watch') return;
+    if (rewatching) { rewatching = false; setTrainerStep('check'); return; }
+    watch.override = true; watch.verified = false;
+    setTrainerStep('recall');
+  };
+  $('#btnCheck').onclick = checkRecall;
+  $('#btnRewatch').onclick = () => {
+    if (trainerStep !== 'check' || !recallRevealed) return;
+    rewatching = true;
+    $('#btnWatched').textContent = 'Back to check';
+    $('#btnWatchedExternal').hidden = true;
+    setTrainerStep('watch');
+    updateWatchUI();
+  };
+  $('#btnNextRep').onclick = () => { const id = $('#btnNextRep').dataset.next; if (id) openTrainer(id); };
+  $('#btnDone').onclick = () => { go('today'); renderAll(); };
+  $('#pointList').onchange = updateRecallHint;
+  $('#btnExtra').onclick = () => { extra = true; S.extra += 1; save(S); renderAll(); };
+  $('#rate').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    pendingRating = +b.dataset.r;
+    document.querySelectorAll('#rate button').forEach(x => x.classList.toggle('on', x === b));
+    updateFinishState();
+    updateRecallHint();
+  };
+  $('#btnFinish').onclick = finishRep;
+  $('#btnExport').onclick = async () => {
+    const file = new File([JSON.stringify(S,null,1)],`brain-gym-${todayKey()}.json`,{type:'application/json'});
+    if (navigator.canShare?.({files:[file]})) {
+      try { await navigator.share({files:[file],title:'B.R.A.I.N. progress'}); return; }
+      catch (err) { if (err.name === 'AbortError') return; }
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(file); a.download = file.name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+  };
+  $('#btnImport').onclick = () => $('#fileIn').click();
+  $('#fileIn').onchange = e => {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      let candidate;
+      try { candidate = sanitizeState(r.result, LIB); }
+      catch { toast('bad file — nothing was changed'); e.target.value = ''; return; }
+      const dropped = candidate.__droppedCustom || 0;
+      const summary = `Replace current progress with ${(candidate.log||[]).length} reps, ${(candidate.notes||[]).length} notes, ${(candidate.custom||[]).length} reels`
+        + (dropped ? ` (dropped ${dropped} invalid reel${dropped>1?'s':''})?` : '?');
+      $('#importSummary').textContent = summary;
+      openSheet('import', $('#btnImport'));
+      $('#importConfirmCancel').onclick = () => { closeSheet(); e.target.value = ''; };
+      $('#importConfirmOk').onclick = () => {
+        closeSheet();
+        backupCurrent('preimport');
+        try {
+          delete candidate.__droppedCustom;
+          S = candidate;
+          const migrated = migrateV1toV2(S);
+          S = migrated.S;
+          S.custom.forEach(rehydrateReel);
+          save(S); renderAll();
+          toast(dropped ? `imported · ${dropped} invalid reel${dropped>1?'s':''} skipped` : 'imported');
+        } catch (err) {
+          console.error(err);
+          const restored = restoreLatestBackup('preimport');
+          if (restored) { S = restored; save(S); renderAll(); }
+          toast('import failed — reverted');
+        }
+        e.target.value = '';
+      };
+    };
+    r.readAsText(f);
+  };
+  $('#btnReset').onclick = e => openSheet('reset',e.currentTarget);
+  if ($('#resetInput')) $('#resetInput').oninput = e => { $('#resetConfirm').disabled = e.target.value !== 'RESET'; };
+  if ($('#resetConfirm')) $('#resetConfirm').onclick = () => {
+    if ($('#resetInput').value !== 'RESET') return;
+    backupCurrent('prereset');
+    S = blank(); save(S); renderAll(); closeSheet();
+    $('#resetInput').value=''; $('#resetConfirm').disabled=true; toast('progress reset');
+  };
+  if ($('#storagePersist')) $('#storagePersist').onclick = async () => {
+    const granted = await navigator.storage?.persist?.().catch(()=>false) || false;
+    $('#storageStatus').textContent = granted ? 'Persistent storage granted on this device.' : 'Persistent storage not granted. Export a backup regularly.';
+  };
+  if ($('#installButton')) $('#installButton').onclick = async () => {
+    if (!installedPrompt) return;
+    const prompt = installedPrompt; installedPrompt = null;
+    await prompt.prompt(); await prompt.userChoice; closeSheet();
+  };
+  addEventListener('beforeinstallprompt', e => {e.preventDefault();installedPrompt=e; if ($('#installButton')) $('#installButton').hidden=false;showInstallPrompt();});
+  addEventListener('appinstalled', () => {installedPrompt=null; if (openSheetName==='install') closeSheet();});
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape' && openSheetName) {e.preventDefault();closeSheet();return;}
+    if (openSheetName && e.key === 'Tab') {
+      const el = $('#'+sheetIDs[openSheetName]);
+      const controls = [...el.querySelectorAll('button:not([disabled]):not([hidden]),input:not([disabled]):not([hidden]),select:not([disabled]):not([hidden])')].filter(x=>x.getClientRects().length);
+      if (!controls.length) return;
+      if (e.shiftKey && document.activeElement===controls[0]) {e.preventDefault();controls.at(-1).focus();}
+      else if (!e.shiftKey && document.activeElement===controls.at(-1)) {e.preventDefault();controls[0].focus();}
+    }
+  });
+  addEventListener('keydown', e => {
+    if (e.target.matches('input,textarea,[contenteditable]')) return;
+    const trainerOpen = $('#screen-train').classList.contains('active');
+    if (e.key === 'Escape' && trainerOpen) { e.preventDefault(); $('#btnBack').click(); return; }
+    if (trainerOpen) {
+      if (/^[1-5]$/.test(e.key)) {
+        const btn = document.querySelector(`#rate [data-r="${e.key}"]`);
+        if (btn) { e.preventDefault(); btn.click(); }
+      }
+      return;
+    }
+    if (e.key === '1') go('today');
+    if (e.key === '2') go('library');
+    if (e.key === '3') go('progress');
+  });
+}
+
+/* ── boot ──────────────────────────────────────────────── */
+(async function boot(){
+  await loadLibrary();
+  const loaded = loadState();
+  S = loaded.S;
+  if (loaded.event === 'corrupt') setTimeout(() => toast('Saved data was unreadable — a copy was kept.'), 300);
+  const mig = migrateV1toV2(S); S = mig.S;
+  S.custom.forEach(rehydrateReel);
+  if (S.sessionDate !== todayKey()) { S.sessionDate = todayKey(); S.extra = 0; extra = false; }
+  pruneDrafts();
+  save(S);
+  wire();
+  renderAll();
+  history.replaceState({route:routeFromURL()},'',location.href);
+  const initial = routeFromURL();
+  if (initial.startsWith('train/') || initial.startsWith('sheet/') || ['library','progress'].includes(initial))
+    handlePopState();
+  else {
+    $('[data-tab="today"]').setAttribute('aria-current','page');
+    if ($('#navAction')) $('#navAction').dataset.screen='today';
+  }
+  // Shared link (?add=…, or Android share-target ?url=/?text=): prefill the add sheet.
+  const shared = linkFromSearch(location.search);
+  if (shared) {
+    history.replaceState({route:'library'},'',routeQuery('library'));
+    go('library',{historyMode:'none'});
+    openAddSheet(shared.src === 'ig' ? `https://www.instagram.com/reel/${shared.id}/`
+      : `https://www.youtube.com/${shared.shorts ? 'shorts/' + shared.id : 'watch?v=' + shared.id}`, null);
+  }
+  if (new URLSearchParams(location.search).get('start') === '1') {
+    const first = pickSession(S,lang,false)[0];
+    if (first) requestAnimationFrame(()=>openTrainer(keyOf(first)));
+  }
+  if ('serviceWorker' in navigator) {
+    const hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      const updateReady = () => {
+        const worker = reg.waiting;
+        if (!worker || !navigator.serviceWorker.controller) return;
+        const notice=$('#toast');
+        notice.replaceChildren();
+        const button=document.createElement('button');
+        button.type='button'; button.textContent='Update ready — tap to refresh';
+        button.onclick=()=>worker.postMessage({type:'SKIP_WAITING'});
+        notice.append(button); notice.classList.add('on');
+      };
+      updateReady();
+      reg.addEventListener('updatefound', () => reg.installing?.addEventListener('statechange',updateReady));
+      // First install claims the page too; only an update that replaces a live worker should reload.
+      let refreshing=!hadController;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing=true; location.reload();
+      });
+    }).catch(() => {});
+  }
+  fetch('version.json').then(r=>r.ok?r.json():null).then(v=>{
+    if ($('#settingsVersion') && v) $('#settingsVersion').textContent = v.version || v.commit || 'Local build';
+  }).catch(()=>{if ($('#settingsVersion')) $('#settingsVersion').textContent='Local build';});
+  console.log(`B.R.A.I.N. v${S.v} · ${LIB.videos.length} videos · ${Object.keys(LIB.modules).length} modules`);
+
+  // ── test hook: same surface as Phase 0/1 plus the pure functions. ──
+  window.__bg = {
+    openTrainer, todayKey, repsToday: () => repsToday(S), LIB,
+    S: () => S, setS: (next) => { S = next; save(S); renderAll(); },
+    nextReview, previewText, retention, isDue, capacity: (m) => capacity(S, m),
+    dueList: () => dueList(S), pickSession: (extraRep) => pickSession(S, lang, !!extraRep),
+    localMidnight, HOUR_MS, DAY_MS, RELEARN_HOURS,
+    migrateV1toV2, sanitizeState: (raw) => sanitizeState(raw, LIB),
+    watchSatisfied, accumulateWatch, embedSrc, keyOf, segmentDuration, parseLink, linkFromSearch, interleave,
+    watch: () => ({ ...watch }), choosePromptMode, promptMode: () => promptMode,
+  };
+  window.LIB = LIB;
+  window.openTrainer = openTrainer;
+  window.todayKey = todayKey;
+})();

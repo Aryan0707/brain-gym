@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>B.R.A.I.N.</title>
-<meta name="theme-color" content="#0a0b0d">
+<meta name="theme-color" content="#101516">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,187 +16,524 @@
 </head>
 <body>
 
-<div id="app">
+<!-- ══ SVG icon sprite ══ -->
+<svg hidden xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10L12 3l9 7v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9z"/><path d="M9 21V12h6v9"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M7 20V10h4v10"/><path d="M14 20V4h4v16"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M6 4l14 8-14 8V4z"/></symbol>
+    <symbol id="i-replay" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0116.5-4.7L21 9"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-16.5 4.7L3 15"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v5a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h5"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4.4 0 8-3.6 8-8 0-4.5-3.5-8-8-13-4.5 5-8 8.5-8 13 0 4.4 3.6 8 8 8z"/><path d="M12 17a3 3 0 100-6 3 3 0 000 6z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A9.9 9.9 0 0021 12c-2.4-4-5.4-6-9-6a9.8 9.8 0 00-4.9 1.4"/><path d="M9.9 4.2A8.8 8.8 0 0112 4c3.6 0 6.6 2 9 6a19 19 0 01-1.6 2.6"/><path d="M1 1l22 22"/><path d="M14.1 14.1A3 3 0 119.9 9.9"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></symbol>
+    <symbol id="i-square-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8"/><path d="M8 12h8"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><circle cx="4" cy="13" r="3"/><circle cx="12" cy="11" r="3"/><circle cx="20" cy="15" r="3"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></symbol>
+    <symbol id="i-language" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M2 12h20"/><path d="M12 2a15 15 0 013.5 5M12 2a15 15 0 00-3.5 5M12 22a15 15 0 003.5-5M12 22a15 15 0 00-3.5-5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M7 11l5 5 5-5"/><path d="M12 4v12"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M7 9l5-5 5 5"/><path d="M12 16V4"/></symbol>
+    <symbol id="i-rewatch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="16" height="16" rx="2"/><path d="M22 8l-4 4 4 4V8z"/><path d="M8 11l5 3-5 3V11z"/></symbol>
+    <symbol id="i-dot" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="4"/></symbol>
+  </defs>
+</svg>
 
-  <!-- ══ app bar ══ -->
-  <header class="appbar">
-    <div class="brand"><span class="glyph">◉</span><span class="name">B.R.A.I.N.</span></div>
-    <div class="meters">
-      <div class="meter"><b id="mStreak">0</b><i>streak</i></div>
-      <div class="meter"><b id="mXP">0</b><i>xp</i></div>
-      <button class="langbtn" id="langBtn">Both</button>
-      <span class="hiddenids"><b id="mLevel">1</b><i id="mRank">Dull Blade</i></span>
+<!-- ══ scroll sentinel ══ -->
+<div id="scrollSentinel" aria-hidden="true"></div>
+
+<!-- ══ top nav (sticky) ══ -->
+<header class="top-nav appbar" id="topNav">
+  <h1 class="nav-title" id="navTitle">Today</h1>
+  <button class="nav-action btn-icon" id="navAction" data-screen="today" aria-label="Screen action" onclick="">
+    <svg width="20" height="20"><use href="#i-flame"/></svg>
+  </button>
+  <!-- legacy IDs kept for main.js compat; hidden, JS sets textContent -->
+  <span class="legacy-hidden" id="mStreak">0</span>
+  <span class="legacy-hidden" id="mXP">0</span>
+  <span class="legacy-hidden" id="mLevel">1</span>
+  <span class="legacy-hidden" id="mRank">Dull Blade</span>
+  <span class="legacy-hidden" id="langBtn"></span>
+  <div class="legacy-hidden" id="langSeg">
+    <button data-lang="all" class="on">Both</button>
+    <button data-lang="hi">हिंदी</button>
+    <button data-lang="en">English</button>
+  </div>
+</header>
+
+<!-- ══ screens (document-scrolling container) ══ -->
+<main class="screens">
+
+  <!-- ── TODAY ── -->
+  <section id="screen-today" class="screen active">
+
+    <!-- loading skeleton (visible pre-boot, hidden by JS after library.json loads) -->
+    <div class="skeleton" id="todaySkeleton">
+      <div class="skeleton-box" style="aspect-ratio:16/9"></div>
+      <div class="skeleton-line w-60"></div>
+      <div class="skeleton-line w-80"></div>
+      <div class="skeleton-line w-40"></div>
+      <div class="skeleton-line w-50"></div>
+      <div class="skeleton-line w-35"></div>
+      <div class="skeleton-line w-45"></div>
+      <div class="skeleton-line w-30"></div>
     </div>
-    <div class="langpop" id="langSeg" hidden>
-      <button data-lang="all" class="on">Both</button>
-      <button data-lang="hi">हिंदी</button>
-      <button data-lang="en">English</button>
+
+    <!-- feature card (up-next) — parent renders .today-feature.card with .feature-art/.feature-body -->
+    <div class="today-feature card" id="featureCard" hidden>
+      <div class="feature-art">
+        <img src="" alt="">
+        <div class="feature-duration"></div>
+        <div class="feature-play"><svg width="36" height="36"><use href="#i-play"/></svg></div>
+      </div>
+      <div class="feature-body">
+        <span class="feature-eyebrow">Up next</span>
+        <h1 class="feature-title" id="sessTitle">Today</h1>
+        <div class="feature-meta">
+          <span class="chip" id="featureModChip"></span>
+          <span class="feature-dur"></span>
+        </div>
+        <div class="feature-segments">
+          <span class="segment-bar"></span>
+          <span class="segment-bar"></span>
+          <span class="segment-bar"></span>
+        </div>
+        <p class="muted" id="sessSub">Watch, recall, rate.</p>
+        <button class="btn big" id="featureStart">Start rep</button>
+      </div>
     </div>
-  </header>
 
-  <!-- ══ screens ══ -->
-  <main class="screens">
-
-    <!-- TODAY -->
-    <section id="screen-today" class="screen active">
-      <div class="hero">
-        <div class="hero-copy">
-          <span class="hero-kicker">Your daily practice</span>
-          <h1 id="sessTitle">Today</h1>
-          <p class="muted" id="sessSub">Watch, recall, rate.</p>
-          <p class="lvl" id="heroLvl">Level 1 · Dull Blade</p>
-        </div>
-        <div class="ring">
-          <svg viewBox="0 0 42 42">
-            <circle cx="21" cy="21" r="18" class="bg"/>
-            <circle cx="21" cy="21" r="18" class="fg" id="ringFg"/>
-          </svg>
-          <span id="ringTxt">0/3</span>
-        </div>
+    <!-- legacy hero / ring (hidden; JS sets textContent on IDs for compat) -->
+    <div class="hero legacy-hidden">
+      <div class="hero-copy">
+        <span class="hero-kicker">Your daily practice</span>
+        <h1>Today</h1>
+        <p class="muted">Watch, recall, rate.</p>
+        <p class="lvl" id="heroLvl">Level 1 · Dull Blade</p>
       </div>
-      <div id="dueSection"></div>
-      <div id="sessionCards" class="list"></div>
-      <div class="emptystate" id="sessDone" hidden>
-        <h2>Session complete</h2>
-        <p class="muted" id="sessDoneSub"></p>
-        <button class="btn" data-tab-go="progress">See capacity</button>
-        <button class="btn ghost" id="btnExtra">Extra rep</button>
+      <div class="ring">
+        <svg viewBox="0 0 42 42">
+          <circle cx="21" cy="21" r="18" class="bg"/>
+          <circle cx="21" cy="21" r="18" class="fg" id="ringFg"/>
+        </svg>
+        <span id="ringTxt">0/3</span>
       </div>
-    </section>
+    </div>
 
-    <!-- LIBRARY -->
-    <section id="screen-library" class="screen">
-      <h2 class="screen-heading">Explore videos</h2>
-      <p class="screen-intro">Choose a lesson, then prove what you learned.</p>
-      <div class="searchrow">
-        <label class="sr-only" for="q">Search videos</label>
-        <input id="q" placeholder="Search title or creator" autocomplete="off" enterkeyhint="search">
-      </div>
-      <div class="chiprow" id="modChips"></div>
-      <details class="fold filters">
-        <summary>Source and length filters</summary>
-        <div class="segrow">
-          <div class="seg" id="srcSeg">
-            <button data-src="all" class="on">All</button>
-            <button data-src="yt">YouTube</button>
-            <button data-src="ig">Reels</button>
-          </div>
-          <div class="seg" id="tierSeg">
-            <button data-tier="all" class="on">Any</button>
-            <button data-tier="drill">≤15m</button>
-            <button data-tier="deep">Deep</button>
-          </div>
-        </div>
-      </details>
-      <details class="fold addreel">
-        <summary>＋ Add an Instagram reel</summary>
-        <div class="addrow">
-          <input id="reelUrl" placeholder="paste reel link…" autocomplete="off" inputmode="url">
-          <select id="reelMod"></select>
-          <select id="reelLang"><option value="hi">हिंदी</option><option value="en" selected>English</option></select>
-          <button class="btn" id="btnAddReel">Add</button>
-        </div>
-        <p class="muted" id="addMsg">Hindi reels are the gap — Instagram search is closed without login. Paste any Hindi reel and it joins your sessions.</p>
-      </details>
-      <div id="libCards" class="grid"></div>
-    </section>
+    <!-- due section -->
+    <div id="dueSection"></div>
 
-    <!-- PROGRESS -->
-    <section id="screen-progress" class="screen">
-      <h2 class="screen-heading">Your progress</h2>
-      <p class="screen-intro">Ideas kept, not videos watched.</p>
-      <h2 class="sh">Brain capacity</h2>
-      <div id="capacities" class="caps"></div>
-      <h2 class="sh">Numbers that matter</h2>
-      <div class="statgrid" id="statGrid"></div>
-      <h2 class="sh">Review queue</h2>
-      <div id="queueList" class="queue"></div>
-      <h2 class="sh">Notebook</h2>
-      <div id="notebook" class="notebook"></div>
-      <details class="fold data">
-        <summary>Data &amp; backup</summary>
-        <p class="muted">Everything lives on this device. Nothing is uploaded.</p>
-        <div class="addrow">
-          <button class="btn ghost" id="btnExport">Export</button>
-          <button class="btn ghost" id="btnImport">Import</button>
-          <button class="btn ghost red" id="btnReset">Reset</button>
-        </div>
-        <input type="file" id="fileIn" accept=".json" hidden>
-      </details>
-    </section>
-  </main>
+    <!-- session cards — parent renders .row-item > .lesson-row.card -->
+    <div id="sessionCards" class="list"></div>
 
-  <!-- ══ trainer ══ -->
-  <section id="screen-train" class="trainer">
-    <header class="trainbar">
-      <button class="back" id="btnBack" aria-label="Back">‹</button>
-      <div class="trainmeta">
-        <span class="chip" id="tMod"></span>
-        <span class="chip" id="tLang"></span>
-        <span class="chip" id="tDur"></span>
-      </div>
-      <a class="opener" id="tOpen" target="_blank" rel="noopener" aria-label="Open original">↗</a>
-    </header>
-    <div class="trainScroll">
-      <div class="player"><iframe id="frame" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
-      <h2 id="tTitle"></h2>
-      <p class="muted" id="tChannel"></p>
-      <div class="why" id="tWhy"></div>
+    <!-- session complete -->
+    <div class="emptystate" id="sessDone" hidden>
+      <h2>Session complete</h2>
+      <p class="muted" id="sessDoneSub"></p>
+      <button class="btn" data-tab-go="progress">See progress</button>
+      <button class="btn ghost" id="btnExtra">One more rep</button>
+    </div>
 
-      <div class="rep">
-        <label class="replabel" for="tNote">Write the idea from memory before you check yourself</label>
-        <div class="promptline" id="tPrompt"></div>
-        <textarea id="tNote" rows="3" placeholder="The idea, in my own words…"></textarea>
-        <div class="recall-check" id="recallCheck" hidden>
-          <button class="btn ghost" id="btnReveal" disabled>Reveal key points</button>
-          <p class="muted">Your note locks when you reveal the key points. Mark only what you wrote before seeing them.</p>
-          <fieldset id="keyPoints" hidden>
-            <legend>Which points were in your note?</legend>
-            <div id="pointList"></div>
-            <p class="muted">None? Leave every box empty. The lesson will return today.</p>
-          </fieldset>
-        </div>
-        <p class="muted" id="selfRatedNote" hidden>This lesson has no checked answer key yet. Your review is based on your own rating.</p>
-
-        <div class="checks">
-          <label><input type="checkbox" id="c1"> I followed the whole thing</label>
-          <label><input type="checkbox" id="c2"> I can explain it out loud to someone</label>
-          <label><input type="checkbox" id="c3"> I can name a place I'd use it</label>
-        </div>
-
-        <label class="replabel">How well can you explain this right now?</label>
-        <div class="rate" id="rate">
-          <button data-r="1">1<i>lost</i></button>
-          <button data-r="2">2<i>shaky</i></button>
-          <button data-r="3">3<i>got it</i></button>
-          <button data-r="4">4<i>solid</i></button>
-          <button data-r="5">5<i>teach</i></button>
-        </div>
-        <button class="btn big" id="btnFinish" disabled>Finish rep</button>
-        <p class="muted" id="schedHint"></p>
-      </div>
+    <!-- empty -->
+    <div class="emptystate" id="todayEmpty" hidden>
+      <p class="muted">You've trained every lesson in this language. Switch language or run reviews.</p>
     </div>
   </section>
 
-  <!-- ══ tab bar ══ -->
-  <nav class="tabbar">
-    <button class="tab active" data-tab="today">
-      <svg viewBox="0 0 24 24"><path d="M12 2.5 21 11h-3v9h-4.5v-6h-3v6H6v-9H3z"/></svg>
-      <span>Today <i id="mDue">0</i></span>
-    </button>
-    <button class="tab" data-tab="library">
-      <svg viewBox="0 0 24 24"><path d="M4 4h6.5v6.5H4zM13.5 4H20v6.5h-6.5zM4 13.5h6.5V20H4zM13.5 13.5H20V20h-6.5z"/></svg>
-      <span>Library <i id="libCount">0/0</i></span>
-    </button>
-    <button class="tab" data-tab="progress">
-      <svg viewBox="0 0 24 24"><path d="M5 20V10h3v10zM10.5 20V4h3v16zM16 20v-7h3v7z"/></svg>
-      <span>Progress</span>
-    </button>
-  </nav>
+  <!-- ── LIBRARY ── -->
+  <section id="screen-library" class="screen">
+    <div class="search-row">
+      <svg class="search-icon" width="18" height="18"><use href="#i-search"/></svg>
+      <label class="sr-only" for="q">Search videos</label>
+      <input id="q" placeholder="Search title or creator" autocomplete="off" enterkeyhint="search">
+      <button class="search-clear" id="clearSearch" aria-label="Clear search" hidden>
+        <svg width="16" height="16"><use href="#i-x"/></svg>
+      </button>
+    </div>
 
+    <div class="module-chips" id="modChips"></div>
+
+    <div class="library-toolbar">
+      <button class="btn ghost btn-filter" id="filterButton" aria-label="Filters" data-open-sheet="filtersSheet">
+        <svg width="16" height="16"><use href="#i-sliders"/></svg>
+        <span>Filters</span>
+        <span class="filter-badge" id="filterCount" hidden>0</span>
+      </button>
+    </div>
+
+    <div id="libCards" class="grid"></div>
+
+    <div class="emptystate" id="libEmpty" hidden>
+      <p class="muted">No lessons match your search. <button class="btn ghost" id="clearSearchInline">Clear search</button></p>
+    </div>
+
+    <!-- legacy library controls (hidden, for old JS ID compat) -->
+    <div class="legacy-hidden">
+      <div class="searchrow"><input id="reelUrl" placeholder="paste reel link…" autocomplete="off" inputmode="url"></div>
+      <select id="reelMod"><option value="">—</option></select>
+      <select id="reelLang"><option value="hi">हिंदी</option><option value="en" selected>English</option></select>
+      <button id="btnAddReel">Add</button>
+      <p id="addMsg"></p>
+      <span id="libCount">0/0</span>
+      <div class="segrow"><div class="seg" id="srcSeg">
+        <button data-src="all" class="on">All</button>
+        <button data-src="yt">YouTube</button>
+        <button data-src="ig">Reels</button>
+      </div></div>
+      <div class="segrow"><div class="seg" id="tierSeg">
+        <button data-tier="all" class="on">Any</button>
+        <button data-tier="drill">≤15m</button>
+        <button data-tier="deep">Deep</button>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ── PROGRESS ── -->
+  <section id="screen-progress" class="screen">
+    <!-- stat tiles — #statGrid is the visible container (old regression expects this ID) -->
+    <div class="stat-tiles statgrid" id="statGrid">
+      <div class="stat" id="tileStreak">
+        <span class="stat-value" id="statStreak">0</span>
+        <span class="stat-label">day streak</span>
+        <span class="stat-sub" id="statStreakBest">best 0</span>
+      </div>
+      <div class="stat" id="tileDue">
+        <span class="stat-value" id="statDue">0</span>
+        <span class="stat-label">due now</span>
+      </div>
+      <div class="stat" id="tileNotes">
+        <span class="stat-value" id="statNotes">0</span>
+        <span class="stat-label">ideas kept</span>
+      </div>
+    </div>
+
+    <!-- modules — parent renders .module-row with .module-label/.module-progress/.bar -->
+    <h2 class="sh">Modules</h2>
+    <div id="capacities" class="caps"></div>
+
+    <!-- review queue -->
+    <h2 class="sh">Review queue</h2>
+    <div id="queueList" class="queue"></div>
+
+    <!-- notebook — parent renders .note as <details> -->
+    <h2 class="sh">Notebook</h2>
+    <div class="search-row">
+      <svg class="search-icon" width="18" height="18"><use href="#i-search"/></svg>
+      <input id="noteSearch" placeholder="Search notes" autocomplete="off" enterkeyhint="search">
+    </div>
+    <div id="notebook" class="notebook"></div>
+
+    <!-- empty progress -->
+    <div class="emptystate" id="progressEmpty" hidden>
+      <p class="muted">Your progress starts with one rep.</p>
+      <button class="btn" data-tab-go="today">Start your first rep</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══ trainer (overlay, push from right) ══ -->
+<section id="screen-train" class="trainer">
+  <header class="trainer-nav">
+    <button class="back" id="btnBack" aria-label="Back to Today">
+      <svg width="20" height="20"><use href="#i-chevron-left"/></svg>
+      <span>Today</span>
+    </button>
+    <div class="step-indicator" id="trainSteps" aria-label="Step 1 of 3, watch">
+      <span class="step-dot active" data-step="watch"></span>
+      <span class="step-dot" data-step="recall"></span>
+      <span class="step-dot" data-step="check"></span>
+    </div>
+    <a class="opener" id="tOpen" target="_blank" rel="noopener" aria-label="Open in YouTube">
+      <svg width="18" height="18"><use href="#i-external"/></svg>
+    </a>
+  </header>
+
+  <!-- legacy trainer-metadata IDs (hidden; JS sets textContent) -->
+  <div class="legacy-hidden">
+    <span id="tMod"></span><span id="tLang"></span><span id="tDur"></span>
+  </div>
+
+  <div class="trainScroll">
+    <p class="stepLabel" id="stepLabel" aria-live="polite"></p>
+
+    <!-- step: watch -->
+    <section id="stepWatch" class="trainStep" hidden>
+      <div class="player"><div id="ytPlayer"></div><iframe id="frame" title="Lesson video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+      <h2 id="tTitle"></h2>
+      <p class="muted" id="tChannel"></p>
+      <div class="why" id="tWhy"></div>
+      <p class="muted" id="watchStatus" aria-live="polite"></p>
+      <!-- action bar: buttons LIVE here for test visibility -->
+      <div class="trainer-action-bar">
+        <button class="btn big" id="btnWatched" disabled>I've watched it</button>
+        <button class="btn ghost" id="btnWatchedExternal">Watched in the YouTube app</button>
+      </div>
+    </section>
+
+    <!-- step: recall -->
+    <section id="stepRecall" class="trainStep" hidden>
+      <div class="rep">
+        <p class="prompt-mode" id="tPromptMode" hidden></p>
+        <h2 class="promptline" id="tPrompt"></h2>
+        <div class="recall-hint">
+          <svg width="16" height="16"><use href="#i-eye-off"/></svg>
+          <span>Video hidden while you write. Recall from memory.</span>
+        </div>
+        <textarea id="tNote" rows="5" placeholder="The idea, in my own words…"></textarea>
+        <p class="muted" id="noteCounter" aria-live="polite">15 more characters</p>
+      </div>
+      <!-- action bar -->
+      <div class="trainer-action-bar">
+        <button class="btn big" id="btnCheck" disabled>Check yourself</button>
+      </div>
+    </section>
+
+    <!-- step: check & rate -->
+    <section id="stepCheck" class="trainStep" hidden>
+      <div class="rep">
+        <h2 class="rep-heading">Check &amp; rate</h2>
+        <p class="replabel">What you wrote from memory</p>
+        <div class="noteSnapshot" id="tNoteSnapshot"></div>
+        <fieldset id="keyPoints" hidden>
+          <legend>Which points were in your note?</legend>
+          <div id="pointList"></div>
+          <p class="muted">None? Leave every box empty. This is a self-check, not automatic grading.</p>
+        </fieldset>
+        <p class="muted" id="selfRatedNote" hidden>No answer key for this first rep. This review is self-rated.</p>
+        <p class="replabel">How well can you explain this right now?</p>
+        <div class="rating-control" id="rate">
+          <button data-r="1" aria-pressed="false"><b>1</b><span>lost</span></button>
+          <button data-r="2" aria-pressed="false"><b>2</b><span>shaky</span></button>
+          <button data-r="3" aria-pressed="false"><b>3</b><span>got it</span></button>
+          <button data-r="4" aria-pressed="false"><b>4</b><span>solid</span></button>
+          <button data-r="5" aria-pressed="false"><b>5</b><span>could teach</span></button>
+        </div>
+        <p class="muted" id="schedHint" aria-live="polite"></p>
+        <button class="btn ghost" id="btnRewatch">
+          <svg width="16" height="16"><use href="#i-rewatch"/></svg>
+          <span>Rewatch</span>
+        </button>
+      </div>
+      <!-- action bar -->
+      <div class="trainer-action-bar">
+        <button class="btn big" id="btnFinish" disabled>Finish rep</button>
+      </div>
+    </section>
+
+    <!-- step: done -->
+    <section id="stepDone" class="trainStep" hidden>
+      <div class="rep doneStep">
+        <div class="doneRing" id="doneRing"></div>
+        <h2>Rep complete</h2>
+        <p id="doneXP"></p>
+        <p id="doneDue"></p>
+      </div>
+      <!-- action bar -->
+      <div class="trainer-action-bar">
+        <button class="btn big" id="btnNextRep">Next rep</button>
+        <button class="btn ghost" id="btnDone">Done</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- persistent #trainerAction/#trainerSecondary placeholders (parent populates) -->
+  <div class="trainer-action-bar trainer-action-persistent" id="trainerAction" hidden>
+    <button class="btn ghost" id="trainerSecondary" hidden></button>
+  </div>
+</section>
+
+<!-- ══ tab bar (fixed bottom) ══ -->
+<nav class="tabbar">
+  <button class="tab active" data-tab="today" aria-current="page">
+    <svg width="22" height="22"><use href="#i-home"/></svg>
+    <span>Today <i id="mDue">0</i></span>
+  </button>
+  <button class="tab" data-tab="library">
+    <svg width="22" height="22"><use href="#i-grid"/></svg>
+    <span>Library</span>
+  </button>
+  <button class="tab" data-tab="progress">
+    <svg width="22" height="22"><use href="#i-chart"/></svg>
+    <span>Progress</span>
+  </button>
+</nav>
+
+<!-- ══ toast ══ -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ══ sheets (role="dialog" aria-modal="true") ══ -->
+
+<!-- import confirm sheet -->
+<div id="importConfirm" class="sheet" role="dialog" aria-modal="true" hidden>
+  <div class="sheet-scrim"></div>
+  <div class="sheet-body">
+    <div class="sheet-handle"></div>
+    <h3>Import progress</h3>
+    <p id="importSummary" class="muted"></p>
+    <p class="muted">Your current progress will be backed up first (last 3 kept).</p>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="importConfirmCancel">Cancel</button>
+      <button class="btn" id="importConfirmOk">Replace</button>
+    </div>
+  </div>
 </div>
 
-<div class="toast" id="toast"></div>
-<script src="app.js"></script>
+<!-- filters sheet -->
+<div id="filtersSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Filter lessons" hidden>
+  <div class="sheet-scrim"></div>
+  <div class="sheet-body">
+    <div class="sheet-handle"></div>
+    <h3>Filter lessons</h3>
+    <div class="sheet-section">
+      <label class="sheet-label">Source</label>
+      <div class="seg" id="sheetSrcSeg">
+        <button data-src="all" class="on">All</button>
+        <button data-src="yt">YouTube</button>
+        <button data-src="ig">Reels</button>
+      </div>
+    </div>
+    <div class="sheet-section">
+      <label class="sheet-label">Length</label>
+      <div class="seg" id="sheetTierSeg">
+        <button data-tier="all" class="on">Any</button>
+        <button data-tier="drill">≤15 min</button>
+        <button data-tier="deep">Deep</button>
+      </div>
+    </div>
+    <div class="sheet-section">
+      <label class="sheet-label">Language</label>
+      <div class="seg" id="sheetLangSeg">
+        <button data-lang="all" class="on">Both</button>
+        <button data-lang="hi">हिंदी</button>
+        <button data-lang="en">English</button>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn" id="filtersApply">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- settings sheet -->
+<div id="settingsSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Settings" hidden>
+  <div class="sheet-scrim"></div>
+  <div class="sheet-body">
+    <div class="sheet-handle"></div>
+    <h3>Settings</h3>
+    <div class="sheet-section">
+      <label class="sheet-label">Language</label>
+      <div class="seg" id="settingsLangSeg">
+        <button data-lang="all" class="on">Both</button>
+        <button data-lang="hi">हिंदी</button>
+        <button data-lang="en">English</button>
+      </div>
+    </div>
+    <div class="sheet-section sheet-btn-list">
+      <button class="btn ghost sheet-btn" id="btnExport">
+        <svg width="18" height="18"><use href="#i-upload"/></svg>
+        <span>Export data</span>
+      </button>
+      <button class="btn ghost sheet-btn" id="btnImport">
+        <svg width="18" height="18"><use href="#i-download"/></svg>
+        <span>Import data</span>
+      </button>
+      <input type="file" id="fileIn" accept=".json" hidden>
+    </div>
+    <div class="sheet-section sheet-btn-list">
+      <button class="btn ghost sheet-btn" id="storagePersist">
+        <svg width="18" height="18"><use href="#i-check"/></svg>
+        <span>Keep data safe</span>
+        <span class="sheet-btn-hint" id="storageStatus"></span>
+      </button>
+    </div>
+    <div class="sheet-section sheet-btn-list" id="settingsInstallSection" hidden>
+      <button class="btn ghost sheet-btn" id="showInstallSheet">
+        <svg width="18" height="18"><use href="#i-square-plus"/></svg>
+        <span>Install app</span>
+      </button>
+    </div>
+    <div class="sheet-section">
+      <p class="muted">Version <span id="settingsVersion">—</span></p>
+    </div>
+    <div class="sheet-section">
+      <button class="btn ghost sheet-btn danger" id="btnReset" data-open-sheet="resetSheet">
+        <span>Reset all data</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- install sheet -->
+<div id="installSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Install app" hidden>
+  <div class="sheet-scrim"></div>
+  <div class="sheet-body install-sheet-body">
+    <div class="sheet-handle"></div>
+    <div class="install-icon"><img src="icons/icon-192.png" width="64" height="64" alt="B.R.A.I.N. icon"></div>
+    <h3>Install B.R.A.I.N.</h3>
+    <p class="muted">Full screen, works offline, keeps your streak safe.</p>
+    <ol class="install-steps">
+      <li>Tap the Share icon <svg width="16" height="16"><use href="#i-share"/></svg></li>
+      <li>Add to Home Screen</li>
+    </ol>
+    <div class="sheet-actions">
+      <button class="btn" id="installButton" hidden>Install</button>
+      <button class="btn ghost" id="installDismiss">Not now</button>
+    </div>
+  </div>
+</div>
+
+<!-- add reel sheet -->
+<div id="addReelSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Add a lesson" hidden>
+  <div class="sheet-scrim"></div>
+  <div class="sheet-body">
+    <div class="sheet-handle"></div>
+    <h3>Add a lesson</h3>
+    <p class="muted">In Instagram or YouTube tap Share → Copy link, then Paste here.</p>
+    <div class="sheet-section sheet-row">
+      <label class="sr-only" for="addReelUrl">Instagram or YouTube link</label>
+      <input id="addReelUrl" placeholder="Reel or YouTube link…" autocomplete="off" inputmode="url" class="sheet-input">
+      <button class="btn ghost" id="addReelPaste" type="button">Paste</button>
+    </div>
+    <div class="sheet-section sheet-row">
+      <select id="addReelMod" class="sheet-select"></select>
+      <select id="addReelLang" class="sheet-select">
+        <option value="hi">हिंदी</option>
+        <option value="en" selected>English</option>
+      </select>
+    </div>
+    <p class="muted" id="addReelMsg" aria-live="polite"></p>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="addReelCancel">Cancel</button>
+      <button class="btn" id="addReelConfirm">Add &amp; start</button>
+    </div>
+  </div>
+</div>
+
+<!-- reset confirmation sheet -->
+<div id="resetSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Reset all data" hidden>
+  <div class="sheet-scrim"></div>
+  <div class="sheet-body">
+    <div class="sheet-handle"></div>
+    <h3>Reset all data</h3>
+    <p class="muted">This deletes all progress, notes, streaks, and custom reels. It cannot be undone.</p>
+    <div class="sheet-section">
+      <label class="sheet-label" for="resetInput">Type RESET to confirm</label>
+      <input id="resetInput" placeholder="RESET" autocomplete="off" class="sheet-input">
+    </div>
+    <div class="sheet-actions">
+      <button class="btn ghost" id="resetCancel">Cancel</button>
+      <button class="btn red" id="resetConfirm" disabled>Reset everything</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
 </body>
 </html>
