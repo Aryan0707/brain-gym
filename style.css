@@ -2395,3 +2395,34 @@ button.module-row + button.module-row { border-top: 1px solid var(--line); }
   color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm, 10px);
 }
 .ai-key-actions { display: flex; gap: var(--s2, 8px); margin-top: var(--s2, 8px); }
+
+/* ── tutor: AI notes beside the video, the module path, and the next-step card ── */
+.pathchip { margin: 2px 0 0; font-size: var(--t-cap, 12px); color: var(--muted); letter-spacing: .02em; }
+.ainotes {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm, 10px);
+  padding: 12px 13px; margin: var(--s3, 12px) 0;
+}
+.ainotes h3 { margin: 0 0 4px; font-size: 15px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.ainotes h3 small { color: var(--muted); font-weight: 400; font-size: var(--t-cap, 12px); }
+.ainotes-sum { margin: 0 0 10px; font-size: 13px; color: var(--fg-2); }
+.ainotes ol, .aicompare ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.ainotes li button {
+  display: flex; gap: 10px; width: 100%; text-align: left; align-items: baseline;
+  background: none; border: 0; padding: 6px 4px; border-radius: 8px; color: var(--muted);
+  font: inherit; font-size: 14px; line-height: 1.4; cursor: pointer; min-height: 40px;
+}
+.ainotes li button time { flex: none; font-variant-numeric: tabular-nums; font-size: var(--t-cap, 12px); }
+.ainotes li.on button { color: var(--fg); }
+.ainotes li.now button { background: var(--accent-tint); }
+.aicompare { margin: var(--s3, 12px) 0; font-size: 14px; }
+.aicompare summary { cursor: pointer; padding: 8px 0; min-height: 40px; color: var(--accent, var(--fg)); }
+.aicompare li { padding: 4px 0; line-height: 1.4; }
+.nextcard {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md, 14px);
+  padding: 14px; margin: var(--s3, 12px) 0; display: flex; flex-direction: column; gap: 6px;
+}
+.nextcard h3 { margin: 0; font-size: 17px; line-height: 1.3; }
+.nextcard p { margin: 0; }
+.nextkick { font-size: var(--t-cap, 12px); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.nextreason { font-size: 14px; border-left: 3px solid var(--accent); padding-left: 10px; color: var(--fg-2); }
+.autonext { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--fg-2); min-height: 40px; }

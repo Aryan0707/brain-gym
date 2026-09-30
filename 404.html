@@ -205,11 +205,17 @@
       <div class="player"><div id="ytPlayer"></div><iframe id="frame" title="Lesson video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
       <h2 id="tTitle"></h2>
       <p class="muted" id="tChannel"></p>
+      <p class="pathchip" id="tPath" hidden></p>
       <div class="why" id="tWhy"></div>
       <div class="explain" data-explain id="explainWatch">
         <button class="btn ghost explain-btn">Explain it simpler</button>
         <div class="explain-out" aria-live="polite" hidden></div>
       </div>
+      <section class="ainotes" id="aiNotes" hidden aria-label="AI notes">
+        <h3>AI notes <small>tap a point to jump there</small></h3>
+        <p class="ainotes-sum" id="aiNotesSum"></p>
+        <ol id="aiNotesList"></ol>
+      </section>
       <p class="muted" id="watchStatus" aria-live="polite"></p>
       <!-- action bar: buttons LIVE here for test visibility -->
       <div class="trainer-action-bar">
@@ -225,7 +231,7 @@
         <h2 class="promptline" id="tPrompt"></h2>
         <div class="recall-hint">
           <svg width="16" height="16"><use href="#i-eye-off"/></svg>
-          <span>Video hidden while you write. Recall from memory.</span>
+          <span id="recallHintText">Video hidden while you write. Recall from memory.</span>
         </div>
         <textarea id="tNote" rows="5" placeholder="The idea, in my own words…"></textarea>
         <p class="muted" id="noteCounter" aria-live="polite">15 more characters</p>
@@ -247,6 +253,10 @@
           <div id="pointList"></div>
           <p class="muted">None? Leave every box empty. This is a self-check, not automatic grading.</p>
         </fieldset>
+        <details class="aicompare" id="aiCompare" hidden>
+          <summary>AI notes to compare with</summary>
+          <ol id="aiCompareList"></ol>
+        </details>
         <p class="muted" id="selfRatedNote" hidden>No answer key for this first rep. This review is self-rated.</p>
         <p class="replabel">How well can you explain this right now?</p>
         <div class="rating-control" id="rate">
@@ -280,9 +290,18 @@
         <p id="doneXP"></p>
         <p id="doneDue"></p>
       </div>
+      <div class="nextcard" id="nextCard" hidden>
+        <p class="nextkick" id="nextKick"></p>
+        <h3 id="nextTitle"></h3>
+        <p class="muted" id="nextWhy"></p>
+        <p class="nextreason" id="nextReason" aria-live="polite" hidden></p>
+        <label class="autonext"><input type="checkbox" id="autoNext"> Auto-continue to the next step</label>
+        <p class="muted" id="autoLine" aria-live="polite"></p>
+      </div>
       <!-- action bar -->
       <div class="trainer-action-bar">
         <button class="btn big" id="btnNextRep">Next rep</button>
+        <button class="btn ghost" id="btnMix" hidden>Mix it up instead</button>
         <button class="btn ghost" id="btnDone">Done</button>
       </div>
     </section>
@@ -496,7 +515,7 @@ addEventListener('error', function (e) {
   catch (_) { return; }
   var files = ['index.html', 'style.css', 'src/main.js', 'src/util.js', 'src/library.js',
     'src/state.js', 'src/scheduler.js', 'src/session.js', 'src/watch.js',
-    'src/intake.js', 'src/learn.js', 'src/notebook.js', 'src/ai.js'];
+    'src/intake.js', 'src/learn.js', 'src/notebook.js', 'src/ai.js', 'src/tutor.js'];
   var clear = window.caches ? caches.keys().then(function (ks) {
     return Promise.all(ks.map(function (k) { return caches.delete(k); }));
   }) : Promise.resolve();

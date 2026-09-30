@@ -9,7 +9,7 @@
  */
 import { $, DAY, TARGET, KEY, RANKS, todayKey, days, mins, durLabel,
          embedSrc, watchUrl, keyOf, segmentDuration, esc, toast } from './util.js';
-import { LIB, loadLibrary, vid, rehydrateReel, clearCustom } from './library.js';
+import { LIB, loadLibrary, loadNotes, vid, rehydrateReel, clearCustom } from './library.js';
 import { parseLink, linkFromSearch } from './intake.js';
 import { blank, save, loadState, sanitizeState, migrateV1toV2,
          loadDraft, saveDraft, clearDraft, pruneDrafts,
@@ -21,7 +21,8 @@ import { firstRepsToday, repsToday, newRepsToday, repeatedToday, dueList, capaci
 import { watchSatisfied, accumulateWatch } from './watch.js';
 import { PROMPT_MODES, choosePromptMode, promptFor } from './learn.js';
 import { buildShelves, depthOf } from './notebook.js';
-import { initAi, resetExplain } from './ai.js';
+import { initAi, resetExplain, suggestNext } from './ai.js';
+import { notesFor, notesAsText, noteOrigin, reachedIndex, pathAfter, stamp } from './tutor.js';
 
 /* ── mutable UI/session state ──────────────────────────── */
 let S = null;
@@ -40,6 +41,8 @@ let watch = { pct:0, ended:false, verified:false, override:false };
 let watchedSeconds = 0, previousVideoTime = null, pollWatch = null, ytPlayer = null;
 let ytAPIPromise = null, rewatching = false;
 let activeTab = 'library', activeRoute = 'library', openSheetName = null, sheetOpener = null;
+let aiDraft = '';            // the AI's notes a new lesson's note started as ('' = written from memory)
+let playTime = 0, nextToken = 0, autoTimer = null;
 let trainerPushed = false;   // true when the trainer's history entry was pushed by us
 const scrollPositions = { library:0, progress:0 };
 let installedPrompt = null, noteQuery = '';
@@ -109,6 +112,31 @@ function updateWatchUI(){
   }
   $('#btnWatched').disabled = !rewatching && !watchSatisfied({ src:current.src, ...watch });
 }
+/* ── tutor: AI notes that follow the video, and the step-by-step path ── */
+function renderWatchNotes(v){
+  const n = notesFor(v);
+  $('#aiNotes').hidden = !n;
+  if (!n) return;
+  $('#aiNotesSum').textContent = n.summary || '';
+  $('#aiNotesList').innerHTML = n.points.map((p, i) =>
+    `<li data-i="${i}"><button type="button" data-seek="${p.t}"><time>${stamp(p.t)}</time><span>${esc(p.text)}</span></button></li>`).join('');
+  markNotes();
+}
+/* Points already reached stay lit; the newest one is highlighted. */
+function markNotes(){
+  const n = notesFor(current); if (!n || $('#aiNotes').hidden) return;
+  const at = reachedIndex(n.points, playTime);
+  $('#aiNotesList').querySelectorAll('li').forEach((li, i) => {
+    li.classList.toggle('on', i <= at);
+    li.classList.toggle('now', i === at);
+  });
+}
+function renderPathChip(v){
+  const info = pathAfter(S, LIB.videos, v, lang);
+  $('#tPath').hidden = !info;
+  if (info) $('#tPath').textContent = `${LIB.modules[v.module][0]} · step ${info.step} of ${info.total}`;
+}
+
 async function startPlayer(v){
   stopPlayer();
   const key = keyOf(v);
@@ -138,6 +166,7 @@ async function startPlayer(v){
                 previousVideoTime = t;
                 const length = knownLength || e.target.getDuration?.() || 0;
                 watch.pct = length ? Math.min(1, watchedSeconds / length) : 0;
+                playTime = t; markNotes();
                 updateWatchUI();
               } catch {}
             }, 1000);
@@ -402,8 +431,18 @@ function openTrainer(id, {historyMode='push'}={}){
   $('#tPromptMode').textContent = PROMPT_MODES[promptMode].label;
   $('#tPromptMode').hidden = promptMode === 'recall';
   $('#tPrompt').textContent = '› ' + promptFor(v, promptMode);
-  $('#tNote').value = loadDraft(keyOf(v));
+  playTime = 0; cancelAuto();
+  const notes = notesFor(v);
+  const firstRep = !S.done[keyOf(v)];
+  aiDraft = firstRep && notes ? notesAsText(notes) : '';
+  $('#tNote').value = loadDraft(keyOf(v)) || aiDraft;
+  $('#recallHintText').textContent = aiDraft
+    ? 'The AI took these notes from the video. Fix or add to them in your own words.'
+    : 'Video hidden while you write. Recall from memory.';
   $('#tNote').disabled = false;
+  $('#aiCompare').hidden = true;
+  renderWatchNotes(v);
+  renderPathChip(v);
   $('#tNoteSnapshot').textContent = '';
   $('#keyPoints').hidden = true;
   $('#pointList').replaceChildren();
@@ -449,6 +488,12 @@ function checkRecall(){
       $('#pointList').append(older);
     }
   }
+  const compare = !aiDraft && notesFor(current);
+  $('#aiCompare').hidden = !compare;
+  if (compare) {
+    $('#aiCompare').open = false;
+    $('#aiCompareList').innerHTML = compare.points.map(p => `<li>${esc(p.text)}</li>`).join('');
+  }
   setTrainerStep('check');
   updateFinishState();
 }
@@ -463,6 +508,7 @@ function finishRep(){
   const now = Date.now();
   const id = keyOf(v);
   const isRepeat = repeatedToday(S, id);
+  const firstRep = !S.done[id];
   const nextText = previewText(S.done[id] || null, effective, now);
 
   if (!isRepeat) {
@@ -485,7 +531,8 @@ function finishRep(){
   const xp = isRepeat ? 2 : 10 + effective * 2;
   S.xp += xp;
   if (!isRepeat) {
-    S.notes.push({ id, title:v.title, text:noteSnapshot, rating:effective, at:nowIso, day:t, recall, mode:promptMode });
+    S.notes.push({ id, title:v.title, text:noteSnapshot, rating:effective, at:nowIso, day:t, recall, mode:promptMode,
+      ...(aiDraft ? { ai:noteOrigin(aiDraft, noteSnapshot) } : {}) });
     bumpStreak(S);
   }
   clearDraft(id);
@@ -495,14 +542,75 @@ function finishRep(){
   $('#doneRing').textContent = `${newRepsToday(S)}/${TARGET + S.extra}`;
   $('#doneXP').textContent = `+${xp} xp${isRepeat ? ' · same-day repeat (goal unchanged)' : ''}`;
   $('#doneDue').textContent = isRepeat ? 'Schedule unchanged' : `Back ${nextText}`;
-  const nextPool = pickSession(S, lang, false).filter(x => keyOf(x) !== id && !repeatedToday(S, keyOf(x)));
-  const wantNew = newRepsToday(S) < TARGET + S.extra;   // new videos first until today's goal is met
-  const next = (wantNew && nextPool.find(x => !S.done[keyOf(x)])) || nextPool[0];
-  $('#btnNextRep').hidden = !next;
-  $('#btnNextRep').dataset.next = next ? keyOf(next) : '';
   setTrainerStep('done');
+  showNextStep(v, { firstRep, isRepeat, note:noteSnapshot, rating:effective });
   navigator.vibrate?.(12);
   if (S.log.length === 1) setTimeout(showInstallPrompt,900);
+}
+
+/* ── next step: the module path, adjusted by the AI's read of your note ── */
+const autoOn = () => {
+  let pref = null; try { pref = localStorage.getItem('braingym.autonext'); } catch {}
+  return pref ? pref === 'on' : !navigator.webdriver;   // automation is never navigated by a timer unless it opts in
+};
+function cancelAuto(){ clearInterval(autoTimer); autoTimer = null; if ($('#autoLine')) $('#autoLine').textContent = ''; }
+
+/* The old "what next" rule (reviews first, weakest module) — the fallback and the "mix it up" choice. */
+function mixedNext(id){
+  const pool = pickSession(S, lang, false).filter(x => keyOf(x) !== id && !repeatedToday(S, keyOf(x)));
+  const wantNew = newRepsToday(S) < TARGET + S.extra;   // new videos first until today's goal is met
+  return (wantNew && pool.find(x => !S.done[keyOf(x)])) || pool[0] || null;
+}
+
+function paintNext(video, { kicker, reason = '' }){
+  $('#nextCard').hidden = !video;
+  $('#btnNextRep').hidden = !video;
+  $('#btnNextRep').dataset.next = video ? keyOf(video) : '';
+  if (!video) return;
+  $('#nextKick').textContent = kicker;
+  $('#nextTitle').textContent = video.title;
+  $('#nextWhy').textContent = video.why || '';
+  $('#nextReason').textContent = reason; $('#nextReason').hidden = !reason;
+  $('#btnNextRep').textContent = 'Start next lesson';
+}
+
+function startAuto(token){
+  cancelAuto();
+  if (!autoOn() || token !== nextToken || trainerStep !== 'done') return;
+  let left = 6;
+  const tick = () => {
+    if (token !== nextToken || trainerStep !== 'done' || activeRoute !== 'train') return cancelAuto();
+    $('#autoLine').textContent = left ? `Next lesson starts in ${left}s. Uncheck to stop.` : '';
+    if (!left--) { const id = $('#btnNextRep').dataset.next; cancelAuto(); if (id) openTrainer(id); }
+  };
+  tick(); autoTimer = setInterval(tick, 1000);
+}
+
+async function showNextStep(v, { firstRep, isRepeat, note, rating }){
+  const token = ++nextToken;
+  const mix = mixedNext(keyOf(v));
+  const info = firstRep && !isRepeat ? pathAfter(S, LIB.videos, v, lang) : null;
+  $('#autoNext').checked = autoOn();
+  $('#btnMix').hidden = true;
+  if (!info?.next) {                 // a review, a repeat, or the path is finished: the usual order
+    paintNext(mix, { kicker: info ? `${LIB.modules[v.module][0]} path complete. Up next` : 'Up next' });
+    return startAuto(token);
+  }
+  const kick = n => `Next step · ${LIB.modules[v.module][0]} · ${n} of ${info.total}`;
+  const plan = (video, reason = '') => paintNext(video, { kicker: kick(info.learned + 1), reason });
+  plan(info.next);
+  const showMix = () => { const m = mixedNext(keyOf(v)); $('#btnMix').hidden = !m; $('#btnMix').dataset.next = m ? keyOf(m) : ''; };
+  showMix();
+  let hold = false;
+  if (info.upcoming.length > 1) {
+    hold = true; $('#nextReason').textContent = 'Reading your note to choose the best next step…'; $('#nextReason').hidden = false;
+  }
+  if (hold) {
+    const pick = await suggestNext(v, note, rating, info.upcoming, lang);
+    if (token !== nextToken || trainerStep !== 'done') return;
+    if (pick) plan(pick.video, pick.reason); else plan(info.next);
+  }
+  startAuto(token);
 }
 
 /* ── routing + wiring ──────────────────────────────────── */
@@ -606,6 +714,7 @@ function renderAll(){ renderChrome(); renderLibrary(); renderProgress(); }
 /* Leave the trainer. history.back() only over an entry this app pushed: a
  * deep-linked or shared lesson has the previous site behind it, not our tabs. */
 function leaveTrainer(){
+  cancelAuto();
   if (trainerPushed) history.back();
   else go(activeTab, {historyMode:'replace'});
 }
@@ -736,8 +845,17 @@ function wire(){
     setTrainerStep('watch');
     updateWatchUI();
   };
-  $('#btnNextRep').onclick = () => { const id = $('#btnNextRep').dataset.next; if (id) openTrainer(id); };
-  $('#btnDone').onclick = () => { go(activeTab); renderAll(); };
+  $('#btnNextRep').onclick = () => { const id = $('#btnNextRep').dataset.next; cancelAuto(); if (id) openTrainer(id); };
+  $('#btnMix').onclick = () => { const id = $('#btnMix').dataset.next; cancelAuto(); if (id) openTrainer(id); };
+  $('#autoNext').onchange = e => {
+    try { localStorage.setItem('braingym.autonext', e.target.checked ? 'on' : 'off'); } catch {}
+    e.target.checked ? startAuto(nextToken) : cancelAuto();
+  };
+  $('#aiNotesList').onclick = e => {
+    const b = e.target.closest('[data-seek]'); if (!b) return;
+    try { ytPlayer?.seekTo(+b.dataset.seek, true); } catch {}
+  };
+  $('#btnDone').onclick = () => { cancelAuto(); go(activeTab); renderAll(); };
   $('#pointList').onchange = updateRecallHint;
   $('#rate').onclick = e => {
     const b = e.target.closest('button'); if (!b) return;
@@ -850,7 +968,7 @@ function wire(){
 
 /* ── boot ──────────────────────────────────────────────── */
 (async function boot(){
-  try { await loadLibrary(); }
+  try { await loadLibrary(); await loadNotes(); }
   catch (err) {
     // No lessons means nothing to render; say why instead of leaving a skeleton.
     console.error(err);

@@ -1,5 +1,6 @@
 /* B.R.A.I.N. library: single global LIB, load from library.json, custom reels. */
 import { keyOf } from './util.js';
+import { NOTES } from './tutor.js';
 export const LIB = { modules:{}, videos:[] };
 
 export async function loadLibrary(){
@@ -10,6 +11,16 @@ export async function loadLibrary(){
   LIB.modules = data.modules;
   LIB.videos  = data.videos.slice();
   return LIB;
+}
+
+/* AI study notes are optional: a missing or broken notes.json just means lessons have no AI notes. */
+export async function loadNotes(){
+  try {
+    const r = await fetch('notes.json');
+    const data = r.ok ? await r.json() : null;
+    if (data?.videos && typeof data.videos === 'object') Object.assign(NOTES, data.videos);
+  } catch {}
+  return NOTES;
 }
 
 /* Drop every user-added video (before an import or reset replaces S.custom). */

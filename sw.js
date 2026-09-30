@@ -2,7 +2,7 @@
    ─────────────────────────────────────────────────────────
    Strategy per resource:
      Shell   → stale-while-revalidate (cache-first, background refresh)
-     library.json → network-first with 3 s timeout, fallback to cache
+     library.json, notes.json → network-first with 3 s timeout, fallback to cache
      Cache only res.ok, never touch cross-origin.
    Update protocol: SW waits for user tap, then skipWaiting + reload.
    main.js hook → listen for {type:'sw-update-waiting'} on serviceWorker messages,
@@ -10,7 +10,7 @@
 */
 
 // deploy.sh stamps CACHE with the build version so every deploy gets a fresh shell cache.
-const CACHE = 'brain-a1d7f0b-202609282240';
+const CACHE = 'brain-762bcd8-202609302218';
 const SHELL_CACHE = CACHE;
 const API_CACHE  = 'brain-api-v2';
 
@@ -19,7 +19,7 @@ const SHELL = [
   './', 'index.html', 'style.css', 'manifest.json',
   'src/main.js', 'src/util.js', 'src/library.js', 'src/state.js',
   'src/scheduler.js', 'src/session.js', 'src/watch.js',
-  'src/intake.js', 'src/learn.js', 'src/notebook.js', 'src/ai.js',
+  'src/intake.js', 'src/learn.js', 'src/notebook.js', 'src/ai.js', 'src/tutor.js',
   'icons/icon-192.png', 'icons/icon-512.png',
   'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'
 ];
@@ -91,7 +91,10 @@ self.addEventListener('install', e => {
       // The first page load fetched library.json before this SW controlled it,
       // so seed the API cache now or the app cannot boot offline.
       .then(() => caches.open(API_CACHE))
-      .then(c => c.add(new Request('library.json', { cache: 'reload' })))
+      .then(c => Promise.all([
+        c.add(new Request('library.json', { cache: 'reload' })),
+        c.add(new Request('notes.json', { cache: 'reload' })).catch(() => {}),   // optional AI notes
+      ]))
       .then(() => {
         // After the shell is cached, if there are open pages this is an
         // update — tell them a new version is waiting.
@@ -138,7 +141,7 @@ self.addEventListener('fetch', e => {
   if (u.origin !== self.location.origin) return;   // never touch youtube/instagram
 
   // library.json: network-first with 3 s timeout
-  if (u.pathname.endsWith('/library.json')) {
+  if (u.pathname.endsWith('/library.json') || u.pathname.endsWith('/notes.json')) {
     e.respondWith(networkFirstTimeout(r, API_CACHE, 3000));
     return;
   }
