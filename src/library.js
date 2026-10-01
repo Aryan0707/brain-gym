@@ -54,9 +54,21 @@ export function rehydrateReel(c){
   }
   LIB.videos.push({
     id: c.id, module: c.module, lang: c.lang, custom: true, src: 'ig', vertical: true,
-    title: `Instagram Reel — added by you (${c.id})`, channel: 'Instagram',
+    title: c.title || `Instagram Reel — added by you (${c.id})`, channel: 'Instagram',
     dur: null, views: null, tier: 'reel', thumb: null,
     why: 'You added this one. Reels are short — watch it twice, then write the idea.',
     prompt: 'The one idea in this reel:',
   });
+}
+
+/* Fetch a public title for a YouTube link you added (YouTube's oEmbed answers browsers directly).
+   Best effort: offline, blocked or unknown → null, and the lesson keeps its placeholder title. */
+export async function fetchTitle(id, { fetchImpl = fetch, timeoutMs = 4000 } = {}){
+  try {
+    const url = `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)}`;
+    const res = await fetchImpl(url, { signal: AbortSignal.timeout(timeoutMs) });
+    if (!res.ok) return null;
+    const t = String((await res.json())?.title ?? '').trim();
+    return t ? t.slice(0, 200) : null;
+  } catch { return null; }
 }

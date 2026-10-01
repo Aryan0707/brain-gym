@@ -2,6 +2,7 @@
    Pure: no DOM, no network (the AI call lives in ai.js). */
 import { keyOf, segmentDuration } from './util.js';
 import { depthOf } from './notebook.js';
+import { levelOf } from './level.js';
 
 /* notes.json → { [videoId]: { summary, points:[{ t, text }] } }. Filled by loadNotes() in library.js. */
 export const NOTES = {};
@@ -25,13 +26,14 @@ export function reachedIndex(points, t){
   return i;
 }
 
-/* One module's path: shallow to deep (reel → drill → deep), then shortest first, then library order.
-   Each step builds on the last, so a module reads like a small course. `lang` filters, 'all' keeps both. */
+/* One module's path: basics to advanced (level, see level.js), then shallow to deep (reel → drill → deep), then
+   shortest first, then library order. Each step builds on the last, so a module reads like a small course.
+   A lesson with no approved level sorts by its length class, as before. `lang` filters, 'all' keeps both. */
 export function pathFor(videos, module, lang = 'all'){
   return videos
     .map((v, i) => ({ v, i }))
     .filter(({ v }) => v.module === module && (lang === 'all' || v.lang === lang))
-    .sort((a, b) => depthOf(a.v) - depthOf(b.v)
+    .sort((a, b) => levelOf(a.v) - levelOf(b.v) || depthOf(a.v) - depthOf(b.v)
       || (segmentDuration(a.v) || 0) - (segmentDuration(b.v) || 0) || a.i - b.i)
     .map(({ v }) => v);
 }

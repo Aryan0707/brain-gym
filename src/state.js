@@ -17,7 +17,7 @@ const IMPORT_KEY_RE = /^[A-Za-z0-9_-]{5,40}$/;
 const LANGS = ['hi', 'en'];
 
 export function blank(){
-  return { v:2, xp:0, done:{}, log:[], notes:[], custom:[],
+  return { v:2, xp:0, done:{}, log:[], notes:[], custom:[], order:[],
            streak:{cur:0,best:0,last:null}, sessionDate:null, extra:0 };
 }
 
@@ -61,6 +61,12 @@ function trimKeys(prefix, keep){
 
 const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
 
+/* The playlist order: an array of unique lesson keys. Anything else means "no saved order". */
+export function cleanOrder(o){
+  if (!Array.isArray(o)) return [];
+  return [...new Set(o.filter(k => typeof k === 'string' && k && k.length <= 60))];
+}
+
 /* Shape-check every collection so one bad entry cannot crash a render. Used on
  * load and on import; entries that cannot be repaired are dropped. */
 function coerceDefaults(S){
@@ -71,6 +77,7 @@ function coerceDefaults(S){
     last: typeof st.last === 'string' ? st.last : null,
   };
   S.custom = Array.isArray(S.custom) ? S.custom.filter(isObj) : [];
+  S.order  = cleanOrder(S.order);
   S.log    = Array.isArray(S.log) ? S.log.filter(e => isObj(e) && typeof e.id === 'string') : [];
   S.notes  = Array.isArray(S.notes)
     ? S.notes.filter(n => isObj(n) && typeof n.id === 'string').map(n => ({
@@ -175,10 +182,12 @@ export function sanitizeState(raw, LIB){
         && LANGS.includes(c.lang) && (c.src === undefined || c.src === 'ig'
           || (c.src === 'yt' && /^[A-Za-z0-9_-]{11}$/.test(c.id))))
       kept.push({ id:c.id, module:c.module, lang:c.lang,
-        ...(c.src === 'yt' ? { src:'yt', ...(c.shorts === true ? { shorts:true } : {}) } : {}) });
+        ...(c.src === 'yt' ? { src:'yt', ...(c.shorts === true ? { shorts:true } : {}) } : {}),
+        ...(typeof c.title === 'string' && c.title.trim() ? { title:c.title.trim().slice(0, 200) } : {}) });
     else dropped.push(c);
   }
   out.custom = kept;
+  out.order = cleanOrder(parsed.order);
   coerceDefaults(out);
   out.__droppedCustom = dropped.length;
   for (const e of out.log)   if (!e.day && e.at) try { e.day = todayKey(new Date(e.at)); } catch {}

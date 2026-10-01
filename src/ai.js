@@ -153,3 +153,6 @@ export function initAi(getCurrent){
   $('#aiKeyRemove').onclick = () => { setKey(''); renderKeyStatus(); };
   renderKeyStatus();
 }
+
+/* The OpenRouter endpoint and error copy, shared with src/search.js. */
+export { API as AI_API, ERRORS as AI_ERRORS };

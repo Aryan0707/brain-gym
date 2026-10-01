@@ -10,7 +10,7 @@
 */
 
 // deploy.sh stamps CACHE with the build version so every deploy gets a fresh shell cache.
-const CACHE = 'brain-762bcd8-202609302218';
+const CACHE = 'brain-3c803aa-202610012056';
 const SHELL_CACHE = CACHE;
 const API_CACHE  = 'brain-api-v2';
 
@@ -19,7 +19,7 @@ const SHELL = [
   './', 'index.html', 'style.css', 'manifest.json',
   'src/main.js', 'src/util.js', 'src/library.js', 'src/state.js',
   'src/scheduler.js', 'src/session.js', 'src/watch.js',
-  'src/intake.js', 'src/learn.js', 'src/notebook.js', 'src/ai.js', 'src/tutor.js',
+  'src/intake.js', 'src/learn.js', 'src/notebook.js', 'src/ai.js', 'src/tutor.js', 'src/playlist.js', 'src/search.js', 'src/level.js',
   'icons/icon-192.png', 'icons/icon-512.png',
   'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'
 ];

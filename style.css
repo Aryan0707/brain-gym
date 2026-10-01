@@ -2396,6 +2396,16 @@ button.module-row + button.module-row { border-top: 1px solid var(--line); }
 }
 .ai-key-actions { display: flex; gap: var(--s2, 8px); margin-top: var(--s2, 8px); }
 
+/* ── AI search: "find by meaning" under the Library search box ── */
+.ai-search-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2, 8px); margin: calc(var(--s2, 8px) * -1) 0 var(--s3, 12px); }
+.ai-search-bar .btn { min-height: 40px; }
+.ai-note { margin: 0 0 var(--s3, 12px); }
+.ai-hit { margin-bottom: var(--s2, 8px); }
+.ai-why {
+  margin: 4px 4px 0 12px; padding-left: 10px; border-left: 2px solid var(--accent, var(--line));
+  font-size: 13px; line-height: 1.4; color: var(--fg-2, var(--muted)); overflow-wrap: anywhere;
+}
+
 /* ── tutor: AI notes beside the video, the module path, and the next-step card ── */
 .pathchip { margin: 2px 0 0; font-size: var(--t-cap, 12px); color: var(--muted); letter-spacing: .02em; }
 .ainotes {
@@ -2426,3 +2436,63 @@ button.module-row + button.module-row { border-top: 1px solid var(--line); }
 .nextkick { font-size: var(--t-cap, 12px); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
 .nextreason { font-size: 14px; border-left: 3px solid var(--accent); padding-left: 10px; color: var(--fg-2); }
 .autonext { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--fg-2); min-height: 40px; }
+
+/* ── playlist ─────────────────────────────────────────── */
+.playlist-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--s3, 12px); margin-bottom: var(--s2, 8px); }
+.playlist-bar[hidden] { display: none; }
+.playlist-bar .sh { margin: 0; }
+#btnReorder[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+
+.playlist-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s3, 12px);
+  padding: var(--s3, 12px) var(--s4, 16px);
+  margin-bottom: var(--s3, 12px);
+  background: var(--accent-tint);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg, 20px);
+}
+.playlist-head[hidden] { display: none; }
+.playlist-head .ph-copy { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.playlist-head small { color: var(--accent); font-size: var(--t-foot, 13px); }
+.playlist-head strong {
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.playlist-head .btn { flex: 0 0 auto; }
+
+.row-num {
+  flex: 0 0 auto;
+  min-width: 28px;
+  text-align: center;
+  color: var(--muted);
+  font: 600 var(--t-foot, 13px)/1 var(--font);
+  font-variant-numeric: tabular-nums;
+}
+
+.row-item.editing { flex-wrap: wrap; }
+.row-item .reorder {
+  flex: 1 0 100%;
+  display: flex;
+  gap: var(--s2, 8px);
+  padding: 0 0 var(--s2, 8px);
+}
+.row-item .reorder button {
+  flex: 1 1 0;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--fg);
+  border-radius: var(--r-sm, 10px);
+  font: 600 var(--t-foot, 13px)/1 var(--font);
+  touch-action: manipulation;
+}
+.row-item .reorder button:disabled { opacity: .4; }
+
+#addReelUrl.sheet-area {
+  flex: 1 1 auto;
+  min-height: 84px;
+  line-height: 1.4;
+  font-size: 16px;   /* 16px keeps iOS from zooming on focus */
+  resize: vertical;
+}
+.sheet-row:has(.sheet-area) { align-items: flex-start; }

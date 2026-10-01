@@ -93,15 +93,32 @@
         <svg width="16" height="16"><use href="#i-x"/></svg>
       </button>
     </div>
+    <!-- AI search: shown once there is something to search for; results by meaning appear below it -->
+    <div class="ai-search-bar" id="aiSearchBar" hidden>
+      <button class="btn ghost" type="button" id="aiSearchBtn">Ask AI to find by meaning</button>
+      <small class="muted">Matches ideas, not just words. Uses your AI key.</small>
+    </div>
+    <div class="ai-search" id="aiSearch" aria-live="polite"></div>
 
     <div class="module-chips" id="modChips"></div>
 
     <div class="library-toolbar">
+      <div class="seg" id="viewSeg" role="group" aria-label="Library view">
+        <button data-view="playlist" class="on" aria-pressed="true">Playlist</button>
+        <button data-view="modules" aria-pressed="false">By module</button>
+      </div>
       <button class="btn ghost btn-filter" id="filterButton" aria-label="Filters">
         <svg width="16" height="16"><use href="#i-sliders"/></svg>
         <span>Filters</span>
         <span class="filter-badge" id="filterCount" hidden>0</span>
       </button>
+    </div>
+
+    <!-- playlist: where you left off, rendered by JS (playlist view only) -->
+    <div id="playlistHead" class="playlist-head" hidden></div>
+    <div class="playlist-bar" id="playlistBar" hidden>
+      <h2 class="sh" id="playlistCount">Playlist</h2>
+      <button class="btn ghost" id="btnReorder" aria-pressed="false" hidden>Reorder</button>
     </div>
 
     <div id="libCards" class="grid"></div>
@@ -178,9 +195,9 @@
 <!-- ══ trainer (overlay, push from right) ══ -->
 <section id="screen-train" class="trainer">
   <header class="trainer-nav">
-    <button class="back" id="btnBack" aria-label="Back to Today">
+    <button class="back" id="btnBack" aria-label="Back to Library">
       <svg width="20" height="20"><use href="#i-chevron-left"/></svg>
-      <span>Today</span>
+      <span>Library</span>
     </button>
     <div class="step-indicator" id="trainSteps" aria-label="Step 1 of 3, watch">
       <span class="step-dot active" data-step="watch"></span>
@@ -367,6 +384,15 @@
         <button data-tier="deep">Deep</button>
       </div>
     </div>
+    <div class="sheet-section" id="levelSection" hidden>
+      <label class="sheet-label">Level</label>
+      <div class="seg" id="sheetLevelSeg">
+        <button data-level="all" class="on">Any</button>
+        <button data-level="1">Basics</button>
+        <button data-level="2">Core</button>
+        <button data-level="3">Advanced</button>
+      </div>
+    </div>
     <div class="sheet-section">
       <label class="sheet-label">Language</label>
       <div class="seg" id="sheetLangSeg">
@@ -464,10 +490,10 @@
   <div class="sheet-body">
     <div class="sheet-handle"></div>
     <h3>Add a lesson</h3>
-    <p class="muted">In Instagram or YouTube tap Share → Copy link, then Paste here.</p>
+    <p class="muted">In Instagram or YouTube tap Share → Copy link, then Paste here. Paste several links (one per line) to add them all, in order, to the end of your playlist.</p>
     <div class="sheet-section sheet-row">
-      <label class="sr-only" for="addReelUrl">Instagram or YouTube link</label>
-      <input id="addReelUrl" placeholder="Reel or YouTube link…" autocomplete="off" inputmode="url" class="sheet-input">
+      <label class="sr-only" for="addReelUrl">Instagram or YouTube links</label>
+      <textarea id="addReelUrl" rows="3" placeholder="Paste one or many links…" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="url" class="sheet-input sheet-area"></textarea>
       <button class="btn ghost" id="addReelPaste" type="button">Paste</button>
     </div>
     <div class="sheet-section sheet-row">
@@ -515,7 +541,7 @@ addEventListener('error', function (e) {
   catch (_) { return; }
   var files = ['index.html', 'style.css', 'src/main.js', 'src/util.js', 'src/library.js',
     'src/state.js', 'src/scheduler.js', 'src/session.js', 'src/watch.js',
-    'src/intake.js', 'src/learn.js', 'src/notebook.js', 'src/ai.js', 'src/tutor.js'];
+    'src/intake.js', 'src/learn.js', 'src/notebook.js', 'src/ai.js', 'src/tutor.js', 'src/playlist.js', 'src/search.js', 'src/level.js'];
   var clear = window.caches ? caches.keys().then(function (ks) {
     return Promise.all(ks.map(function (k) { return caches.delete(k); }));
   }) : Promise.resolve();
