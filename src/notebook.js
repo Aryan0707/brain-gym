@@ -1,7 +1,7 @@
 /* B.R.A.I.N. organized notebook: every video you learned, filed Module → shallow-to-deep,
    each with all of its notes (oldest first, so you can see the idea grow). Pure: no DOM. */
 import { keyOf, segmentDuration } from './util.js';
-import { levelOf } from './level.js';
+import { levelOf, stepOf } from './level.js';
 
 /* How deep a video goes: a reel primes, a drill teaches one idea, a deep video expands it. */
 export const DEPTH = { reel:0, drill:1, deep:2 };
@@ -13,7 +13,8 @@ export const depthOf = v => DEPTH[v.tier] ?? (v.src === 'ig' ? DEPTH.reel : DEPT
 export function shelfOrder(a, b){
   // Basics to advanced, then shallow to deep (reel → drill → deep), then in the order you learned them,
   // then shortest first, so each module reads like a small curriculum.
-  return levelOf(a.v) - levelOf(b.v) || depthOf(a.v) - depthOf(b.v)
+  const sa = stepOf(a.v), sb = stepOf(b.v);
+  return levelOf(a.v) - levelOf(b.v) || (sa === sb ? 0 : sa < sb ? -1 : 1) || depthOf(a.v) - depthOf(b.v)
     || String(a.card?.first ?? '9999').localeCompare(String(b.card?.first ?? '9999'))
     || (segmentDuration(a.v) || 0) - (segmentDuration(b.v) || 0);
 }

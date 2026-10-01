@@ -23,6 +23,10 @@ export function levelOf(v){
 /* "Basics" | "Core" | "Advanced" for an approved level; '' when the lesson has none. */
 export const levelLabel = v => hasLevel(v) ? LEVELS[v.level] : '';
 
+/* A lesson's place in its module's step-by-step order (1 = first). Lessons the owner has not ordered yet sort after
+   the ordered ones in their level, so a new lesson never jumps ahead of the curriculum. */
+export const stepOf = v => Number.isInteger(v?.step) && v.step >= 1 ? v.step : Infinity;
+
 /* Lessons per level in one module (and language): [basics, core, advanced]. Only approved levels count. */
 export function levelCounts(videos, module, lang = 'all'){
   const out = [0, 0, 0];
