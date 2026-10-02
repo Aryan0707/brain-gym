@@ -10,7 +10,7 @@
 */
 
 // deploy.sh stamps CACHE with the build version so every deploy gets a fresh shell cache.
-const CACHE = 'brain-fa54606-202610012232';
+const CACHE = 'brain-3f7fa91-202610021937';
 const SHELL_CACHE = CACHE;
 const API_CACHE  = 'brain-api-v2';
 
