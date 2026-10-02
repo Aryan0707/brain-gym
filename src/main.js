@@ -19,12 +19,13 @@ import { nextReview, previewText, dueLabel, retention, isDue, RELEARN_HOURS,
 import { firstRepsToday, repsToday, newRepsToday, repeatedToday, dueList, capacity,
          displayStreak, bumpStreak, pickSession, interleave, rollDay } from './session.js';
 import { watchSatisfied, accumulateWatch } from './watch.js';
-import { PROMPT_MODES, choosePromptMode, promptFor } from './learn.js';
+import { PROMPT_MODES, choosePromptMode, promptFor, hasGuess, hintCues, hintCeiling, HINT_CAP, pointsCap,
+         calibrationNote, certainHitRate, wantsAction, savePlan, openPlan, answerPlan, followThrough } from './learn.js';
 import { buildShelves, depthOf } from './notebook.js';
 import { initAi, resetExplain, suggestNext } from './ai.js';
 import { candidatesFor, aiSearch, searchError, MIN_QUERY } from './search.js';
 import { levelOf, hasLevel, levelLabel } from './level.js';
-import { notesFor, notesAsText, noteOrigin, reachedIndex, pathAfter, stamp } from './tutor.js';
+import { notesFor, reachedIndex, pathAfter, stamp } from './tutor.js';
 import { playlistOrder, moveBy, moveAfter, resumePoint, nextInPlaylist, parseMany } from './playlist.js';
 
 /* ── mutable UI/session state ──────────────────────────── */
@@ -48,7 +49,9 @@ let watch = { pct:0, ended:false, verified:false, override:false };
 let watchedSeconds = 0, previousVideoTime = null, pollWatch = null, ytPlayer = null;
 let ytAPIPromise = null, rewatching = false;
 let activeTab = 'library', activeRoute = 'library', openSheetName = null, sheetOpener = null;
-let aiDraft = '';            // the AI's notes a new lesson's note started as ('' = written from memory)
+let guess = '';              // the pre-video guess for this first rep ('' = none)
+let hintsUsed = 0, confidence = 0;   // hints shown on this rep; 1-3 confidence said before the check (0 = not said)
+let playRate = 1.25;         // YouTube playback speed for a first watch (remembered)
 let playTime = 0, nextToken = 0, autoTimer = null;
 let trainerPushed = false;   // true when the trainer's history entry was pushed by us
 const scrollPositions = { library:0, progress:0 };
@@ -108,6 +111,23 @@ function stopPlayer(){
   else $('.player').prepend(Object.assign(document.createElement('div'), { id:'ytPlayer' }));
   $('#frame').src = 'about:blank';
   $('#frame').hidden = false;
+  $('#speed').hidden = true;
+}
+/* Playback speed for a YouTube first watch. Remembered; 1.25x by default (a cut of about a fifth of the time
+   with little loss), and shown only while a tracked player exists. */
+const RATES = [1, 1.25, 1.5, 1.75];
+function loadRate(){
+  try { const r = +localStorage.getItem('braingym.rate'); if (RATES.includes(r)) playRate = r; } catch {}
+}
+function applyRate(){
+  try { ytPlayer?.setPlaybackRate?.(playRate); } catch {}
+  document.querySelectorAll('#speed [data-rate]').forEach(b => {
+    const on = +b.dataset.rate === playRate;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+  });
+  const len = current ? segmentDuration(current) : 0;
+  const saved = len ? Math.round(len * (1 - 1 / playRate) / 60) : 0;
+  $('#speedSave').textContent = saved >= 1 ? `saves about ${saved} min` : '';
 }
 function updateWatchUI(){
   if (!current) return;
@@ -161,15 +181,17 @@ async function startPlayer(v){
         ...(Number.isFinite(v.start) ? { start:v.start } : {}),
         ...(Number.isFinite(v.end) ? { end:v.end } : {}) },
       events:{
+        onReady(){ applyRate(); },
         onStateChange(e){
           if (e.data === YT.PlayerState.PLAYING) {
+            applyRate();   // YouTube can reset the speed when quality changes
             previousVideoTime = e.target.getCurrentTime();
             clearInterval(pollWatch);
             pollWatch = setInterval(() => {
               if (!current || keyOf(current) !== key || trainerStep !== 'watch') return;
               try {
                 const t = e.target.getCurrentTime();
-                watchedSeconds = accumulateWatch(watchedSeconds, previousVideoTime, t);
+                watchedSeconds = accumulateWatch(watchedSeconds, previousVideoTime, t, playRate);
                 previousVideoTime = t;
                 const length = knownLength || e.target.getDuration?.() || 0;
                 watch.pct = length ? Math.min(1, watchedSeconds / length) : 0;
@@ -191,6 +213,7 @@ async function startPlayer(v){
         },
       },
     });
+    $('#speed').hidden = false; applyRate();
   } catch {
     $('#watchStatus').textContent = 'Watch tracking unavailable. Use self-report after watching.';
     $('#btnWatchedExternal').textContent = 'I watched it (self-report)';
@@ -220,14 +243,28 @@ function setTrainerStep(step){
 
 /* ── trainer helpers ───────────────────────────────────── */
 let earlierNotes = [];
-const recallSource = () => current?.recallKeys?.length ? 'curated'
-  : (S?.done[keyOf(current)] && earlierNotes.length ? 'own-note' : null);
+/* What a rep's self-check is measured against: the curated key points, else (a review) your own earlier note,
+   else (a first rep) the AI's points from the video's captions, else nothing and the rep is self-rated. */
+function recallSource(){
+  if (current?.recallKeys?.length) return 'curated';
+  if (S?.done[keyOf(current)] && earlierNotes.length) return 'own-note';
+  return notesFor(current) ? 'notes' : null;
+}
+function recallPoints(){
+  const src = recallSource();
+  return src === 'curated' ? current.recallKeys
+    : src === 'own-note' ? ['Today\'s note contains the core of my earlier note.']
+    : src === 'notes' ? notesFor(current).points.map(p => p.text) : [];
+}
 const hasRecallNote = () => $('#tNote').value.trim().length >= 15;
 const matchedPoints = () => document.querySelectorAll('#pointList input:checked').length;
-const effectiveRating = () => recallSource() === 'curated'
-  ? Math.min(pendingRating, [1, 2, 3, 5][matchedPoints()])
-  : recallSource() === 'own-note' && !matchedPoints() ? Math.min(pendingRating, 2)
-  : pendingRating;
+function effectiveRating(){
+  const src = recallSource(), m = matchedPoints();
+  const capped = src === 'curated' ? Math.min(pendingRating, [1, 2, 3, 5][m])
+    : src === 'notes' ? Math.min(pendingRating, pointsCap(m, recallPoints().length))
+    : src === 'own-note' && !m ? Math.min(pendingRating, 2) : pendingRating;
+  return Math.min(capped, hintCeiling(hintsUsed));   // every hint taken lowers what the rep can earn
+}
 
 function currentPreview(){
   if (!current || !pendingRating) return '';
@@ -239,11 +276,17 @@ function updateRecallHint(){
   if (!pendingRating) return;
   const preview = currentPreview();
   const source = recallSource();
-  $('#schedHint').textContent = source === 'curated'
+  const hinted = hintsUsed ? ` ${hintsUsed} hint${hintsUsed > 1 ? 's' : ''} used (rating max ${hintCeiling(hintsUsed)}).` : '';
+  $('#schedHint').textContent = (source === 'curated'
     ? `${matchedPoints()}/${current.recallKeys.length} points recalled. Review ${preview}. Self-checked, not automatically graded.`
+    : source === 'notes'
+      ? `${matchedPoints()}/${recallPoints().length} of the AI's points covered. Review ${preview}. Self-checked.`
     : source === 'own-note'
       ? `Your earlier note: ${matchedPoints() ? 'core present' : 'core missing (rating capped at 2)'}. Review ${preview}. Self-checked.`
-      : `Self-rated review: ${preview}.`;
+      : `Self-rated review: ${preview}.`) + hinted;
+  const calib = source === 'curated' || source === 'notes'
+    ? calibrationNote(confidence, { matched: matchedPoints(), total: recallPoints().length }) : '';
+  $('#calibNote').textContent = calib; $('#calibNote').hidden = !calib;
 }
 function updateFinishState(){
   const left = Math.max(0, 15 - $('#tNote').value.trim().length);
@@ -558,6 +601,10 @@ function renderProgress(){
     [dueList(S).length,'Due now','Reviews ready'],
     [S.notes.length,'Ideas kept',checkedSummary],
   ].map(([value,label,sub])=>`<div class="stat"><b>${value}</b><span>${label}</span><small>${esc(sub)}</small></div>`).join('');
+  const hit = certainHitRate(S.log), plans = followThrough(S.actions);
+  const learnLines = [hit !== null && `When you said "Certain", you were right ${hit}% of the time.`,
+    plans && `${plans.done} of ${plans.answered} plans followed through.`].filter(Boolean);
+  $('#learnStats').textContent = learnLines.join(' '); $('#learnStats').hidden = !learnLines.length;
   const due = dueList(S);
   $('#queueList').innerHTML = due.length ? `<div class="row-group">${due.map(x=>lessonRow(x.v,'review')).join('')}</div>`
     : '<p class="muted">Queue empty. Everything is scheduled ahead.</p>';
@@ -613,12 +660,21 @@ function openTrainer(id, {historyMode='push'}={}){
   playTime = 0; cancelAuto();
   const notes = notesFor(v);
   const firstRep = !S.done[keyOf(v)];
-  aiDraft = firstRep && notes ? notesAsText(notes) : '';
-  $('#tNote').value = loadDraft(keyOf(v)) || aiDraft;
-  $('#recallHintText').textContent = aiDraft
-    ? 'The AI took these notes from the video. Fix or add to them in your own words.'
+  // The first rep is a real recall, like every review: the box starts empty and the AI's points come after the check.
+  $('#tNote').value = loadDraft(keyOf(v));
+  $('#recallHintText').textContent = notes
+    ? 'Video and notes are hidden. Write what you remember; the AI notes come after you check.'
     : 'Video hidden while you write. Recall from memory.';
   $('#tNote').disabled = false;
+  // Guess first (first rep only), then say how sure you are, hints one at a time, and a plan after.
+  guess = ''; hintsUsed = 0; confidence = 0;
+  $('#tGuess').value = '';
+  $('#pretest').hidden = !firstRep;
+  $('#pretestQ').textContent = v.prompt || '';
+  $('#hintList').replaceChildren(); updateHintUI(); syncConfidence();
+  $('#aiNotes').open = false;
+  $('#guessEcho').hidden = true; $('#planCheck').hidden = true; $('#calibNote').hidden = true;
+  $('#plan').hidden = true;
   $('#aiCompare').hidden = true;
   renderWatchNotes(v);
   renderPathChip(v);
@@ -647,8 +703,16 @@ function checkRecall(){
   $('#tNote').disabled = true;
   $('#tNoteSnapshot').textContent = noteSnapshot;
   const source = recallSource();
-  const points = source === 'curated' ? current.recallKeys : source === 'own-note'
-    ? ['Today\'s note contains the core of my earlier note.'] : [];
+  const points = recallPoints();
+  $('#keyLegend').textContent = source === 'notes' ? 'Which of the AI\'s points did you cover?' : 'Which points were in your note?';
+  $('#guessEcho').hidden = !guess;
+  $('#guessEcho').textContent = guess ? `Before watching you guessed: “${guess}”. How close was it?` : '';
+  const prior = openPlan(S.actions, keyOf(current), todayKey());
+  $('#planCheck').hidden = !prior;
+  if (prior) {
+    $('#planCheckText').textContent = prior.text;
+    document.querySelectorAll('#planOutcomes button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+  }
   $('#keyPoints').hidden = !points.length;
   $('#selfRatedNote').hidden = !!points.length;
   $('#pointList').innerHTML = points.map((point, i) =>
@@ -667,7 +731,7 @@ function checkRecall(){
       $('#pointList').append(older);
     }
   }
-  const compare = !aiDraft && notesFor(current);
+  const compare = source !== 'notes' && notesFor(current);   // 'notes' already shows them as the checklist
   $('#aiCompare').hidden = !compare;
   if (compare) {
     $('#aiCompare').open = false;
@@ -702,16 +766,16 @@ function finishRep(){
   }
 
   const nowIso = new Date().toISOString();
-  const recall = source ? { matched, total:source === 'curated' ? v.recallKeys.length : 1, source } : null;
+  const recall = source ? { matched, total:recallPoints().length, source } : null;
   const logEntry = { id, at:nowIso, day:t, rating:effective, selfRating:pendingRating,
-    recall, mode:promptMode, watch:{ pct:watch.pct, ended:watch.ended, verified:watch.verified } };
+    recall, mode:promptMode, watch:{ pct:watch.pct, ended:watch.ended, verified:watch.verified },
+    ...(confidence ? { conf:confidence } : {}), ...(hintsUsed ? { hints:hintsUsed } : {}), ...(guess ? { guessed:true } : {}) };
   if (isRepeat) logEntry.repeat = true;
   S.log.push(logEntry);
   const xp = isRepeat ? 2 : 10 + effective * 2;
   S.xp += xp;
   if (!isRepeat) {
-    S.notes.push({ id, title:v.title, text:noteSnapshot, rating:effective, at:nowIso, day:t, recall, mode:promptMode,
-      ...(aiDraft ? { ai:noteOrigin(aiDraft, noteSnapshot) } : {}) });
+    S.notes.push({ id, title:v.title, text:noteSnapshot, rating:effective, at:nowIso, day:t, recall, mode:promptMode });
     bumpStreak(S);
   }
   clearDraft(id);
@@ -722,6 +786,8 @@ function finishRep(){
   $('#doneXP').textContent = `+${xp} xp${isRepeat ? ' · same-day repeat (goal unchanged)' : ''}`;
   $('#doneDue').textContent = isRepeat ? 'Schedule unchanged' : `Back ${nextText}`;
   setTrainerStep('done');
+  $('#plan').hidden = !wantsAction(v) || isRepeat;
+  $('#planText').value = ''; $('#planSaved').textContent = '';
   showNextStep(v, { firstRep, isRepeat, note:noteSnapshot, rating:effective });
   navigator.vibrate?.(12);
   if (S.log.length === 1) setTimeout(showInstallPrompt,900);
@@ -756,6 +822,7 @@ function paintNext(video, { kicker, reason = '' }){
 function startAuto(token){
   cancelAuto();
   if (!autoOn() || token !== nextToken || trainerStep !== 'done') return;
+  if (!$('#plan').hidden) { $('#autoLine').textContent = 'Auto-continue is paused so you can plan. Tap Start next lesson when ready.'; return; }
   let left = 6;
   const tick = () => {
     if (token !== nextToken || trainerStep !== 'done' || activeRoute !== 'train') return cancelAuto();
@@ -925,7 +992,48 @@ function onResume(){
   renderAll();
 }
 
+/* ── hints, confidence, plans ──────────────────────────── */
+const hintSource = () => notesFor(current)?.points.map(p => p.text) || current?.recallKeys || [];
+function updateHintUI(){
+  const cap = current ? Math.min(HINT_CAP, hintSource().length) : 0;
+  $('#hints').hidden = !cap;
+  $('#btnHint').hidden = hintsUsed >= cap;
+  $('#hintNote').textContent = hintsUsed
+    ? `A hint is a cue, not the answer. Each one lowers the best rating this rep can earn (now ${hintCeiling(hintsUsed)}).` : '';
+}
+function showHint(){
+  if (trainerStep !== 'recall' || recallRevealed || !current) return;
+  const cues = hintCues(hintSource(), 3);
+  if (hintsUsed >= Math.min(HINT_CAP, cues.length)) return;
+  const li = document.createElement('li');
+  li.textContent = `Hint ${hintsUsed + 1}: ${cues[hintsUsed]}`;
+  $('#hintList').append(li);
+  hintsUsed++; updateHintUI();
+}
+function syncConfidence(){
+  document.querySelectorAll('#conf [data-c]').forEach(b => {
+    const on = +b.dataset.c === confidence;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+  });
+}
+let planTimer = null;
+function onPlanInput(e){
+  if (!current) return;   // no auto-continue timer can be running: startAuto does not start while a plan is shown
+  const id = keyOf(current);
+  savePlan(S.actions, id, e.target.value, todayKey(), new Date().toISOString());
+  const kept = S.actions.some(a => a.id === id && !a.outcome);
+  $('#planSaved').textContent = kept ? 'Saved. I will ask whether it happened at your next review of this lesson.' : '';
+  clearTimeout(planTimer); planTimer = setTimeout(() => save(S), 400);
+}
+function onPlanAnswer(e){
+  const b = e.target.closest('[data-o]'); if (!b || !current) return;
+  if (!answerPlan(S.actions, keyOf(current), b.dataset.o, todayKey())) return;
+  document.querySelectorAll('#planOutcomes button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  save(S);
+}
+
 function wire(){
+  loadRate();
   document.querySelectorAll('.tabbar .tab').forEach(b => b.onclick = () => go(b.dataset.tab));
   addEventListener('popstate', handlePopState);
   document.addEventListener('visibilitychange', onResume);
@@ -1053,6 +1161,23 @@ function wire(){
   $('#aiSearchBtn').onclick = runAiSearch;
   $('#btnBack').onclick = () => { leaveTrainer(); renderAll(); };
   $('#tNote').oninput = e => { saveDraft(current && keyOf(current), e.target.value); updateFinishState(); };
+  $('#tGuess').oninput = e => { guess = hasGuess(e.target.value) ? e.target.value.trim() : ''; };
+  $('#tGuess').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } };
+  $('#speed').onclick = e => {
+    const b = e.target.closest('[data-rate]'); if (!b) return;
+    playRate = +b.dataset.rate;
+    try { localStorage.setItem('braingym.rate', String(playRate)); } catch {}
+    applyRate();
+  };
+  $('#btnHint').onclick = showHint;
+  $('#conf').onclick = e => {
+    const b = e.target.closest('[data-c]'); if (!b || trainerStep !== 'recall' || recallRevealed) return;
+    confidence = confidence === +b.dataset.c ? 0 : +b.dataset.c;
+    syncConfidence();
+  };
+  $('#planText').oninput = onPlanInput;
+  $('#planText').onblur = () => { clearTimeout(planTimer); save(S); };
+  $('#planOutcomes').onclick = onPlanAnswer;
   $('#btnWatched').onclick = () => {
     if (trainerStep !== 'watch' || $('#btnWatched').disabled) return;
     if (rewatching) { rewatching = false; setTrainerStep('check'); return; }
@@ -1069,6 +1194,7 @@ function wire(){
   $('#btnRewatch').onclick = () => {
     if (trainerStep !== 'check' || !recallRevealed) return;
     rewatching = true;
+    $('#pretest').hidden = true;
     $('#btnWatched').textContent = 'Back to check';
     $('#btnWatchedExternal').hidden = true;
     setTrainerStep('watch');
@@ -1282,7 +1408,7 @@ function wire(){
     localMidnight, HOUR_MS, DAY_MS, RELEARN_HOURS,
     migrateV1toV2, sanitizeState: (raw) => sanitizeState(raw, LIB),
     watchSatisfied, accumulateWatch, embedSrc, keyOf, segmentDuration, parseLink, linkFromSearch, interleave,
-    watch: () => ({ ...watch }), choosePromptMode, promptMode: () => promptMode,
+    watch: () => ({ ...watch }), rate: () => playRate, choosePromptMode, promptMode: () => promptMode,
     playlist: () => orderList().map(keyOf), view: () => view, parseMany: raw => parseMany(raw, parseLink),
     playlistOrder, moveBy, moveAfter, resumePoint, nextInPlaylist,
   };

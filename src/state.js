@@ -17,7 +17,7 @@ const IMPORT_KEY_RE = /^[A-Za-z0-9_-]{5,40}$/;
 const LANGS = ['hi', 'en'];
 
 export function blank(){
-  return { v:2, xp:0, done:{}, log:[], notes:[], custom:[], order:[],
+  return { v:2, xp:0, done:{}, log:[], notes:[], custom:[], order:[], actions:[],
            streak:{cur:0,best:0,last:null}, sessionDate:null, extra:0 };
 }
 
@@ -82,6 +82,10 @@ function coerceDefaults(S){
   S.notes  = Array.isArray(S.notes)
     ? S.notes.filter(n => isObj(n) && typeof n.id === 'string').map(n => ({
         ...n, title: String(n.title ?? ''), text: String(n.text ?? '') }))
+    : [];
+  // if-then plans made after a lesson, and whether they happened (see learn.js savePlan)
+  S.actions = Array.isArray(S.actions)
+    ? S.actions.filter(a => isObj(a) && typeof a.id === 'string' && typeof a.text === 'string')
     : [];
   const done = isObj(S.done) ? S.done : {};
   S.done = {};

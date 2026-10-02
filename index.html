@@ -167,6 +167,8 @@
       </div>
     </div>
 
+    <p class="muted learnstats" id="learnStats" hidden></p>
+
     <!-- modules — parent renders .module-row with .module-label/.module-progress/.bar -->
     <h2 class="sh">Modules</h2>
     <div id="capacities" class="caps"></div>
@@ -219,7 +221,20 @@
 
     <!-- step: watch -->
     <section id="stepWatch" class="trainStep" hidden>
+      <section class="pretest" id="pretest" hidden aria-label="Guess before you watch">
+        <label for="tGuess"><b>Guess first</b> <span id="pretestQ"></span></label>
+        <input id="tGuess" type="text" maxlength="200" autocomplete="off" enterkeyhint="done" placeholder="One line. A wrong guess still helps you learn.">
+        <p class="muted">Then watch to see how close you were. You can skip this.</p>
+      </section>
       <div class="player"><div id="ytPlayer"></div><iframe id="frame" title="Lesson video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+      <div class="speed" id="speed" role="group" aria-label="Playback speed" hidden>
+        <span class="speed-l">Speed</span>
+        <button type="button" data-rate="1" aria-pressed="false">1×</button>
+        <button type="button" data-rate="1.25" aria-pressed="false">1.25×</button>
+        <button type="button" data-rate="1.5" aria-pressed="false">1.5×</button>
+        <button type="button" data-rate="1.75" aria-pressed="false">1.75×</button>
+        <span class="speed-save muted" id="speedSave" aria-live="polite"></span>
+      </div>
       <h2 id="tTitle"></h2>
       <p class="muted" id="tChannel"></p>
       <p class="pathchip" id="tPath" hidden></p>
@@ -228,11 +243,11 @@
         <button class="btn ghost explain-btn">Explain it simpler</button>
         <div class="explain-out" aria-live="polite" hidden></div>
       </div>
-      <section class="ainotes" id="aiNotes" hidden aria-label="AI notes">
-        <h3>AI notes <small>tap a point to jump there</small></h3>
+      <details class="ainotes" id="aiNotes" hidden>
+        <summary><span>Skip ahead · AI notes</span> <small>tap a point to jump there</small></summary>
         <p class="ainotes-sum" id="aiNotesSum"></p>
         <ol id="aiNotesList"></ol>
-      </section>
+      </details>
       <p class="muted" id="watchStatus" aria-live="polite"></p>
       <!-- action bar: buttons LIVE here for test visibility -->
       <div class="trainer-action-bar">
@@ -252,6 +267,17 @@
         </div>
         <textarea id="tNote" rows="5" placeholder="The idea, in my own words…"></textarea>
         <p class="muted" id="noteCounter" aria-live="polite">15 more characters</p>
+        <div class="conf" id="conf" role="group" aria-label="How sure are you that this is right?">
+          <span class="conf-l">How sure are you?</span>
+          <button type="button" data-c="1" aria-pressed="false">Guessing</button>
+          <button type="button" data-c="2" aria-pressed="false">Fairly sure</button>
+          <button type="button" data-c="3" aria-pressed="false">Certain</button>
+        </div>
+        <div class="hints" id="hints" hidden>
+          <ol id="hintList"></ol>
+          <button type="button" class="btn ghost" id="btnHint">Stuck? Show a hint</button>
+          <p class="muted" id="hintNote" aria-live="polite"></p>
+        </div>
       </div>
       <!-- action bar -->
       <div class="trainer-action-bar">
@@ -265,8 +291,20 @@
         <h2 class="rep-heading">Check &amp; rate</h2>
         <p class="replabel">What you wrote from memory</p>
         <div class="noteSnapshot" id="tNoteSnapshot"></div>
+        <p class="guess-echo" id="guessEcho" hidden></p>
+        <p class="calib" id="calibNote" aria-live="polite" hidden></p>
+        <p class="muted" id="plannedEcho" hidden></p>
+        <fieldset class="plancheck" id="planCheck" hidden>
+          <legend>Last time you planned</legend>
+          <p id="planCheckText"></p>
+          <div class="plan-outcomes" id="planOutcomes">
+            <button type="button" data-o="yes" aria-pressed="false">Did it</button>
+            <button type="button" data-o="partly" aria-pressed="false">Partly</button>
+            <button type="button" data-o="no" aria-pressed="false">Not yet</button>
+          </div>
+        </fieldset>
         <fieldset id="keyPoints" hidden>
-          <legend>Which points were in your note?</legend>
+          <legend id="keyLegend">Which points were in your note?</legend>
           <div id="pointList"></div>
           <p class="muted">None? Leave every box empty. This is a self-check, not automatic grading.</p>
         </fieldset>
@@ -307,6 +345,12 @@
         <p id="doneXP"></p>
         <p id="doneDue"></p>
       </div>
+      <section class="plan" id="plan" hidden>
+        <h3>Make it real</h3>
+        <p class="muted" id="planAsk">Knowing is not doing. Pick one moment this week and say what you will do.</p>
+        <textarea id="planText" rows="2" maxlength="300" placeholder="If ___ happens, then I will ___."></textarea>
+        <p class="muted" id="planSaved" aria-live="polite"></p>
+      </section>
       <div class="nextcard" id="nextCard" hidden>
         <p class="nextkick" id="nextKick"></p>
         <h3 id="nextTitle"></h3>

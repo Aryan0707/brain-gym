@@ -12,13 +12,6 @@ export const notesFor = v => (v && NOTES[v.id]?.points?.length && !Number.isFini
 const stamp = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 export { stamp };
 
-/* The note a new lesson starts with: the AI's points as bullets, ready to edit. */
-export const notesAsText = n => n.points.map(p => `• ${p.text}`).join('\n');
-
-/* Did the learner change the AI draft? 'as-is' | 'edited' — logged so progress can tell them apart. */
-export const noteOrigin = (draft, written) =>
-  String(written).trim() === String(draft).trim() ? 'as-is' : 'edited';
-
 /* Index of the last point already reached at playback second `t` (-1 before the first). */
 export function reachedIndex(points, t){
   let i = -1;

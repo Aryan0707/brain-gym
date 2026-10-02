@@ -2412,8 +2412,10 @@ button.module-row + button.module-row { border-top: 1px solid var(--line); }
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm, 10px);
   padding: 12px 13px; margin: var(--s3, 12px) 0;
 }
-.ainotes h3 { margin: 0 0 4px; font-size: 15px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.ainotes h3 small { color: var(--muted); font-weight: 400; font-size: var(--t-cap, 12px); }
+.ainotes summary { cursor: pointer; list-style: none; min-height: 40px; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; }
+.ainotes summary::-webkit-details-marker { display: none; }
+.ainotes summary small { color: var(--muted); font-weight: 400; font-size: var(--t-cap, 12px); }
+.ainotes[open] summary { margin-bottom: 4px; }
 .ainotes-sum { margin: 0 0 10px; font-size: 13px; color: var(--fg-2); }
 .ainotes ol, .aicompare ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .ainotes li button {
@@ -2496,3 +2498,32 @@ button.module-row + button.module-row { border-top: 1px solid var(--line); }
   resize: vertical;
 }
 .sheet-row:has(.sheet-area) { align-items: flex-start; }
+
+/* ── learn faster: guess first, speed, hints, confidence, calibration, plans ── */
+.pretest { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md, 14px); padding: 12px 13px; margin: 0 0 var(--s3, 12px); display: flex; flex-direction: column; gap: 8px; }
+.pretest[hidden], .speed[hidden], .hints[hidden], .plan[hidden], .guess-echo[hidden], .calib[hidden], .plancheck[hidden] { display: none; }
+.pretest label { font-size: 15px; line-height: 1.4; }
+.pretest label span { color: var(--fg-2); }
+.pretest input { width: 100%; min-height: 44px; padding: 10px 12px; border-radius: var(--r-sm, 10px); border: 1px solid var(--line); background: var(--bg, transparent); color: var(--fg); font: inherit; font-size: 16px; }
+.pretest p { margin: 0; font-size: 13px; }
+.speed { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 8px 0 0; }
+.speed-l { font-size: var(--t-cap, 12px); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-right: 2px; }
+.speed button, .conf button, .plan-outcomes button { min-height: 40px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg-2); font: inherit; font-size: 14px; cursor: pointer; }
+.speed button.on, .conf button.on, .plan-outcomes button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.speed-save { font-size: 13px; margin-left: 4px; }
+.conf { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0 0; }
+.conf-l { font-size: 14px; color: var(--fg-2); margin-right: 2px; }
+.hints { margin: 12px 0 0; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.hints ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--fg-2); }
+.hints p { margin: 0; font-size: 13px; }
+.guess-echo { margin: 8px 0; font-size: 14px; color: var(--fg-2); border-left: 3px solid var(--line); padding-left: 10px; }
+.calib { margin: 8px 0; font-size: 14px; border-left: 3px solid var(--accent); padding-left: 10px; color: var(--fg-2); }
+.plancheck { border: 1px solid var(--line); border-radius: var(--r-sm, 10px); padding: 10px 12px; margin: 10px 0; }
+.plancheck legend { font-size: var(--t-cap, 12px); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; padding: 0 6px; }
+.plancheck p { margin: 0 0 8px; font-size: 15px; line-height: 1.4; }
+.plan-outcomes { display: flex; gap: 6px; flex-wrap: wrap; }
+.plan { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md, 14px); padding: 14px; margin: var(--s3, 12px) 0; display: flex; flex-direction: column; gap: 8px; }
+.plan h3 { margin: 0; font-size: 17px; }
+.plan p { margin: 0; font-size: 14px; }
+.plan textarea { width: 100%; padding: 10px 12px; border-radius: var(--r-sm, 10px); border: 1px solid var(--line); background: var(--bg, transparent); color: var(--fg); font: inherit; font-size: 16px; resize: vertical; }
+.learnstats { margin: 4px 0 var(--s3, 12px); font-size: 14px; }

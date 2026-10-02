@@ -60,6 +60,10 @@
   "cyber": [
    "Cyber & Security",
    "#7c3aed"
+  ],
+  "dark": [
+   "Dark Religion",
+   "#ef4444"
   ]
  },
  "videos": [
@@ -3075,6 +3079,358 @@
    "thumb": "https://i.ytimg.com/vi/1IwWkKAq9dk/mqdefault.jpg",
    "src": "yt",
    "vertical": false
+  },
+  {
+   "id": "NVd8kuufBhM",
+   "module": "dark",
+   "lang": "en",
+   "title": "What really happened during the Salem Witch Trials - Brian A. Pavlac",
+   "channel": "TED-Ed",
+   "dur": 331,
+   "views": 8246402,
+   "tier": "drill",
+   "level": 1,
+   "step": 2,
+   "why": "Salem in 6 minutes: how a village turned on its neighbours and the courts convicted on confession.",
+   "prompt": "Why did Salem convict mostly on a confession, and who paid for it?",
+   "thumb": "https://i.ytimg.com/vi/NVd8kuufBhM/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Salem's accused were offered a choice: falsely confess and name others, or risk execution - and the courts valued repentance over truth.",
+    "Every person arrested was an outsider in some way: poor, absent from church, suing an accuser, or an enslaved woman known by first name only.",
+    "The 1692 panic began with a physician who found nothing physically wrong with the girls and still diagnosed them as under 'an evil hand'."
+   ]
+  },
+  {
+   "id": "ncy4VLuEefw",
+   "module": "dark",
+   "lang": "en",
+   "title": "What Is The Occult?",
+   "channel": "The Esoteric Cross",
+   "dur": 422,
+   "views": 15369,
+   "tier": "drill",
+   "level": 1,
+   "step": 1,
+   "why": "The word 'occult' just means hidden - the baseline definition most people get wrong.",
+   "prompt": "What does 'occult' actually mean, and why is it not the same as 'evil'?",
+   "thumb": "https://i.ytimg.com/vi/ncy4VLuEefw/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "'Occult' comes from the Latin occultare, to conceal - it means hidden, not evil or dangerous.",
+    "Religions are said to have an exoteric face taken at face value and an esoteric meaning underneath, like a text's back speech.",
+    "Kabbalah's Tree of Life describes 10 spheres of the divine, with a hidden sphere (Daath, knowledge) as the goal."
+   ]
+  },
+  {
+   "id": "zKYkE4aZF6o",
+   "module": "dark",
+   "lang": "en",
+   "title": "The Meaning Behind Most Common Religious Symbols",
+   "channel": "Mythos Lab",
+   "dur": 485,
+   "views": 3308,
+   "tier": "drill",
+   "level": 1,
+   "step": 3,
+   "why": "Every symbol you 'recognise' has a borrowed history - the star and crescent is the clearest.",
+   "prompt": "Which religious symbol turned out to have a completely different origin?",
+   "thumb": "https://i.ytimg.com/vi/zKYkE4aZF6o/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "The star and crescent was never an early Muslim symbol - it came from the Ottoman Empire, and many Muslims still reject it.",
+    "Early Muslims showed religious identity through Arabic calligraphy of prayers and Quranic verses rather than pictures.",
+    "The Ichthys fish was a secret code for Christians under persecution: Iesous Theou Yios Soter, Jesus Christ, Son of God, Savior."
+   ]
+  },
+  {
+   "id": "BofnqmbuXO8",
+   "module": "dark",
+   "lang": "hi",
+   "title": "डायन के नाम पर हत्या! Jharkhand से देश तक Witch Hunting की खौफनाक कहानी",
+   "channel": "Aslam Unfiltered",
+   "dur": 342,
+   "views": 36,
+   "tier": "drill",
+   "level": 1,
+   "step": 5,
+   "why": "भारत में डायन प्रथा आज भी जिंदा है - यह वीडियो 2026 की झारखंड घटना से शुरू होता है।",
+   "prompt": "डायन प्रथा में पीड़ित सबसे पहले कौन बनता है, और क्यों?",
+   "thumb": "https://i.ytimg.com/vi/BofnqmbuXO8/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Witch-hunting in Jharkhand still kills: a mob set a woman and her 2-year-old child alight over a suspicion, and police action came too late.",
+    "The victims are almost always a middle-aged or widowed woman, and the accused are usually the woman's own relatives.",
+    "It follows three patterns - a death or illness triggers suspicion, a grudge is exploited, and no one consults a doctor or the law."
+   ]
+  },
+  {
+   "id": "MVkkYTwCKWc",
+   "module": "dark",
+   "lang": "hi",
+   "title": "अंधविश्वास VS विज्ञान -6 SUPERSTITIONS AND THEIR LOGIC BEHIND THEM-Nathfacts|FEP15",
+   "channel": "Nathfacts",
+   "dur": 368,
+   "views": 4992,
+   "tier": "drill",
+   "level": 1,
+   "step": 4,
+   "why": "बिल्ली रास्ता काटना, नींबू-मिर्ची, पीपल - हर अंधविश्वास की एक असली वजह।",
+   "prompt": "इनमें से किस अंधविश्वास की असली वजह मुझे सबसे हैरतअंगी लगी, और क्यों?",
+   "thumb": "https://i.ytimg.com/vi/MVkkYTwCKWc/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Stopping for a cat on the road comes from bullock carts: a night-active animal crossing could unbalance the cart, so drivers waited for it to pass.",
+    "Throwing copper coins into rivers was about water quality - water stored in copper vessels was thought to be contaminated, so the coins were thrown away.",
+    "Hanging lemon and chilli at the door works because citrus gives off citric acid, which drives insects away."
+   ]
+  },
+  {
+   "id": "kB-dJaCXAxA",
+   "module": "dark",
+   "lang": "en",
+   "title": "Why do people join cults? - Janja Lalich",
+   "channel": "TED-Ed",
+   "dur": 386,
+   "views": 5921587,
+   "tier": "drill",
+   "level": 2,
+   "step": 6,
+   "why": "Why people join cults: the definition (high commitment, hierarchy, isolation) and how recruitment works.",
+   "prompt": "What two things make a cult a cult, apart from its beliefs?",
+   "thumb": "https://i.ytimg.com/vi/kB-dJaCXAxA/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "A cult is defined by high commitment plus strict hierarchy - not by its beliefs; many cults are not even religious.",
+    "Modern cults separate members from the outside world and control relationships, finances and living arrangements; the word cultus once meant devoted worshippers.",
+    "More than two-thirds of cult members are recruited by a friend, family member or coworker, so recruitment targets the recently lonely or displaced."
+   ]
+  },
+  {
+   "id": "pM768ddKJIU",
+   "module": "dark",
+   "lang": "en",
+   "title": "The Psychology of Cults Explained: The Allure of Belonging",
+   "channel": "Chris Shelton, MSc",
+   "dur": 460,
+   "views": 3757,
+   "tier": "drill",
+   "level": 2,
+   "step": 7,
+   "why": "Belonging is a survival drive - cults fill a real need, then exploit it with groupthink.",
+   "prompt": "Which human need makes cults dangerous, and how does groupthink finish the job?",
+   "thumb": "https://i.ytimg.com/vi/pM768ddKJIU/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Humans are wired for connection and isolation drives people to seek belonging; cults step into that gap with community that feels unconditional.",
+    "The warmth is a veneer - cults invent their own language and customs, then groupthink makes members stop questioning and suppress doubts.",
+    "Isolation from outside perspectives plus repeated reinforcement and emotional manipulation turn conformity into something demanded, and resisters get labelled traitors."
+   ]
+  },
+  {
+   "id": "xUCqY8C0Cl0",
+   "module": "dark",
+   "lang": "en",
+   "title": "The SATANIC TEMPLE Explained in 4 Minutes",
+   "channel": "Symbol Sage",
+   "dur": 239,
+   "views": 23178,
+   "tier": "drill",
+   "level": 2,
+   "step": 8,
+   "why": "The Satanic Temple uses Satan as a symbol of protest, not a deity - context kills the stereotype.",
+   "prompt": "What does the Satanic Temple actually want, and what are they protesting?",
+   "thumb": "https://i.ytimg.com/vi/xUCqY8C0Cl0/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "The Satanic Temple treats Satan as a symbol of protest and rebellion against religious authority, not as a deity.",
+    "It is rationalist and atheistic, and it rejects LaVeyan Satanism as too authoritarian and supernaturalist.",
+    "Its visible acts - lawsuits over the Ten Commandments, proposed Black Mass on a campus - are deliberate publicity for church-state separation and civil liberties."
+   ]
+  },
+  {
+   "id": "1xWjmXu05us",
+   "module": "dark",
+   "lang": "en",
+   "title": "QAnon Explained in 3 Minutes",
+   "channel": "inFact with Brian Dunning",
+   "dur": 229,
+   "views": 6161,
+   "tier": "drill",
+   "level": 2,
+   "step": 9,
+   "why": "QAnon in 3 minutes: the belief gap. Wanting control over your life makes conspiracies attractive.",
+   "prompt": "Why does feeling out of control make a person believe a conspiracy?",
+   "thumb": "https://i.ytimg.com/vi/1xWjmXu05us/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Q's predictions of mass arrests never came true, yet supporters adopted him anyway as a sort of messiah.",
+    "For the theory to work, you must assume Trump knew about and approved anonymous posts on message boards - which would itself be treasonous.",
+    "The research answer is a belief gap: the less in control of your own life you feel, the more likely you are to believe a conspiracy against you."
+   ]
+  },
+  {
+   "id": "a10i9aULIYY",
+   "module": "dark",
+   "lang": "hi",
+   "title": "क्या धर्म से war होती है? | Does religion cause war ? Opinion from Gita",
+   "channel": "GitaQuest - Hindi",
+   "dur": 470,
+   "views": 1182,
+   "tier": "drill",
+   "level": 2,
+   "step": 11,
+   "why": "अगर धर्म हिंसा का कारण होता, तो नास्तिक देश शांत होते - आंकड़े इसके उलट हैं।",
+   "prompt": "धर्म और हिंसा का रिश्ता: आंकड़े क्या कहते हैं, और क्यों वे उलट हैं?",
+   "thumb": "https://i.ytimg.com/vi/a10i9aULIYY/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "The claim 'religion causes violence' predicts atheist societies would be peaceful - the Soviet Union, which crushed religious practice, was among the most violent.",
+    "France's primary school data: only 123 out of 1083 deaths avoided were attributed to religion, and violence rose as atheism rose.",
+    "The Gita maps reality onto three qualities (guna) which shape how we see the world and act - the real issue is the agenda, not the religion."
+   ]
+  },
+  {
+   "id": "DtKnG0cChTA",
+   "module": "dark",
+   "lang": "hi",
+   "title": "Black Magic Exposed - Religion, Black Magic & Reality",
+   "channel": "Book Buddy",
+   "dur": 1285,
+   "views": 59662,
+   "tier": "deep",
+   "level": 2,
+   "step": 10,
+   "why": "काला जादू: डर की उत्पत्ति, नज़र, टोना - और क्यों यह खत्म नहीं होता।",
+   "prompt": "काले जादू का डर इंसान में कहाँ से आता है?",
+   "thumb": "https://i.ytimg.com/vi/DtKnG0cChTA/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Fear of magic comes from what is unseen - invisible presences, voices from the dark, and situations where you feel helpless and have no route out.",
+    "People have fought magic for thousands of years with spells, warding off evil eyes, and reading the Quran for protection.",
+    "The questions worth asking are whether magic exists at all and whether spells really bring a job or cure an illness, not whether the stories are frightening."
+   ]
+  },
+  {
+   "id": "ohGj3BnOVyg",
+   "module": "dark",
+   "lang": "en",
+   "title": "What is Satanism?",
+   "channel": "ReligionForBreakfast",
+   "dur": 467,
+   "views": 342646,
+   "tier": "drill",
+   "level": 3,
+   "step": 14,
+   "why": "Satanism is not one thing: rationalist vs theistic, and the panic that manufactured the stereotype.",
+   "prompt": "Name the two kinds of Satanism and the book that started the panic.",
+   "thumb": "https://i.ytimg.com/vi/ohGj3BnOVyg/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Satanism splits into rationalist (atheistic; Satan as a symbol of rebellion and individuality) and theistic/esoteric (Satan as a real being to model your life after).",
+    "Aquino, founder of the Temple of Set, argued Satan was a corruption of the Egyptian god Set, a guide to humanity.",
+    "Michelle Remembers (1980) supplied the template for panic allegations; cases filed jumped from 66 in 1966 to 168 in the 1980s and 235 in the 1990s, producing wrongful convictions."
+   ]
+  },
+  {
+   "id": "plEImKEIRm8",
+   "module": "dark",
+   "lang": "en",
+   "title": "What was the Satanic Panic?",
+   "channel": "CBC News",
+   "dur": 477,
+   "views": 598133,
+   "tier": "drill",
+   "level": 3,
+   "step": 15,
+   "why": "The Satanic Panic, as told by CBC: how one book turned a rumour into police raids and wrongful convictions.",
+   "prompt": "Which book started the Satanic Panic, and what did it cost real people?",
+   "thumb": "https://i.ytimg.com/vi/plEImKEIRm8/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "The panic spread through rock music and Dungeons & Dragons claims, then into daycare abuse allegations where children as young as two were questioned in ways now known to produce false accusations.",
+    "The spark was Michelle Remembers, which had no evidence or witnesses yet presented itself as a recovered memory.",
+    "Many cases collapsed at trial or on appeal; the accused lost years in prison, money and reputation."
+   ]
+  },
+  {
+   "id": "5sYhbtk8jJc",
+   "module": "dark",
+   "lang": "en",
+   "title": "The Origins of Satan",
+   "channel": "ReligionForBreakfast",
+   "dur": 1095,
+   "views": 3505735,
+   "tier": "deep",
+   "level": 3,
+   "step": 16,
+   "why": "The history of Satan: in the Hebrew Bible he is 'the accuser', not God's arch-enemy. The demon idea came later.",
+   "prompt": "In the Hebrew Bible, who is Satan? How did the idea of him change?",
+   "thumb": "https://i.ytimg.com/vi/5sYhbtk8jJc/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "In the earliest Hebrew Bible there is no supreme evil being - the noun Satan means adversary or accuser and refers to human enemies.",
+    "In Job and Zechariah Satan is a divine job title, a prosecutor in God's council - part of God's own court, not a fallen angel or absolute enemy.",
+    "Both passages come from literature written during or after the Babylonian exile, and Christians disagree to this day - about 40% in a 2009 survey said Satan is a symbol rather than a living being."
+   ]
+  },
+  {
+   "id": "SG2v3TUvzOc",
+   "module": "dark",
+   "lang": "hi",
+   "title": "Religion and the Decline of Magic by Keith Thomas explanation in hindi.DU MA#Religion and literature",
+   "channel": "Success Maker",
+   "dur": 1193,
+   "views": 1196,
+   "tier": "deep",
+   "level": 3,
+   "step": 12,
+   "why": "Keith Thomas की किताब: 16वीं-17वीं सदी में जादू क्यों खत्म हुआ - धर्म और विज्ञान का सच्चा इतिहास।",
+   "prompt": "इंग्लैंड में जादू क्यों खत्म हुआ, इसका आर्थिक-सामाजिक कारण क्या था?",
+   "thumb": "https://i.ytimg.com/vi/SG2v3TUvzOc/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Keith Thomas's Religion and the Decline of Magic (1971) covers 16th-17th century England, where population growth, plague and fire had no solution.",
+    "Popular magic - witchcraft, astrology, healing charms - flourished because religion was the only support and answer people had.",
+    "As print, literacy, state enforcement and science spread, magic declined and what had been a practical method turned into superstition."
+   ]
+  },
+  {
+   "id": "nma0gg-N1nI",
+   "module": "dark",
+   "lang": "hi",
+   "title": "Science, Religion and Magic: What’s the Difference?",
+   "channel": "VAIDS IAS",
+   "dur": 1266,
+   "views": 51,
+   "tier": "deep",
+   "level": 3,
+   "step": 13,
+   "why": "Sociology का सवाल: विज्ञान, धर्म और जादू में फर्क क्या है - परिभाषा और अनुसंधान।",
+   "prompt": "समाजशास्त्र में विज्ञान, धर्म और जादू को कैसे परिभाषित किया जाता है?",
+   "thumb": "https://i.ytimg.com/vi/nma0gg-N1nI/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "recallKeys": [
+    "Sociology calls the shared tools, customs, values and beliefs a group builds to adapt to its environment 'culture'.",
+    "Needs split into material needs (survival, physical living conditions) and non-material needs (intellectual development, satisfaction); culture answers both.",
+    "In sociology, science, religion and magic sit in the non-material culture, which is why magic is studied alongside religion rather than as a science."
+   ]
   }
  ],
  "reel_note": "Instagram embeds verified in-browser (video element rendered). Signed IG CDN thumbnail URLs expire, so reels render a text tile instead."
