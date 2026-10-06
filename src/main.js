@@ -33,7 +33,7 @@ let S = null;
 let lang = 'all';
 let modFilter = 'all';
 let tierFilter = 'all';
-let srcFilter = 'all';
+let library = 'yt';          // the active library: 'yt' (YouTube videos) or 'ig' (Instagram reels). Two libraries, never mixed.
 let levelFilter = 'all';     // 'all' | '1' | '2' | '3' (basics, core, advanced)
 let q = '';
 let aiq = null, aiToken = 0;   // AI search: { query, sig, status:'loading'|'done'|'error', picks, msg, code }
@@ -71,6 +71,10 @@ const motion = fn => {
   transition.finished.catch(() => {});
   return transition;
 };
+/* The module chips pin themselves just under the sticky top bar: tell CSS how tall that bar is. */
+const topBar = document.querySelector('#topNav');
+if (topBar && 'ResizeObserver' in window)
+  new ResizeObserver(() => document.documentElement.style.setProperty('--nav-h', `${topBar.offsetHeight}px`)).observe(topBar);
 function keyboardInset(){
   const vv = window.visualViewport;
   const inset = vv ? Math.max(0, window.innerHeight - vv.height - vv.offsetTop) : 0;
@@ -103,14 +107,21 @@ function youtubeAPI(){
   }).catch(err => { ytAPIPromise = null; throw err; });
   return ytAPIPromise;
 }
+/* Point the embed at `url` in a FRESH iframe. Re-setting .src on a live iframe adds an entry to the tab's
+   history, so the trainer's Back (history.back) would step the iframe instead of leaving the lesson. */
+function loadFrame(url, { hidden = false } = {}){
+  const old = $('#frame'), frame = old.cloneNode(false);
+  frame.src = url; frame.hidden = hidden;
+  old.replaceWith(frame);
+  return frame;
+}
 function stopPlayer(){
   clearInterval(pollWatch); pollWatch = null; previousVideoTime = null;
   if (ytPlayer) { try { ytPlayer.pauseVideo(); ytPlayer.destroy(); } catch {} ytPlayer = null; }
   const node = $('#ytPlayer');
   if (node) node.replaceWith(Object.assign(document.createElement('div'), { id:'ytPlayer' }));
   else $('.player').prepend(Object.assign(document.createElement('div'), { id:'ytPlayer' }));
-  $('#frame').src = 'about:blank';
-  $('#frame').hidden = false;
+  loadFrame('about:blank');
   $('#speed').hidden = true;
 }
 /* Playback speed for a YouTube first watch. Remembered; 1.25x by default (a cut of about a fifth of the time
@@ -159,7 +170,7 @@ function markNotes(){
   });
 }
 function renderPathChip(v){
-  const info = pathAfter(S, LIB.videos, v, lang);
+  const info = pathAfter(S, libVideos(libOf(v)), v, lang);
   $('#tPath').hidden = !info;
   if (info) $('#tPath').textContent = [LIB.modules[v.module][0], levelLabel(v), `step ${info.step} of ${info.total}`].filter(Boolean).join(' · ');
 }
@@ -167,14 +178,13 @@ function renderPathChip(v){
 async function startPlayer(v){
   stopPlayer();
   const key = keyOf(v);
-  const fallback = $('#frame');
-  fallback.src = embedSrc(v);
+  loadFrame(embedSrc(v));
   if (v.src === 'ig') return;
   try {
     const YT = await youtubeAPI();
     if (!current || keyOf(current) !== key || trainerStep !== 'watch') return;
     const knownLength = segmentDuration(v);
-    fallback.src = 'about:blank'; fallback.hidden = true;
+    loadFrame('about:blank', { hidden: true });
     ytPlayer = new YT.Player('ytPlayer', {
       host:'https://www.youtube-nocookie.com', videoId:v.id,
       playerVars:{ playsinline:1, rel:0, modestbranding:1,
@@ -207,7 +217,7 @@ async function startPlayer(v){
           }
         },
         onError(){
-          stopPlayer(); fallback.src = embedSrc(v);
+          stopPlayer(); loadFrame(embedSrc(v));
           $('#watchStatus').textContent = 'Player unavailable. Use self-report after watching.';
           $('#btnWatchedExternal').textContent = 'I watched it (self-report)';
         },
@@ -296,12 +306,27 @@ function updateFinishState(){
 }
 
 /* ── playlist order + addLink/removeReel: any Instagram or YouTube link ─── */
-const orderList = () => playlistOrder(S.order, LIB.videos, LIB.modules);
+/* Two libraries: YouTube videos and Instagram reels. Each has its own playlist, numbering, reviews and next lesson. */
+const LIBS = { yt:'Videos', ig:'Reels' };
+const libOf = v => v.src === 'ig' ? 'ig' : 'yt';
+const inLibrary = (v, which = library) => libOf(v) === which;
+const libVideos = (which = library) => LIB.videos.filter(v => inLibrary(v, which));
+const otherLib = which => which === 'ig' ? 'yt' : 'ig';
+function setLibrary(which){
+  if (!LIBS[which]) return;
+  library = which; reordering = false; aiq = null; aiToken++;
+  try { localStorage.setItem('braingym.library', which); } catch {}
+}
+/* S.order holds both libraries (one saved list); each library shows only its own lessons, numbered from 1. */
+const fullOrder = () => playlistOrder(S.order, LIB.videos, LIB.modules);
+const orderList = (which = library) => fullOrder().filter(v => inLibrary(v, which));
+/* A reordered library: its keys first, the other library's saved keys kept as they were. */
+const mergeOrder = mine => [...mine, ...fullOrder().map(keyOf).filter(k => !mine.includes(k))];
 const inLang = v => lang === 'all' || v.lang === lang;
 /* New lessons you add go to the END of the playlist. The first time, the current order is frozen
  * into S.order so they do not slot into their module's path instead. */
 function appendToPlaylist(ids){
-  if (!S.order.length) S.order = orderList().map(keyOf).filter(k => !ids.includes(k));
+  if (!S.order.length) S.order = fullOrder().map(keyOf).filter(k => !ids.includes(k));
   S.order.push(...ids);
 }
 /* A YouTube link you paste has no title. Ask YouTube (best effort, 3 at a time) and swap it in. */
@@ -336,8 +361,10 @@ function addMany(links, module, langCode, say){
   say('');
   if (openSheetName) closeSheet({historyMode:'replace'});
   view = 'playlist'; reordering = false; storeView();
+  const reels = items.filter(i => i.src !== 'yt').length;
+  setLibrary(reels > items.length / 2 ? 'ig' : 'yt');   // show the library most of them went to
   const skipped = links.length - fresh.length;
-  toast(`${items.length} added to the end of your playlist${skipped ? ` · ${skipped} skipped (already there or over ${MAX_BULK})` : ''}`);
+  toast(`${items.length - reels ? `${items.length - reels} video${items.length - reels > 1 ? 's' : ''}` : ''}${items.length - reels && reels ? ' and ' : ''}${reels ? `${reels} reel${reels > 1 ? 's' : ''}` : ''} added to the end of ${reels && reels < items.length ? 'their playlists' : 'your playlist'}${skipped ? ` · ${skipped} skipped (already there or over ${MAX_BULK})` : ''}`);
   renderAll();
   fillTitles(items);
   return true;
@@ -358,7 +385,8 @@ function addLink(raw, module, langCode, msg = $('#addReelMsg')){
   save(S);
   try { localStorage.setItem('braingym.lastAdd', JSON.stringify({ module, lang: langCode })); } catch {}
   say('');
-  toast(src === 'ig' ? 'reel added — if it will not play, Instagram blocks embedding it' : 'video added');
+  setLibrary(src === 'ig' ? 'ig' : 'yt');
+  toast(src === 'ig' ? 'reel added to Reels — if it will not play, Instagram blocks embedding it' : 'video added to Videos');
   renderAll();
   openTrainer(id);
   fillTitles([item]);
@@ -422,7 +450,7 @@ function lessonRow(v, mode='library', { num = 0, edit = null } = {}){
       <button type="button" data-move="${esc(id)}" data-dir="-1" ${edit.first ? 'disabled' : ''} aria-label="Move ${esc(v.title)} up">↑ Up</button>
       <button type="button" data-move="${esc(id)}" data-dir="1" ${edit.last ? 'disabled' : ''} aria-label="Move ${esc(v.title)} down">↓ Down</button>
       <button type="button" data-move-next="${esc(id)}" aria-label="Play ${esc(v.title)} next">Play next</button></span>` : '';
-  return `<div class="row-item${edit ? ' editing' : ''}"><button class="lesson-row card" data-open="${esc(id)}" aria-label="${esc(pos + v.title)}. ${esc(label)}">
+  return `<div class="row-item${edit ? ' editing' : ''}"><button class="lesson-row card" style="--mod:${esc(mod[1])}" data-open="${esc(id)}" aria-label="${esc(pos + v.title)}. ${esc(label)}">
     ${num ? `<span class="row-num" aria-hidden="true">${num}</span>` : ''}<span class="row-art${v.src === 'ig' ? ' reel-art' : ''}">${v.src === 'ig'
       ? '<svg aria-hidden="true"><use href="#i-play"></use></svg>'
       : `<img loading="lazy" draggable="false" src="${esc(v.thumb)}" alt="">`}</span>
@@ -436,7 +464,7 @@ function lessonRow(v, mode='library', { num = 0, edit = null } = {}){
 function renderReviews(){
   // Hidden while searching or filtering: then the user is looking for something specific.
   const due = (q || modFilter !== 'all') ? []
-    : dueList(S).map(x => x.v).filter(v => (lang === 'all' || v.lang === lang) && !repeatedToday(S, keyOf(v)));
+    : dueList(S).map(x => x.v).filter(v => inLibrary(v) && (lang === 'all' || v.lang === lang) && !repeatedToday(S, keyOf(v)));
   $('#dueSection').innerHTML = due.length
     ? `<h2 class="sh">Reviews due · ${due.length}</h2><div class="row-group">${due.slice(0,5).map(v=>lessonRow(v,'review')).join('')}</div>`
       + (due.length > 5 ? `<button class="btn ghost" data-tab-go="progress">See all ${due.length} in Progress</button>` : '')
@@ -446,17 +474,16 @@ const storeView = () => { try { localStorage.setItem('braingym.view', view); } c
 const passesFilters = v =>
   (modFilter === 'all' || v.module === modFilter) &&
   (lang === 'all' || v.lang === lang) &&
-  (srcFilter === 'all' || v.src === srcFilter) &&
+  inLibrary(v) &&
   (tierFilter === 'all' || v.tier === tierFilter || (tierFilter === 'drill' && !v.dur)) &&
   (levelFilter === 'all' || levelOf(v) === +levelFilter);
-const filterSig = () => [modFilter, lang, srcFilter, tierFilter, levelFilter].join('|');
-const isFiltered = () => !!q || modFilter !== 'all' || srcFilter !== 'all' || tierFilter !== 'all' || levelFilter !== 'all' || lang !== 'all';
+const filterSig = () => [library, modFilter, lang, tierFilter, levelFilter].join('|');
+const isFiltered = () => !!q || modFilter !== 'all' || tierFilter !== 'all' || levelFilter !== 'all' || lang !== 'all';
 
 /* The Filters sheet and its hidden legacy twins show the same four choices: keep every button in step. */
 function syncFilterUI(){
   const mark = (ids, attr, val) => ids.forEach(id => document.querySelectorAll(`#${id} button`)
     .forEach(b => b.classList.toggle('on', b.dataset[attr] === val)));
-  mark(['sheetSrcSeg', 'srcSeg'], 'src', srcFilter);
   mark(['sheetTierSeg', 'tierSeg'], 'tier', tierFilter);
   mark(['sheetLangSeg', 'settingsLangSeg', 'langSeg'], 'lang', lang);
   mark(['sheetLevelSeg'], 'level', levelFilter);
@@ -473,24 +500,63 @@ function renderPlaylistHead(all){
   const pool = all.filter(inLang);
   const learned = pool.filter(v => S.done[keyOf(v)]).length;
   const next = resumePoint(S, all, lang);
+  // The hero glows in the next lesson's module colour; the bar shows how much of the playlist is learned.
+  if (next) el.style.setProperty('--mod', LIB.modules[next.module][1]); else el.style.removeProperty('--mod');
+  el.style.setProperty('--p', `${pool.length ? Math.round(learned / pool.length * 100) : 0}%`);
   el.innerHTML = next
     ? `<div class="ph-copy"><small>${learned ? 'Continue where you left off' : 'Start here'} · ${learned} of ${pool.length} learned</small>
-        <strong>${esc(next.title)}</strong></div>
+        <strong>${esc(next.title)}</strong><i class="ph-bar" aria-hidden="true"></i></div>
         <button class="btn" type="button" data-open="${esc(keyOf(next))}">${learned ? 'Continue' : 'Play'}</button>`
     : `<div class="ph-copy"><small>Playlist complete</small><strong>All ${pool.length} lessons learned</strong></div>`;
+}
+/* Today's goal is shared across Videos and Reels. Reviews never take a new lesson's slot.
+   The first due review (if any) in the active library is shown as a one-tap action. */
+function renderDailySummary(){
+  const el = $('#dailySummary');
+  const goal = TARGET + S.extra, completed = newRepsToday(S);
+  const remaining = Math.max(0, goal - completed);
+  const due = dueList(S).map(x => x.v).filter(v =>
+    inLibrary(v) && (lang === 'all' || v.lang === lang) && !repeatedToday(S, keyOf(v)));
+  const nextDue = due[0] || null;
+  el.hidden = false;
+  el.innerHTML = `<div class="daily-heading"><h2>Today</h2><strong>${completed} of ${goal} new lessons</strong></div>
+    <div class="daily-meter" role="progressbar" aria-label="New lessons completed today"
+      aria-valuemin="0" aria-valuemax="${goal}" aria-valuenow="${Math.min(goal, completed)}">
+      <i style="width:${Math.min(100, completed / goal * 100)}%"></i></div>
+    ${nextDue ? `<button class="daily-review" data-open="${esc(keyOf(nextDue))}">${due.length} review${due.length === 1 ? '' : 's'} ready in ${LIBS[library]}</button>` : ''}
+    <p>${remaining ? `${remaining} new lesson${remaining === 1 ? '' : 's'} to go` : 'Daily goal complete'} · across Videos and Reels</p>`;
+}
+/* The two library tabs: how much of each you have learned, and a dot when the OTHER one has reviews due. */
+function renderLibTabs(){
+  const due = dueList(S).map(x => x.v).filter(v => (lang === 'all' || v.lang === lang) && !repeatedToday(S, keyOf(v)));
+  for (const which of Object.keys(LIBS)) {
+    const vids = libVideos(which), learned = vids.filter(v => S.done[keyOf(v)]).length;
+    const n = due.filter(v => inLibrary(v, which)).length;
+    const b = document.querySelector(`#libSeg [data-lib="${which}"]`);
+    const on = which === library;
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+    b.innerHTML = `${LIBS[which]} <small>${learned}/${vids.length}</small>${n ? `<b class="lib-due" title="${n} reviews due">${n}</b>` : ''}`;
+    b.setAttribute('aria-label', `${LIBS[which]}: ${learned} of ${vids.length} learned${n ? `, ${n} reviews due` : ''}`);
+  }
+  $('#q').placeholder = `Search ${LIBS[library].toLowerCase()} by title or creator`;
 }
 function renderLibrary(){
   if ($('#bootSkeleton')) $('#bootSkeleton').hidden = true;
   renderReviews();
-  const mods = ['all', ...Object.keys(LIB.modules)];
+  renderLibTabs();
+  renderDailySummary();
+  const mine = libVideos();
+  const mods = ['all', ...Object.keys(LIB.modules).filter(m => mine.some(v => v.module === m))];
+  if (!mods.includes(modFilter)) modFilter = 'all';
   $('#modChips').innerHTML = mods.map(m => {
     const label = m === 'all' ? 'All modules' : LIB.modules[m][0];
-    return `<button data-mod="${esc(m)}" class="module-chip${modFilter === m ? ' on' : ''}" ${m==='all'?'':`style="--mod:${esc(LIB.modules[m][1])}"`}>${m==='all'?'':'<i aria-hidden="true"></i>'}${esc(label)}</button>`;
+    const n = m === 'all' ? mine.length : mine.filter(v => v.module === m).length;   // lessons in this library
+    return `<button data-mod="${esc(m)}" class="module-chip${modFilter === m ? ' on' : ''}" ${m==='all'?'':`style="--mod:${esc(LIB.modules[m][1])}"`}>${m==='all'?'':'<i aria-hidden="true"></i>'}${esc(label)}<small>${n}</small></button>`;
   }).join('');
   const matches = v => passesFilters(v) &&
     (!q || (v.title + ' ' + v.channel + ' ' + v.why).toLowerCase().includes(q));
   const playlist = view === 'playlist';
-  const ordered = playlist ? orderList() : LIB.videos;
+  const ordered = playlist ? orderList() : mine;
   const list = ordered.filter(matches);
   document.querySelectorAll('#viewSeg button').forEach(b => {
     const on = b.dataset.view === view; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
@@ -498,13 +564,18 @@ function renderLibrary(){
   const canReorder = playlist && !isFiltered();
   if (!canReorder) reordering = false;
   $('#playlistBar').hidden = !playlist;
-  $('#playlistCount').textContent = `Playlist · ${list.length} lesson${list.length === 1 ? '' : 's'}`;
+  $('#playlistCount').textContent = `${LIBS[library]} playlist · ${list.length} lesson${list.length === 1 ? '' : 's'}`;
   $('#btnReorder').hidden = !canReorder;
   $('#btnReorder').textContent = reordering ? 'Done' : 'Reorder';
   $('#btnReorder').setAttribute('aria-pressed', String(reordering));
   renderPlaylistHead(ordered);
-  $('#libCount').textContent = `${LIB.videos.filter(v => S.done[keyOf(v)]).length}/${LIB.videos.length}`;
-  const empty = `<div class="emptystate">No lessons match ${q ? `“${esc(q)}”` : 'your filters'}. <button class="btn ghost" id="emptyClearSearch">Clear search</button></div>`;
+  $('#libCount').textContent = `${mine.filter(v => S.done[keyOf(v)]).length}/${mine.length}`;
+  // A search that finds nothing here may well exist in the other library: say so instead of looking empty.
+  const elsewhere = q ? LIB.videos.filter(v => !inLibrary(v) && (lang === 'all' || v.lang === lang)
+    && (v.title + ' ' + v.channel + ' ' + v.why).toLowerCase().includes(q)).length : 0;
+  const empty = `<div class="emptystate">No ${LIBS[library].toLowerCase()} match ${q ? `“${esc(q)}”` : 'your filters'}.${elsewhere
+    ? ` <button class="btn ghost" data-lib-go="${otherLib(library)}">${elsewhere} in ${LIBS[otherLib(library)]}</button>` : ''
+    } <button class="btn ghost" id="emptyClearSearch">Clear search</button></div>`;
   if (!list.length) $('#libCards').innerHTML = empty;
   else if (playlist) {
     const place = new Map(ordered.map((v, i) => [keyOf(v), i]));
@@ -522,7 +593,7 @@ function renderLibrary(){
   renderAiSearch();
   syncFilterUI();
   if ($('#filterCount')) {
-    const count = [srcFilter !== 'all',tierFilter !== 'all',levelFilter !== 'all',lang !== 'all'].filter(Boolean).length;
+    const count = [tierFilter !== 'all',levelFilter !== 'all',lang !== 'all'].filter(Boolean).length;
     $('#filterCount').textContent = count; $('#filterCount').hidden = !count;
   }
 }
@@ -554,7 +625,7 @@ async function runAiSearch(){
   const query = $('#q').value.trim();
   if (query.length < MIN_QUERY) return;
   const token = ++aiToken;
-  const { items } = candidatesFor(LIB.videos.filter(passesFilters), query, LIB.modules);
+  const { items } = candidatesFor(libVideos().filter(passesFilters), query, LIB.modules);
   aiq = { query, sig: filterSig(), status: 'loading', picks: [] };
   renderAiSearch();
   if (!items.length) { aiq = { ...aiq, status: 'done' }; renderAiSearch(); return; }
@@ -574,8 +645,8 @@ function reorder(action, id, dir = 0){
   if (action === 'next') {
     const first = resumePoint(S, orderList(), 'all');
     if (!first || keyOf(first) === id) { toast('Already up next'); return; }
-    S.order = moveAfter(keys, id, keys[keys.indexOf(keyOf(first)) - 1] ?? null);
-  } else S.order = moveBy(keys, id, dir);
+    S.order = mergeOrder(moveAfter(keys, id, keys[keys.indexOf(keyOf(first)) - 1] ?? null));
+  } else S.order = mergeOrder(moveBy(keys, id, dir));
   save(S); renderLibrary();
   const btn = document.querySelector(action === 'next' ? `[data-move-next="${CSS.escape(id)}"]` : `[data-move="${CSS.escape(id)}"][data-dir="${dir}"]:not(:disabled)`)
     || document.querySelector(`[data-move="${CSS.escape(id)}"]:not(:disabled)`);
@@ -646,6 +717,7 @@ function openTrainer(id, {historyMode='push'}={}){
   $('#tChannel').textContent = v.channel;
   $('#tMod').textContent = LIB.modules[v.module][0];
   $('#tMod').style.setProperty('--mod', LIB.modules[v.module][1]);
+  $('#screen-train').style.setProperty('--mod', LIB.modules[v.module][1]);   // tints the player glow, step dot and callout
   $('#tLang').textContent = v.lang === 'hi' ? 'Hindi' : 'English';
   $('#tDur').textContent = segmentDuration(v) ? mins(segmentDuration(v)) : (v.src === 'ig' ? 'reel' : '—');
   $('#tWhy').textContent = v.why;
@@ -802,7 +874,8 @@ function cancelAuto(){ clearInterval(autoTimer); autoTimer = null; if ($('#autoL
 
 /* The old "what next" rule (reviews first, weakest module) — the fallback and the "mix it up" choice. */
 function mixedNext(id){
-  const pool = pickSession(S, lang, false).filter(x => keyOf(x) !== id && !repeatedToday(S, keyOf(x)));
+  const here = vid(id) ? libOf(vid(id)) : library;   // "mix it up" mixes modules, never the two libraries
+  const pool = pickSession(S, lang, false).filter(x => keyOf(x) !== id && inLibrary(x, here) && !repeatedToday(S, keyOf(x)));
   const wantNew = newRepsToday(S) < TARGET + S.extra;   // new videos first until today's goal is met
   return (wantNew && pool.find(x => !S.done[keyOf(x)])) || pool[0] || null;
 }
@@ -835,9 +908,9 @@ function startAuto(token){
 /* Playlist view: a new lesson flows to the next one in YOUR order; after a review, the next due review
  * first. Your order is authoritative, so the AI does not re-pick it. "Mix it up" keeps the old order. */
 function playlistNext(v, { firstRep, mix, token }){
-  const key = keyOf(v), list = orderList();
+  const key = keyOf(v), list = orderList(libOf(v));
   const due = firstRep ? null : dueList(S).map(x => x.v)
-    .find(x => keyOf(x) !== key && inLang(x) && !repeatedToday(S, keyOf(x)));
+    .find(x => keyOf(x) !== key && inLibrary(x, libOf(v)) && inLang(x) && !repeatedToday(S, keyOf(x)));
   const nx = due || nextInPlaylist(S, list, key, lang);
   if (due) paintNext(due, { kicker: 'Next review' });
   else if (nx) {
@@ -852,7 +925,7 @@ function playlistNext(v, { firstRep, mix, token }){
 async function showNextStep(v, { firstRep, isRepeat, note, rating }){
   const token = ++nextToken;
   const mix = mixedNext(keyOf(v));
-  const info = firstRep && !isRepeat ? pathAfter(S, LIB.videos, v, lang) : null;
+  const info = firstRep && !isRepeat ? pathAfter(S, libVideos(libOf(v)), v, lang) : null;
   $('#autoNext').checked = autoOn();
   $('#btnMix').hidden = true;
   if (view === 'playlist') return playlistNext(v, { firstRep: firstRep && !isRepeat, mix, token });
@@ -1077,6 +1150,8 @@ function wire(){
     if (!e.target.closest('#langSeg') && !e.target.closest('#langBtn')) $('#langSeg').hidden = true;
   });
   document.body.addEventListener('click', e => {
+    const lg = e.target.closest('[data-lib-go]');
+    if (lg) { setLibrary(lg.dataset.libGo); modFilter = 'all'; renderLibrary(); return; }
     const t = e.target.closest('[data-open]');
     if (t) { openTrainer(t.dataset.open); return; }
     const m = e.target.closest('[data-mod]');
@@ -1103,17 +1178,14 @@ function wire(){
     const b = e.target.closest('button'); if (!b) return;
     set(b.dataset); rerender();
   }; };
-  sheetSeg('#sheetSrcSeg',   d => { srcFilter = d.src; });
   sheetSeg('#sheetTierSeg',  d => { tierFilter = d.tier; });
   sheetSeg('#sheetLevelSeg', d => { levelFilter = d.level; });
   sheetSeg('#sheetLangSeg',  d => { lang = d.lang; }, renderAll);
   sheetSeg('#settingsLangSeg', d => { lang = d.lang; }, renderAll);
   $('#filtersApply').onclick = () => closeSheet();
-  $('#srcSeg').onclick = e => {
-    const b = e.target.closest('button'); if (!b) return;
-    srcFilter = b.dataset.src;
-    document.querySelectorAll('#srcSeg button').forEach(x => x.classList.toggle('on', x === b));
-    renderLibrary();
+  $('#libSeg').onclick = e => {
+    const b = e.target.closest('[data-lib]'); if (!b || b.dataset.lib === library) return;
+    setLibrary(b.dataset.lib); modFilter = 'all'; renderLibrary();
   };
   $('#reelMod').innerHTML = Object.keys(LIB.modules)
     .map(m => `<option value="${esc(m)}">${esc(LIB.modules[m][0])}</option>`).join('');
@@ -1341,6 +1413,7 @@ function wire(){
   const mig = migrateV1toV2(S); S = mig.S;
   S.custom.forEach(rehydrateReel);
   try { const saved = localStorage.getItem('braingym.view'); if (saved === 'modules' || saved === 'playlist') view = saved; } catch {}
+  try { const saved = localStorage.getItem('braingym.library'); if (LIBS[saved]) library = saved; } catch {}
   rollDay(S);
   pruneDrafts();
   save(S);
@@ -1367,8 +1440,8 @@ function wire(){
   }
   if (new URLSearchParams(location.search).get('start') === '1') {
     const first = view === 'playlist'
-      ? (dueList(S).map(x => x.v).find(inLang) || resumePoint(S, orderList(), lang))
-      : pickSession(S,lang,false)[0];
+      ? (dueList(S).map(x => x.v).find(x => inLibrary(x) && inLang(x)) || resumePoint(S, orderList(), lang))
+      : (pickSession(S,lang,false).find(x => inLibrary(x)) || resumePoint(S, orderList(), lang));
     if (first) requestAnimationFrame(()=>openTrainer(keyOf(first)));
   }
   if ('serviceWorker' in navigator) {
@@ -1409,7 +1482,8 @@ function wire(){
     migrateV1toV2, sanitizeState: (raw) => sanitizeState(raw, LIB),
     watchSatisfied, accumulateWatch, embedSrc, keyOf, segmentDuration, parseLink, linkFromSearch, interleave,
     watch: () => ({ ...watch }), rate: () => playRate, choosePromptMode, promptMode: () => promptMode,
-    playlist: () => orderList().map(keyOf), view: () => view, parseMany: raw => parseMany(raw, parseLink),
+    playlist: () => orderList().map(keyOf), fullPlaylist: () => fullOrder().map(keyOf), library: () => library, setLibrary: w => { setLibrary(w); renderAll(); },
+    view: () => view, parseMany: raw => parseMany(raw, parseLink),
     playlistOrder, moveBy, moveAfter, resumePoint, nextInPlaylist,
   };
   window.LIB = LIB;

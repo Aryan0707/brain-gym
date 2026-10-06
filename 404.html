@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>B.R.A.I.N.</title>
-<meta name="theme-color" content="#101516">
+<meta name="theme-color" content="#0a0b14">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -41,6 +41,8 @@
     <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M7 11l5 5 5-5"/><path d="M12 4v12"/></symbol>
     <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/><path d="M7 9l5-5 5 5"/><path d="M12 16V4"/></symbol>
     <symbol id="i-rewatch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="16" height="16" rx="2"/><path d="M22 8l-4 4 4 4V8z"/><path d="M8 11l5 3-5 3V11z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
     <symbol id="i-dot" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="4"/></symbol>
   </defs>
 </svg>
@@ -83,14 +85,30 @@
       <div class="skeleton-line w-45"></div>
     </div>
 
+    <!-- two libraries, never mixed: YouTube videos and Instagram reels -->
+    <div class="seg lib-seg" id="libSeg" role="group" aria-label="Library">
+      <button type="button" data-lib="yt" class="on" aria-pressed="true">Videos</button>
+      <button type="button" data-lib="ig" aria-pressed="false">Reels</button>
+    </div>
+
+    <!-- One daily goal across both libraries; reviews are extra, not new-lesson credit. -->
+    <section class="daily-summary" id="dailySummary" aria-label="Today's practice" hidden></section>
+
     <!-- reviews due — rendered by JS, hidden while searching or filtering -->
     <div id="dueSection"></div>
     <div class="search-row">
-      <svg class="search-icon" width="18" height="18"><use href="#i-search"/></svg>
-      <label class="sr-only" for="q">Search videos</label>
-      <input id="q" placeholder="Search title or creator" autocomplete="off" enterkeyhint="search">
-      <button class="search-clear" id="clearSearch" aria-label="Clear search" hidden>
-        <svg width="16" height="16"><use href="#i-x"/></svg>
+      <div class="search-field">
+        <svg class="search-icon" width="18" height="18"><use href="#i-search"/></svg>
+        <label class="sr-only" for="q">Search videos</label>
+        <input id="q" placeholder="Search title or creator" autocomplete="off" enterkeyhint="search">
+        <button class="search-clear" id="clearSearch" aria-label="Clear search" hidden>
+          <svg width="16" height="16"><use href="#i-x"/></svg>
+        </button>
+      </div>
+      <button class="btn-filter" id="filterButton" aria-label="Filters">
+        <svg width="20" height="20"><use href="#i-sliders"/></svg>
+        <span class="sr-only">Filters</span>
+        <span class="filter-badge" id="filterCount" hidden>0</span>
       </button>
     </div>
     <!-- AI search: shown once there is something to search for; results by meaning appear below it -->
@@ -100,26 +118,23 @@
     </div>
     <div class="ai-search" id="aiSearch" aria-live="polite"></div>
 
-    <div class="module-chips" id="modChips"></div>
+    <!-- pinned under the top bar while you scroll the list -->
+    <div class="chips-bar"><div class="module-chips" id="modChips"></div></div>
 
+    <!-- heading + view toggle share one row; the heading (and Reorder) only exist in the playlist view -->
     <div class="library-toolbar">
-      <div class="seg" id="viewSeg" role="group" aria-label="Library view">
-        <button data-view="playlist" class="on" aria-pressed="true">Playlist</button>
-        <button data-view="modules" aria-pressed="false">By module</button>
+      <div class="playlist-bar" id="playlistBar" hidden>
+        <h2 class="sh" id="playlistCount">Playlist</h2>
+        <button class="btn ghost" id="btnReorder" aria-pressed="false" hidden>Reorder</button>
       </div>
-      <button class="btn ghost btn-filter" id="filterButton" aria-label="Filters">
-        <svg width="16" height="16"><use href="#i-sliders"/></svg>
-        <span>Filters</span>
-        <span class="filter-badge" id="filterCount" hidden>0</span>
-      </button>
+      <div class="seg" id="viewSeg" role="group" aria-label="Library view">
+        <button data-view="playlist" class="on" aria-pressed="true" title="Playlist"><svg width="18" height="18" aria-hidden="true"><use href="#i-list"/></svg><span class="sr-only">Playlist</span></button>
+        <button data-view="modules" aria-pressed="false" title="By module"><svg width="18" height="18" aria-hidden="true"><use href="#i-layers"/></svg><span class="sr-only">By module</span></button>
+      </div>
     </div>
 
     <!-- playlist: where you left off, rendered by JS (playlist view only) -->
     <div id="playlistHead" class="playlist-head" hidden></div>
-    <div class="playlist-bar" id="playlistBar" hidden>
-      <h2 class="sh" id="playlistCount">Playlist</h2>
-      <button class="btn ghost" id="btnReorder" aria-pressed="false" hidden>Reorder</button>
-    </div>
 
     <div id="libCards" class="grid"></div>
 
@@ -135,11 +150,6 @@
       <button id="btnAddReel">Add</button>
       <p id="addMsg"></p>
       <span id="libCount">0/0</span>
-      <div class="segrow"><div class="seg" id="srcSeg">
-        <button data-src="all" class="on">All</button>
-        <button data-src="yt">YouTube</button>
-        <button data-src="ig">Reels</button>
-      </div></div>
       <div class="segrow"><div class="seg" id="tierSeg">
         <button data-tier="all" class="on">Any</button>
         <button data-tier="drill">≤15m</button>
@@ -412,14 +422,6 @@
   <div class="sheet-body">
     <div class="sheet-handle"></div>
     <h3>Filter lessons</h3>
-    <div class="sheet-section">
-      <label class="sheet-label">Source</label>
-      <div class="seg" id="sheetSrcSeg">
-        <button data-src="all" class="on">All</button>
-        <button data-src="yt">YouTube</button>
-        <button data-src="ig">Reels</button>
-      </div>
-    </div>
     <div class="sheet-section">
       <label class="sheet-label">Length</label>
       <div class="seg" id="sheetTierSeg">

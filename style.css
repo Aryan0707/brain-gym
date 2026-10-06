@@ -6,30 +6,45 @@
 /* ── 1. TOKENS ─────────────────────────────────────────── */
 :root {
   color-scheme: dark;
-  /* colour */
-  --bg:        #0b0e10;
-  --bar:       #101516;
-  --surface:   #151a1c;
-  --surface-2: #1c2325;
-  --line:      #2c3637;
-  --line-strong:#485550;
-  --fg:        #f2f5f1;
-  --fg-2:      #c9d3ce;
-  --muted:     #9fa9a5;
-  --accent:    #a7e7b9;
-  --on-accent: #122219;
-  --accent-tint:#17261d;
+  /* colour — ink canvas, dark translucent panels, one indigo accent */
+  --bg:        #05060c;
+  --bar:       #0a0b14;
+  --surface:   rgba(255,255,255,.035);
+  --surface-2: rgba(255,255,255,.08);
+  --line:      rgba(255,255,255,.08);
+  --line-strong:rgba(255,255,255,.18);
+  --fg:        #f7f8fc;
+  --fg-2:      #e0e2ee;
+  --muted:     #b4b8cf;
+  --accent:    #a5b4fc;
+  --on-accent: #0b0d24;
+  --accent-tint:rgba(129,140,248,.10);
+  --primary:   #e9ebfa;   /* the one light button */
   --warn:      #f5c26b;
-  --danger:    #fb7185;
-  --badge:     #ff5f57;
+  --danger:    #ff7a93;
+  --badge:     #d93f4f;
+  --success:   #6ee7a8;
+  /* glass */
+  --glass-fill:linear-gradient(180deg, rgba(22,24,38,.88), rgba(14,15,26,.88));   /* dark base: text never sits on raw colour */
+  --glass-hi:  inset 0 1px 0 rgba(255,255,255,.06);
+  --glass-bar: rgba(10,11,20,.86);   /* = --bar (#0a0b14) at 86%: keeps theme-color matching the nav */
+  --glass-sheet:rgba(11,12,22,.96);
+  --glass-blur:blur(24px) saturate(160%);
+  /* Aurora: a 130x281 JPEG (2 KB) baked from the gradients below, stretched to cover.
+     Painting gradients live at full size cost a frame on every repaint; an image just
+     composites. Retune them, re-render at 130x281 over --bg, re-embed. */
+  --aurora: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAEZAIIDASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAAIBAwUECf/EABoQAQEBAQEBAQAAAAAAAAAAAAABAhIRIVH/xAAZAQEBAQEBAQAAAAAAAAAAAAAAAgEDBAX/xAAXEQEBAQEAAAAAAAAAAAAAAAAAARES/9oADAMBAAIRAxEAPwD8181ccpVyvtSuTrL431zlb6vWNtRS1NqbRNc9Ltc9VzrXOoq6iuVIioqqiudU57c66bc3KgAwAAezKqVyzpUr3ypdZo6RKdK0Vay1PqbpNo21z1S69Ram0ZamttRa52tibUWqtRquda56v1LbWOdABgAA9KVs05ytleuVLrNnbn0dN0XdMtR6zpmirU2stTam1sjbUWlqbUWtZa56rdVztRaACAAAAB9krZXKVvTto6enqOjpvQv1nqememirU3TPU3SbRVrnrTLpNqbQtYCAAAAAAB0m1dz9cfT1Wjt03px6OjR16Z3HP1npou7TdMGaADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB//Z") center / cover no-repeat;
+  /* source:
+    radial-gradient(90% 40% at 20% 0%, rgba(99,102,241,.13), transparent 70%)
+  */
   /* type (px) */
   --t-large:   30px;
   --t-title:   22px;
   --t-headline:17px;
   --t-body:    16px;
   --t-sub:     15px;
-  --t-foot:    13px;
-  --t-cap:     12px;
+  --t-foot:    14px;
+  --t-cap:     13px;
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   /* space */
   --s1: 4px;  --s2: 8px;  --s3: 12px;  --s4: 16px;
@@ -42,6 +57,7 @@
   --dur-fade: 160ms;
   /* layout */
   --tabbar-h: 56px;
+  --screen-px: 16px;   /* .screen's side padding: lets full-bleed bars cancel it */
   --safe-t: env(safe-area-inset-top);
   --safe-b: env(safe-area-inset-bottom);
   --kb: 0px;
@@ -2250,6 +2266,7 @@ button, .btn, .tab, .back, .opener, .lesson-row, .recall-point,
   .screen { padding-inline: 15px; }
   /* keep legacy compat too */
   .screen { padding: 16px 15px var(--s6, 24px); }
+  :root { --screen-px: 15px; }
   .top-nav { padding-inline: 15px; }
   .nav-title { font-size: 24px; }
   .top-nav.is-scrolled .nav-title { font-size: var(--t-headline, 17px); }
@@ -2269,6 +2286,7 @@ button, .btn, .tab, .back, .opener, .lesson-row, .recall-point,
 
 @media (min-width: 600px) {
   .screen { padding: var(--s6, 24px) 30px 42px; }
+  :root { --screen-px: 30px; }
 
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2527,3 +2545,348 @@ button.module-row + button.module-row { border-top: 1px solid var(--line); }
 .plan p { margin: 0; font-size: 14px; }
 .plan textarea { width: 100%; padding: 10px 12px; border-radius: var(--r-sm, 10px); border: 1px solid var(--line); background: var(--bg, transparent); color: var(--fg); font: inherit; font-size: 16px; resize: vertical; }
 .learnstats { margin: 4px 0 var(--s3, 12px); font-size: 14px; }
+
+/* ═══ 8. DARK GLASS ════════════════════════════════════════════════════
+   A restrained dark theme: ink canvas, a faint indigo glow at the top, panels
+   on a dark translucent base, hairline borders, one indigo accent and one light
+   primary button. Colour is information, not decoration: a module's hue appears
+   only as a thin spine, a dot, a bar or a selected-chip outline.
+   Cost rules: blur (backdrop-filter) only on the nav, tab bar and sheets, where
+   content scrolls underneath; no blurred shadows on the 184 lesson rows.
+   Overrides earlier blocks on purpose: keep this section last.
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* ── canvas ── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--aurora);
+}
+body { letter-spacing: -.005em; }
+
+/* ── top bar ── */
+.top-nav {
+  background: var(--glass-bar);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--line);
+}
+.nav-title { font-size: 28px; font-weight: 700; letter-spacing: -.035em; }
+.top-nav.is-scrolled .nav-title { font-size: var(--t-headline, 17px); }
+.nav-action {
+  color: var(--fg-2);
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+/* ── tab bar: docked, with a hairline indicator on the active tab ── */
+.tabbar {
+  background: var(--glass-bar);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-top: 1px solid var(--line);
+  box-shadow: none;
+}
+.tab { position: relative; color: var(--muted); }
+.tab.active { color: var(--fg); }
+.tab.active svg { color: var(--accent); }
+.tab.active::before {
+  content: "";
+  position: absolute;
+  top: -1px; left: 30%; right: 30%;
+  height: 2px;
+  border-radius: 0 0 2px 2px;
+  background: var(--accent);
+}
+.tab i {
+  opacity: 1;
+  padding: 1px 6px;
+  border-radius: var(--r-pill, 999px);
+  background: var(--badge);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ── buttons: one light primary, everything else quiet ── */
+.btn {
+  background: var(--primary);
+  color: var(--on-accent);
+  border-radius: 10px;
+  font-weight: 650;
+}
+.btn.ghost {
+  background: rgba(255,255,255,.04);
+  color: var(--fg);
+  border: 1px solid var(--line-strong);
+}
+.btn.red { background: none; color: var(--danger); border-color: rgba(255,122,147,.45); }
+.btn.big { border-radius: 12px; }
+.btn.ghost:disabled { opacity: .45; }
+@media (hover: hover) {
+  .btn:not(:disabled):hover { background: #fff; }
+  .btn.ghost:not(:disabled):hover { background: var(--surface-2); }
+  .lesson-row:hover { border-color: var(--line-strong); }
+}
+
+/* ── surfaces ── */
+.rep, .plan, .nextcard, .emptystate, .caps, .stat, .pretest, .ainotes, .explain-out,
+.card, .lesson-row, .qitem, .note, .note-details, .fold {
+  background: var(--glass-fill);
+  border: 1px solid var(--line);
+  box-shadow: var(--glass-hi);
+}
+.rep, .caps { border-radius: 16px; }
+.lesson-row {
+  position: relative;
+  padding-left: 16px;
+  transition: opacity 80ms, border-color var(--dur-fade, 160ms);
+}
+/* module hue: a thin spine */
+.lesson-row::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 12px; bottom: 12px;
+  width: 2px;
+  border-radius: 0 2px 2px 0;
+  background: var(--mod, var(--accent));
+}
+.row-art { border-radius: 8px; }
+.row-art.reel-art, .row-art.ig { background: var(--accent-tint); }
+.row-state { color: var(--muted); font-size: var(--t-cap, 13px); }
+.row-num { color: var(--muted); }
+h2.sh { color: var(--muted); font-size: 13px; font-weight: 600; letter-spacing: .01em; }
+
+/* ── daily workload: compact, using the same surfaces and progress tokens ── */
+.daily-summary { margin: 0 0 var(--s3); padding: var(--s3) var(--s4); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--glass-fill); }
+.daily-summary[hidden] { display: none; }
+.daily-heading { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s2); flex-wrap: wrap; }
+.daily-heading h2 { font-size: var(--t-sub); font-weight: 600; }
+.daily-heading strong { font-size: var(--t-cap); font-weight: 600; font-variant-numeric: tabular-nums; }
+.daily-meter { height: 4px; margin: var(--s2) 0; overflow: hidden; border-radius: var(--r-pill); background: var(--surface-2); }
+.daily-meter i { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+.daily-summary p { margin: 0; color: var(--muted); font-size: var(--t-cap); }
+.daily-review { display: block; width: 100%; margin: var(--s1) 0 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: var(--r-sm); background: none; color: var(--accent); font-size: var(--t-cap); font-weight: 500; text-align: left; cursor: pointer; }
+.daily-review:active { background: var(--surface-2); }
+
+/* ── hero: "Start here / Continue" ── */
+.playlist-head {
+  --hero-tint: rgba(99,102,241,.10);
+  position: relative;
+  padding: 16px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  background: radial-gradient(110% 160% at 0% 0%, var(--hero-tint), transparent 60%), var(--glass-fill);
+  box-shadow: var(--glass-hi);
+}
+@supports (color: color-mix(in srgb, red 50%, transparent)) {
+  .playlist-head { --hero-tint: color-mix(in srgb, var(--mod, #6366f1) 12%, transparent); }
+}
+.playlist-head small { color: var(--muted); }
+.playlist-head strong { font-size: 18px; line-height: 1.28; font-weight: 650; letter-spacing: -.015em; }
+.playlist-head .btn { min-height: 46px; padding-inline: 20px; }
+.ph-bar {
+  display: block;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: var(--r-pill, 999px);
+  background: rgba(255,255,255,.10);
+  overflow: hidden;
+}
+.ph-bar::after {
+  content: "";
+  display: block;
+  width: var(--p, 0%);
+  height: 100%;
+  border-radius: inherit;
+  background: var(--mod, var(--accent));
+}
+
+/* ── chips and selected states: one rule for "selected" everywhere ── */
+.chiprow button,
+.speed button, .conf button, .plan-outcomes button {
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.chiprow button.on,
+.speed button.on, .conf button.on, .plan-outcomes button[aria-pressed="true"],
+#btnReorder[aria-pressed="true"] {
+  background: rgba(129,140,248,.18);
+  border-color: var(--accent);
+  color: var(--fg);
+}
+
+/* ── inputs ── */
+.search-row #q, .search-row input {
+  background: rgba(0,0,0,.42);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+}
+.search-icon { z-index: 1; }
+.search-clear { z-index: 1; background: rgba(255,255,255,.10); }
+textarea, .sheet-input, .sheet-select, .fold select, #aiKey, .pretest input, .plan textarea,
+.searchrow input, input[type="text"], #reelUrl {
+  background: rgba(0,0,0,.42);
+  border-color: var(--line-strong);
+}
+.search-row #q:focus, .search-row input:focus,
+textarea:focus, .sheet-input:focus, #aiKey:focus, .pretest input:focus, .plan textarea:focus,
+input[type="text"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(165,180,252,.20);
+}
+#tNote:disabled { background: rgba(0,0,0,.42); }
+
+/* ── library controls: search + filters, pinned chips, heading + view toggle ── */
+.search-row { gap: 8px; margin-bottom: 12px; }
+.search-field { position: relative; flex: 1 1 auto; min-width: 0; display: flex; align-items: center; }
+.btn-filter {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 46px; height: 46px; min-width: 46px; padding: 0;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  color: var(--fg-2);
+  cursor: pointer;
+}
+.btn-filter:has(.filter-badge:not([hidden])) { border-color: var(--accent); color: var(--fg); }
+.btn-filter .filter-badge {
+  position: absolute; top: -7px; right: -7px;
+  width: auto; min-width: 20px; height: 20px; padding: 0 5px;
+  background: var(--accent); color: var(--on-accent);
+}
+/* chips stay reachable while you scroll 170 lessons */
+.chips-bar {
+  position: sticky;
+  top: var(--nav-h, 68px);
+  z-index: 40;
+  margin: 0 calc(var(--screen-px) * -1) 4px;
+  padding: 0 var(--screen-px);
+  background: var(--glass-bar);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-block: 1px solid var(--line);
+}
+/* a 34px pill inside a 44px tap target */
+.module-chips { gap: 2px; padding: 0; }
+.module-chips .module-chip {
+  position: relative; isolation: isolate;
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 44px; padding: 0 12px;
+  background: none; border: 0; box-shadow: none;
+  color: var(--fg-2); font-size: 14px; font-weight: 600;
+}
+.module-chip::before {
+  content: "";
+  position: absolute; inset: 5px 0; z-index: -1;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: rgba(255,255,255,.04);
+}
+.module-chip small { font-size: 12px; font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
+.module-chips .module-chip.on { color: #fff; background: none; }
+.module-chips .module-chip.on::before {
+  background: rgba(129,140,248,.30);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(165,180,252,.35);
+}
+.module-chip.on small { color: var(--fg-2); }
+/* a chosen module takes its own hue */
+.module-chip.on[style*="--mod"]::before { border-color: var(--mod); box-shadow: 0 0 0 1px var(--mod); }
+@supports (color: color-mix(in srgb, red 50%, transparent)) {
+  .module-chip.on[style*="--mod"]::before { background: color-mix(in srgb, var(--mod) 26%, rgba(255,255,255,.04)); }
+}
+.library-toolbar { gap: 8px; margin: 8px 0 12px; justify-content: space-between; }
+.library-toolbar .playlist-bar { flex: 1 1 auto; min-width: 0; margin: 0; justify-content: flex-start; gap: 0; }
+.library-toolbar .playlist-bar .sh { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.library-toolbar #viewSeg { margin-left: auto; }
+.library-toolbar .seg button { padding-inline: 11px; }
+.library-toolbar #btnReorder {
+  background: none; border: 0; box-shadow: none; border-radius: 8px;
+  padding: 0 10px; color: var(--accent); font-size: 13px; font-weight: 600;
+}
+
+/* ── segmented control ── */
+.seg { background: rgba(255,255,255,.04); border-color: var(--line); border-radius: 10px; }
+.seg button.on { background: rgba(255,255,255,.10); color: var(--fg); }
+.seg button + button { border-left-color: var(--line); }
+
+/* ── progress ── */
+.stat { border-radius: 14px; }
+.stat b, .stat .stat-value { font-weight: 650; letter-spacing: -.03em; }
+.module-row .bar { background: rgba(255,255,255,.08); }
+.module-row .bar i { background: var(--mod); }
+button.module-row + button.module-row { border-top-color: var(--line); }
+.cap .bar { background: rgba(255,255,255,.08); }
+
+/* ── sheets ── */
+.sheet-scrim { background: rgba(4,5,16,.72); }
+.sheet-body {
+  background: var(--glass-sheet);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--line-strong);
+  border-bottom: 0;
+  border-radius: 20px 20px 0 0;
+}
+.sheet-handle { background: rgba(255,255,255,.22); }
+
+/* ── toast ── */
+.toast { background: var(--primary); color: var(--on-accent); box-shadow: 0 10px 28px -8px rgba(0,0,0,.7); }
+
+/* ── trainer ── */
+.trainer { background: var(--aurora), var(--bg); }
+.trainer-nav { background: rgba(7,8,16,.94); border-bottom-color: var(--line); }
+.trainer-action-bar { background: rgba(7,8,16,.96); border-top-color: var(--line); }
+.step-dot { transition: background var(--dur-fade, 160ms), width var(--dur-fade, 160ms); }
+.step-dot.active { width: 20px; border-radius: var(--r-pill, 999px); background: var(--mod, var(--accent)); }
+.player { border-color: var(--line-strong); }
+.why { background: var(--accent-tint); border-left-color: var(--mod, var(--accent)); }
+.stepLabel { color: var(--muted); letter-spacing: .08em; }
+.promptline { color: var(--fg); }
+.recall-hint { background: rgba(255,255,255,.05); }
+.recall-check { background: var(--accent-tint); border-color: var(--line-strong); }
+.noteSnapshot { background: rgba(0,0,0,.42); }
+.prompt-mode { background: rgba(165,180,252,.14); }
+.ainotes li.now button { background: rgba(165,180,252,.14); }
+
+/* rating: neutral until chosen; the chosen one is outlined and tinted like every other selection */
+.rating-control button { background: rgba(255,255,255,.04); border-color: var(--line); border-radius: 10px; }
+.rating-control button.on {
+  background: rgba(129,140,248,.20);
+  border-color: var(--accent);
+  color: var(--fg);
+}
+.rating-control button.on span { color: var(--fg-2); }
+
+/* ── skeleton ── */
+.skeleton-line, .skeleton-box { background: rgba(255,255,255,.08); }
+
+/* ── no backdrop-filter (old WebViews): trade translucency for legibility ── */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --glass-bar: rgba(10,11,20,.98); --glass-sheet: rgba(11,12,22,.99); }
+}
+
+/* ── reduced motion: the base rule shrinks durations to .01ms, which makes an
+   infinite animation (the loading skeleton) strobe. Run those once instead. ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-iteration-count: 1 !important; }
+}
+
+/* ── wide screens: keep the phone-shaped column readable ── */
+@media (min-width: 900px) {
+  .screens { max-width: 760px; margin-inline: auto; }
+  .top-nav { padding-inline: max(16px, calc((100vw - 760px) / 2 + 30px)); }
+}
+
+/* ── two libraries: Videos | Reels ── restrained: same segmented control, a plain count and a small due number */
+.lib-seg { display: flex; width: 100%; margin: 0 0 var(--s3, 12px); }
+.lib-seg button { flex: 1 1 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.lib-seg button small { font-weight: 500; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.lib-seg button.on small { color: var(--fg-2, var(--muted)); }
+.lib-due { min-width: 18px; padding: 2px 5px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); color: var(--fg); font: 600 11px/1 var(--font); text-align: center; font-variant-numeric: tabular-nums; }

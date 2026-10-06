@@ -7,8 +7,8 @@
   "id": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0b0e10",
-  "theme_color": "#101516",
+  "background_color": "#05060c",
+  "theme_color": "#0a0b14",
   "categories": ["education", "productivity", "health"],
   "share_target": {
     "action": "./",
