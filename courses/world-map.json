@@ -1,0 +1,1423 @@
+{
+ "version": 1,
+ "id": "world-map",
+ "title": "World Map",
+ "subtitle": "From reality to civilization",
+ "description": "An eight-layer written course that builds a mental map of how reality works, from energy and evolution through minds, exchange, power, and technology to the open frontiers of philosophy. Each of the thirty-two lessons teaches one core idea in plain English with a concrete example, a limitation, and three self-check points.",
+ "coverage": [
+  "energy",
+  "evolution",
+  "incentives",
+  "power",
+  "coordination",
+  "institutions",
+  "capital",
+  "information",
+  "psychology",
+  "narratives",
+  "networks",
+  "feedback",
+  "epistemology"
+ ],
+ "sources": [
+  {
+   "id": "openstax-bio",
+   "title": "OpenStax — Concepts of Biology",
+   "url": "https://openstax.org/details/books/concepts-biology",
+   "note": "Free introductory biology textbook. Covers natural selection (variation, heritability, differential survival), the laws of thermodynamics, and ecology including energy flow and carrying capacity."
+  },
+  {
+   "id": "openstax-econ",
+   "title": "OpenStax — Principles of Economics 3e",
+   "url": "https://openstax.org/details/books/principles-economics-3e",
+   "note": "Free economics textbook. Covers scarcity, opportunity cost, incentives, property rights, transaction costs, credit and leverage, externalities, and comparative advantage (sections include 'Explicit and Implicit Costs', 'Absolute and Comparative Advantage', 'How Households Supply Financial Capital')."
+  },
+  {
+   "id": "openstax-soc",
+   "title": "OpenStax — Introduction to Sociology 3e",
+   "url": "https://openstax.org/details/books/introduction-sociology-3e",
+   "note": "Free sociology textbook. Covers power and authority, economic systems, social stratification, groups, and collective behavior (sections include 'Power and Authority', 'Economic Systems', 'What Is Social Stratification?')."
+  },
+  {
+   "id": "openstax-psych",
+   "title": "OpenStax — Psychology 2e",
+   "url": "https://openstax.org/details/books/psychology-2e",
+   "note": "Free psychology textbook. Covers cognition, emotion, social psychology, attitudes, and persuasion (sections include 'What Is Social Psychology?' and 'Sensation versus Perception')."
+  },
+  {
+   "id": "openstax-wh2",
+   "title": "OpenStax — World History Volume 2 (from 1400)",
+   "url": "https://openstax.org/details/books/world-history-volume-2",
+   "note": "Free world-history textbook. Covers the Enlightenment, the mercantilist economy, coerced labor, and industrialization; source for the Industrial Revolution and the exchange of ideas."
+  },
+  {
+   "id": "darwin-1859",
+   "title": "Darwin — On the Origin of Species (1859, 1st ed.)",
+   "url": "https://darwin-online.org.uk/content/frameset?itemID=F373&viewtype=text&pageseq=1",
+   "note": "Historical primary text describing natural selection and adaptation; published before modern genetics. It is not cited as evidence for later finch field experiments."
+  },
+  {
+   "id": "coase-1991",
+   "title": "Coase — Nobel Lecture (1991), 'The Institutional Structure of Production'",
+   "url": "https://www.nobelprize.org/prizes/economic-sciences/1991/coase/lecture/",
+   "note": "Primary lecture explaining transaction costs, firms, and the institutional structure of production. Institutions and positive transaction costs are a research program, not a universal historical explanation."
+  },
+  {
+   "id": "ostrom-2009",
+   "title": "Ostrom — Nobel Lecture (2009), 'Beyond Markets and States'",
+   "url": "https://www.nobelprize.org/uploads/2018/06/ostrom_lecture.pdf",
+   "note": "Primary lecture on polycentric governance and common resources. Communication, monitoring, and local rules can support cooperation under particular conditions; design principles are not guarantees."
+  },
+  {
+   "id": "kahneman-2002",
+   "title": "Kahneman — Nobel Lecture (2002), 'Maps of Bounded Rationality'",
+   "url": "https://www.nobelprize.org/uploads/2018/06/kahnemann-lecture.pdf",
+   "note": "Introduces the fast/intuitive and slow/deliberate modes of thinking and the heuristics (availability, anchoring) that systematically bias judgment. The two-system map is a modeling device, not a complete psychology."
+  },
+  {
+   "id": "shannon-1948",
+   "title": "Shannon — 'A Mathematical Theory of Communication' (1948)",
+   "url": "https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf",
+   "note": "Defines information as reduction of uncertainty, measured by entropy (H = -sum of p log2 p), and proves the channel-capacity theorem. The measure is syntactic, deliberately silent on meaning and truth."
+  },
+  {
+   "id": "meadows-leverage",
+   "title": "Meadows — 'Leverage Points: Places to Intervene in a System'",
+   "url": "https://donellameadows.org/wp-content/userfiles/Leverage_Points.pdf",
+   "note": "Describes feedback, delays, and possible leverage points. The ordering is a tentative heuristic with exceptions, not a scientific law or a promise that one intervention will work."
+  },
+  {
+   "id": "hayek-1974",
+   "title": "Hayek — Nobel Lecture (1974), 'The Pretence of Knowledge'",
+   "url": "https://www.nobelprize.org/prizes/economic-sciences/1974/hayek/lecture/",
+   "note": "Primary lecture on dispersed knowledge and the limits of prediction in complex social systems. A perspective to examine, not proof that any particular market or policy is optimal."
+  },
+  {
+   "id": "hall-eroi-2014",
+   "title": "Hall, Lambert & Balogh (2014) — 'EROI of different fuels', Energy Policy",
+   "url": "https://www.sciencedirect.com/science/article/pii/S0301421513003856",
+   "note": "Publisher reference for EROI and differences among energy sources. The publisher blocked full-text retrieval during this build; no exact quotation or numerical estimate from the paper is asserted. Energy-return accounting depends on boundaries."
+  },
+  {
+   "id": "sep-free-will",
+   "title": "Stanford Encyclopedia of Philosophy — 'Free Will'",
+   "url": "https://plato.stanford.edu/entries/freewill/",
+   "note": "Surveys the main positions on free will, determinism, and moral responsibility; the debate is presented as unresolved."
+  },
+  {
+   "id": "sep-consciousness",
+   "title": "Stanford Encyclopedia of Philosophy — 'Consciousness'",
+   "url": "https://plato.stanford.edu/entries/consciousness/",
+   "note": "Surveys the concept of consciousness and the explanatory gap ('hard problem'); no theory has reached consensus."
+  },
+  {
+   "id": "sep-life-meaning",
+   "title": "Stanford Encyclopedia of Philosophy — 'The Meaning of Life'",
+   "url": "https://plato.stanford.edu/entries/life-meaning/",
+   "note": "Surveys the philosophical question of what makes a life meaningful; presents competing answers rather than one conclusion."
+  },
+  {
+   "id": "sep-social-norms",
+   "title": "Stanford Encyclopedia of Philosophy — 'Social Norms'",
+   "url": "https://plato.stanford.edu/entries/social-norms/",
+   "note": "Covers how shared norms coordinate behavior and sustain cooperation and legitimacy."
+  },
+  {
+   "id": "sep-emergence",
+   "title": "Stanford Encyclopedia of Philosophy — 'Emergent Properties'",
+   "url": "https://plato.stanford.edu/entries/properties-emergent/",
+   "note": "Defines emergence and the debate over whether higher-level properties are reducible to their parts."
+  },
+  {
+   "id": "sep-game-theory",
+   "title": "Stanford Encyclopedia of Philosophy — 'Game Theory'",
+   "url": "https://plato.stanford.edu/entries/game-theory/",
+   "note": "Introduces strategic interaction, including the prisoner's dilemma and the role of credible commitment in cooperation."
+  },
+  {
+   "id": "sep-scientific-method",
+   "title": "Stanford Encyclopedia of Philosophy — 'Scientific Method'",
+   "url": "https://plato.stanford.edu/entries/scientific-method/",
+   "note": "Covers hypothesis testing, evidence, falsifiability, and how competing explanations are compared."
+  },
+  {
+   "id": "snow-1855",
+   "title": "John Snow — On the Mode of Communication of Cholera (1855), pp. 38–55",
+   "url": "https://epi-snow.ph.ucla.edu/Stream2_BSPoutbreak_a.html",
+   "note": "UCLA-hosted transcription of Snow’s primary account. Read Part 2, not only the introductory retelling: Snow explicitly notes the outbreak was already declining before handle removal and its effect was uncertain."
+  },
+  {
+   "id": "openstax-entropy",
+   "title": "OpenStax — College Physics 2e, §15.6: entropy and the second law",
+   "url": "https://openstax.org/books/college-physics-2e/pages/15-6-entropy-and-the-second-law-of-thermodynamics-disorder-and-the-unavailability-of-energy",
+   "note": "Introduces entropy as a state quantity and explains system-plus-surroundings accounting and reversible processes. The chapter uses a disorder analogy; this course does not equate entropy with everyday untidiness."
+  },
+  {
+   "id": "openstax-wh1",
+   "title": "OpenStax — World History Volume 1, §3.1: Early Civilizations",
+   "url": "https://openstax.org/books/world-history-volume-1/pages/3-1-early-civilizations",
+   "note": "Introductory account of agriculture, surplus, specialization, settlements, and social hierarchies. Evidence supports multiple historical paths, not an inevitable sequence from grain to kings."
+  },
+  {
+   "id": "sep-cultural-evolution",
+   "title": "Stanford Encyclopedia of Philosophy — Cultural Evolution",
+   "url": "https://plato.stanford.edu/entries/evolution-cultural/",
+   "note": "Surveys social learning, cultural inheritance, dual-inheritance theory, and disputed mechanisms. Cultural evolution is an empirical research field, not merely a rhetorical metaphor."
+  },
+  {
+   "id": "sep-nothingness",
+   "title": "Stanford Encyclopedia of Philosophy — Nothingness",
+   "url": "https://plato.stanford.edu/entries/nothingness/",
+   "note": "Sections 1–5 examine why there is something rather than nothing, possible explanatory frameworks, and assumptions about what must exist. This is a survey of debates, not a settled cosmological answer."
+  },
+  {
+   "id": "nist-generative-ai",
+   "title": "NIST AI 600-1 — Generative Artificial Intelligence Profile (2024)",
+   "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+   "note": "Section 2 describes confabulation, information integrity, human-AI configuration, and other risks. Supports task-specific testing and independent checking; does not settle consciousness or understanding."
+  },
+  {
+   "id": "sep-morality",
+   "title": "Stanford Encyclopedia of Philosophy — The Definition of Morality",
+   "url": "https://plato.stanford.edu/entries/morality-definition/",
+   "note": "Distinguishes descriptive and normative senses of morality and discusses differing theoretical accounts. Facts about behavior alone do not select an ethical theory."
+  }
+ ],
+ "layers": [
+  {
+   "id": "seeing-clearly",
+   "title": "Seeing clearly",
+   "stage": "Birth",
+   "stageNote": "Even infants look longer at events that break their expectations, then learn from them. Guess, check, correct: the habit this layer trains.",
+   "goal": "Learn to look at claims the way a careful investigator does: as models, as evidence, and as uncertain bets, always asking what you give up to accept one.",
+   "checkpoint": "You can restate any claim as a model, ask what evidence would change it, and name the trade-off it carries.",
+   "lessons": [
+    {
+     "id": "wm-seeing-models",
+     "title": "A model is a map, not the territory",
+     "summary": "Every explanation is a simplified model of reality, useful only where its assumptions hold.",
+     "minutes": 5,
+     "concepts": [
+      "epistemology"
+     ],
+     "paragraphs": [
+      "When we say we understand something, we usually mean we have built a small model of it in our heads. A model leaves most details out on purpose so that the parts that matter become visible. A map is not the city; a diagram of a company is not the company. The test of a model is not whether it is complete, but whether it is useful for the job at hand.",
+      "Every model rests on assumptions. When those assumptions break, the model quietly stops working. Newton's physics is a superb model for ordinary objects, yet it fails at near-light speeds where Einstein's model is needed. Neither is the truth; each is right for its range."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A city's subway map straightens lines and spaces stations evenly, so it bears almost no resemblance to real geography. Yet it is exactly what you need to plan a journey, because it keeps the useful information, connections and order, and drops the rest. The map is not the city, and it is not meant to be. Folding the map to show only the section you need is exactly what a good model does: it hides irrelevant detail so the route ahead is clear."
+     },
+     "video": {
+      "id": "RK9m4OmFAbY",
+      "title": "Tools of Science: Modeling",
+      "channel": "Tools of Science",
+      "dur": 371,
+      "why": "A short walk-through of what scientific models are and why each is useful only within its limits.",
+      "checked": "2026-10-11: public and embeddable; captions not checked."
+     },
+     "limit": "No model is reality itself. Confusing the map for the territory is the source of much overconfidence. A model that predicts well in one place can fail badly in another, and the failure is often invisible until it happens.",
+     "prompt": "Name one model you use to understand the world, and one situation where it breaks down.",
+     "recallKeys": [
+      "I can explain that a model is a deliberate simplification, not a complete picture of reality.",
+      "I can name an assumption behind a model I use and a case where that assumption fails.",
+      "I can say why a useful model is judged by usefulness, not completeness."
+     ],
+     "sourceIds": [
+      "sep-scientific-method",
+      "openstax-econ"
+     ]
+    },
+    {
+     "id": "wm-seeing-evidence",
+     "title": "Evidence and the difference between correlation and cause",
+     "summary": "Claims need evidence, and evidence must be checked for confounding before it implies a cause.",
+     "minutes": 6,
+     "concepts": [
+      "epistemology"
+     ],
+     "paragraphs": [
+      "A careful thinker asks two questions about any claim: what evidence would support it, and what evidence would count against it. Correlation, the fact that two things move together, is easy to find but weak on its own. Ice-cream sales and drowning deaths rise together in summer; ice cream does not cause drowning. A shared third cause, hot weather, drives both.",
+      "To move from correlation toward cause, investigators try to rule out confounders: other explanations that could produce the same pattern. Controlled experiments, natural experiments, and careful comparison are tools for doing this. Scientific method exists precisely to make this check systematic rather than a matter of trust."
+     ],
+     "example": {
+      "title": "John Snow's cholera map",
+      "text": "In 1854 London, John Snow investigated cholera deaths near the Broad Street pump and compared cases with people's water use. The parish board removed the handle after hearing his evidence. But the outbreak was already declining, and Snow acknowledged that removal's effect was uncertain. The important lesson is the comparison of exposures and exceptions, not a claim that one intervention proved its own success. A falling case count after an intervention does not, by itself, establish that the intervention caused the fall."
+     },
+     "video": {
+      "id": "ofweqU0Lz4I",
+      "title": "Correlation vs Causation Explained: Why Patterns Can Mislead Us",
+      "channel": "Sprouts",
+      "dur": 290,
+      "why": "A five-minute animation on why a pattern between two things does not prove that one causes the other.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Even strong causal evidence is usually partial and provisional. Randomized trials are powerful but often impractical or unethical for social questions. Showing a cause is not the same as showing how large the effect is, or whether it still holds in other settings.",
+     "prompt": "Think of a claim you have accepted. What evidence would make you reject it?",
+     "recallKeys": [
+      "I can explain why correlation alone does not establish a cause, with my own example of a confounder.",
+      "I can describe one way investigators try to rule out alternative explanations.",
+      "I can say why even good causal evidence is provisional rather than final."
+     ],
+     "sourceIds": [
+      "sep-scientific-method",
+      "openstax-psych",
+      "snow-1855"
+     ]
+    },
+    {
+     "id": "wm-seeing-uncertainty",
+     "title": "Living with uncertainty and judging confidence",
+     "summary": "Most important claims are matters of degree, so good thinking means holding beliefs with the right strength.",
+     "minutes": 5,
+     "concepts": [
+      "epistemology"
+     ],
+     "paragraphs": [
+      "Almost nothing worth knowing is certain. The honest response to a complex question is not a confident yes or no but a degree of confidence: I think this is likely, or this is roughly even, or this is unlikely. Holding a belief at the wrong strength is a mistake in both directions. Being sure when you should be uncertain is overconfidence; being unsure when the evidence is strong wastes good information.",
+      "Better reasoners calibrate: their confidence tracks how often they turn out to be right. When they say they are about 70 percent sure, they are right around 70 percent of the time. Calibration is a skill that improves with feedback, because it forces you to notice when you were too sure or too timid."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Imagine keeping a record of weather forecasts for your location. Among many forecasts assigning a 70 percent chance of rain, rain should occur roughly 70 percent of the time if they are well calibrated. One dry day does not disprove a probabilistic forecast. Persistent mismatch across many comparable forecasts suggests a calibration problem. First check what counts as rain, which area the forecast covers, and the observation period: vague event definitions can make an apparently precise confidence score misleading."
+     },
+     "video": {
+      "id": "HZGCoVF3YvM",
+      "title": "Bayes theorem, the geometry of changing beliefs",
+      "channel": "3Blue1Brown",
+      "dur": 911,
+      "why": "A visual explanation of updating a belief by exactly as much as new evidence warrants.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "One-off events can still receive subjective probabilities, but scarce comparable observations make calibration difficult. Small samples and poorly defined events also make confidence checks unreliable. Numerical precision is not a substitute for clearly stated assumptions and honest limits.",
+     "prompt": "Pick a belief you hold strongly. What information would make you lower your confidence?",
+     "recallKeys": [
+      "I can state a belief with a degree of confidence instead of as certain or impossible.",
+      "I can explain what calibration means and why overconfidence is costly.",
+      "I can explain why a precise probability can be poorly justified or hard to calibrate."
+     ],
+     "sourceIds": [
+      "sep-scientific-method",
+      "kahneman-2002"
+     ]
+    },
+    {
+     "id": "wm-seeing-scarcity",
+     "title": "Scarcity and opportunity cost",
+     "summary": "Resources are limited, so every choice has a cost: the next best thing you give up.",
+     "minutes": 5,
+     "concepts": [
+      "incentives"
+     ],
+     "paragraphs": [
+      "Scarcity is the basic fact behind all economic thinking: there is not enough of anything to satisfy every want. Time, money, attention, and energy are all scarce. Because of scarcity, every choice means giving something up. The real cost of a choice is its opportunity cost: the value of the best alternative you forgo.",
+      "Opportunity cost is why free is rarely free. A free hour of a lecture still costs you the work, rest, or study you could have done instead. Seeing costs this way changes decisions: the question is not what something costs in money, but what you cannot do because of it. Hidden opportunity costs explain many choices that look irrational from the outside."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A student has one free evening. They can study, work a shift, or rest. Choosing to rest costs the wages of the shift and the progress of the study, whichever would have mattered more. The price of rest is not zero; the true cost is the single best alternative given up, not the whole list of everything. Next time you hear that something is free, ask what you cannot do because you accepted it, and the real cost will appear."
+     },
+     "video": {
+      "id": "3ez10ADR_gM",
+      "title": "Intro to Economics: Crash Course Econ #1",
+      "channel": "CrashCourse",
+      "dur": 729,
+      "why": "The opening Crash Course Economics episode: scarcity, trade-offs, and opportunity cost.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Opportunity cost is a lens, not a calculator. People do not, and cannot, list every alternative perfectly. Framing everything as a cost can also blind us to non-negotiable values, like care for family, that people rightly refuse to trade.",
+     "prompt": "What is the true cost of the way you spent your last free hour?",
+     "recallKeys": [
+      "I can define scarcity and opportunity cost in my own words.",
+      "I can identify the opportunity cost of a recent decision of mine.",
+      "I can say why opportunity cost is a useful lens, not an exact measure."
+     ],
+     "sourceIds": [
+      "openstax-econ"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "physical-world",
+   "title": "The physical world and life",
+   "stage": "Infancy",
+   "stageNote": "A small body runs on food, warmth, and care. Life begins as an energy budget, shaped by place and by what was inherited.",
+   "goal": "Ground everything in the physical budget of energy and the blind logic of evolution, before any story about societies.",
+   "checkpoint": "You can explain how energy constrains every living system and how natural selection produces apparent design without a designer.",
+   "lessons": [
+    {
+     "id": "wm-physical-energy",
+     "title": "Energy, entropy, and the physical budget",
+     "summary": "Every living thing and every society runs on an energy budget, and getting energy always costs energy.",
+     "minutes": 6,
+     "concepts": [
+      "energy"
+     ],
+     "paragraphs": [
+      "Organisms and societies depend on energy flows. Plants capture sunlight; food, fuels, and electricity power activity. Obtaining an energy supply also requires inputs: mining, drilling, building equipment, and maintaining networks. Energy return on investment compares the energy obtained with energy invested, using stated boundaries. More usable energy remaining after these costs can support other activities, but energy abundance alone does not explain wealth or political institutions.",
+      "The second law says the total entropy of an isolated system cannot decrease. Entropy is a state quantity; in statistical descriptions it is related to the number of microscopic arrangements compatible with a macroscopic state, not ordinary untidiness. Heat spreading from hot to cold increases total entropy and reduces the opportunity to extract work from that temperature difference. Living systems maintain local organization by exchanging energy and matter with their surroundings; the total still obeys the second law."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Imagine a refrigerator cooling your food. It moves heat from its cold interior into a warmer room, but it needs electrical work to do so and releases additional heat outside. Cooling one place does not violate the second law, because the refrigerator and its surroundings must be considered together. Following the electricity upstream adds further resource and energy costs. This example shows why local organization and cooling are possible without treating entropy as a vague synonym for mess or social decline."
+     },
+     "video": {
+      "id": "YM-uykVfq_E",
+      "title": "What is entropy? - Jeff Phillips",
+      "channel": "TED-Ed",
+      "dur": 319,
+      "why": "A five-minute animation of what entropy is and why energy spreads out.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Entropy is not a law of social decay. Thermodynamic and Shannon entropies have related mathematical structures but different physical meanings and units. Energy-return estimates depend on system boundaries; they are not a complete theory of prices, prosperity, or politics.",
+     "prompt": "Where does the energy you used today come from, and what did it cost to obtain?",
+     "recallKeys": [
+      "I can explain why getting energy itself costs energy, and what surplus means.",
+      "I can state the second law of thermodynamics in plain terms without misusing the word entropy.",
+      "I can name one thing energy constraints explain and one thing they do not explain."
+     ],
+     "sourceIds": [
+      "openstax-bio",
+      "hall-eroi-2014",
+      "openstax-entropy"
+     ]
+    },
+    {
+     "id": "wm-physical-geography",
+     "title": "Geography and ecology shape possibilities, not destiny",
+     "summary": "Place, climate, and available resources set the menu of options a society starts from.",
+     "minutes": 5,
+     "concepts": [
+      "energy"
+     ],
+     "paragraphs": [
+      "Where people live shapes what they can do. Climate, soil, rivers, coastlines, and the plants and animals at hand determine which foods can grow, which diseases spread, and how easily people can move and trade. A society surrounded by rich farmland faces different choices than one on an island or in a desert.",
+      "Ecology is the study of these connections among living things and their environment: how energy and matter flow through food webs, and how populations rise and fall against the carrying capacity of their habitat. Seeing a society against its geography is the first step to understanding why its economy, diet, and even its politics took the shape they did."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A society on a river delta with rich silt and easy water transport can farm densely and trade widely, while a society on a dry island must fish, import, and guard scarce fresh water. The same starting population faces very different menus of options, and its economy, diet, and politics bend to fit. Neither is permanently doomed or saved by its geography, but each must play a different hand of cards, and many of its early moves are shaped by the hand it was dealt."
+     },
+     "video": {
+      "id": "JEYh5WACqEk",
+      "title": "Why Some Diseases Only Traveled One Direction",
+      "channel": "CGP Grey",
+      "dur": 728,
+      "why": "How the plants and animals a region happened to have shaped farming, disease, and history.",
+      "checked": "2026-10-11: public and embeddable; captions not checked."
+     },
+     "limit": "Geography constrains, but it does not command. Similar environments have produced very different societies, and human choices and institutions reshape the meaning of place over time. Treating geography as fate is a form of overclaiming that history repeatedly contradicts.",
+     "prompt": "How has the geography of where you live shaped what is easy or hard there?",
+     "recallKeys": [
+      "I can give one example of how geography changes a society's options.",
+      "I can explain what ecology studies and what carrying capacity means.",
+      "I can say why geography is a constraint rather than a destiny."
+     ],
+     "sourceIds": [
+      "openstax-bio"
+     ]
+    },
+    {
+     "id": "wm-physical-evolution",
+     "title": "Natural selection: design without a designer",
+     "summary": "Natural selection changes populations through inherited variation and differences in reproductive success.",
+     "minutes": 6,
+     "concepts": [
+      "evolution"
+     ],
+     "paragraphs": [
+      "Darwin and Wallace described how complex adaptations can arise without a planner. Individuals vary; some differences are inherited; and individuals differ in reproductive success. When inherited traits affect success in a particular environment, those traits can become more common over generations. Scarce resources often contribute, but the essential mechanism is differential reproduction, not a universal war of all against all.",
+      "Over long stretches this process can build things that look purpose-made: wings, eyes, and instincts. Yet no intention is involved at any step. Selection is a description of what survives and reproduces, not a plan, and fitness simply means leaving more offspring in a particular environment, not being stronger, smarter, or better in any general sense."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Imagine a beetle population with inherited color differences. On dark ground, birds more readily spot pale beetles. If darker beetles consequently leave more surviving offspring, dark-color variants can increase over generations. No beetle decides to evolve a new color. Now change the ground to pale sand: the advantage might reverse. This is an illustration of natural selection, not a report of a particular experiment. Chance, migration, and mutation can also change populations, so selection is not the only evolutionary process."
+     },
+     "video": {
+      "id": "0SCjhI86grU",
+      "title": "What is Natural Selection?",
+      "channel": "Stated Clearly",
+      "dur": 534,
+      "why": "A step-by-step animation of variation, inheritance, and selection.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Darwin wrote before genetics was understood, so his mechanism of inheritance was incomplete. More important, natural selection is not a moral or political guide. Efforts to turn it into social Darwinism, a justification of inequality or conquest, are misreadings, not the science itself.",
+     "prompt": "Explain to a friend how a trait can spread without anyone choosing it.",
+     "recallKeys": [
+      "I can list the three conditions that make natural selection work.",
+      "I can say what fitness means in biology, and what it does not mean.",
+      "I can explain why natural selection is not a moral argument."
+     ],
+     "sourceIds": [
+      "darwin-1859",
+      "openstax-bio"
+     ]
+    },
+    {
+     "id": "wm-physical-cooperation",
+     "title": "Cooperation and the limits of the survival metaphor",
+     "summary": "Cooperation is as much a product of evolution as competition, and survival of the fittest misleads when over-applied.",
+     "minutes": 5,
+     "concepts": [
+      "evolution"
+     ],
+     "paragraphs": [
+      "Cooperation can evolve alongside competition. Helping relatives may increase the transmission of shared genes; repeated interactions can favor reciprocal help. Which explanation fits depends on the species, costs, relatedness, and available evidence. Biological fitness concerns reproductive success, not kindness or moral worth. Human wealth and authority therefore cannot be justified merely by calling their holders fitter.",
+      "Cultural evolution is a real research field studying how socially learned behaviors, ideas, and norms change across populations. People may copy successful or prestigious individuals, follow common practices, or adapt ideas deliberately. Cultural transmission differs from genetic inheritance: learning can occur among unrelated people and within a lifetime. Cultural and genetic processes can interact, but neither makes whatever spreads automatically true, useful, or ethically good."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A worker bee does not reproduce, yet it forages, builds, and defends the hive, often dying to protect it. This looks selfless, but because the workers share genes with the queen's offspring, helping the colony spreads their shared genes, so the trait persists. Cooperation here is an evolutionary outcome, not a moral choice. The bee does not weigh the costs and benefits. Its behavior is a product of genes that, over thousands of generations, were favored precisely because they helped the hive survive."
+     },
+     "video": {
+      "id": "1tz6WE4ALUs",
+      "title": "How Does Cooperation Evolve?",
+      "channel": "Stated Clearly",
+      "dur": 229,
+      "why": "How helping others can evolve through kinship and repeated interaction.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "No single evolutionary mechanism explains all cooperation. Cultural evolution is not merely a metaphor, but its models and the importance of cultural group selection remain debated. Distinguish reproductive success, cultural spread, and moral evaluation rather than treating them as interchangeable.",
+     "prompt": "Name one example of cooperation in nature and explain how it might have evolved.",
+     "recallKeys": [
+      "I can describe one mechanism by which cooperation can evolve.",
+      "I can explain the difference between biological fitness and social worth.",
+      "I can explain one way cultural transmission differs from genetic inheritance, without dismissing cultural evolution as merely a metaphor."
+     ],
+     "sourceIds": [
+      "openstax-bio",
+      "sep-cultural-evolution"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "minds-meaning",
+   "title": "Minds and shared meaning",
+   "stage": "Childhood",
+   "stageNote": "Language, stories, and belonging arrive long before the tools to question them.",
+   "goal": "See how limited minds build shared stories that coordinate strangers, and how those stories can be used to persuade or deceive.",
+   "checkpoint": "You can explain how cognition is bounded, how emotion and status drive people, and how narratives and persuasion shape what groups accept as true and legitimate.",
+   "lessons": [
+    {
+     "id": "wm-minds-rationality",
+     "title": "Bounded rationality: the mind's shortcuts",
+     "summary": "People reason with limited time and information, using fast shortcuts that are usually good but systematically biased.",
+     "minutes": 5,
+     "concepts": [
+      "psychology"
+     ],
+     "paragraphs": [
+      "The mind is not a perfect calculator. Daniel Kahneman described two broad modes of thinking: a fast, automatic mode that handles most decisions without effort, and a slower, deliberate mode that checks and corrects. Because the fast mode has to work instantly, it relies on shortcuts, called heuristics, that work well most of the time.",
+      "Those same shortcuts produce predictable biases. We overrate what easily comes to mind, we anchor on the first number we see, and we seek out information that confirms what we already believe. None of this is a character flaw; it is the price of a mind that must decide quickly on incomplete information."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "After a vivid plane crash, many people fear flying far more than driving, even though driving is statistically riskier per mile. The crash is easy to recall, so the mind overrates its likelihood. The shortcut that usually serves us, judging risk by how easily examples come to mind, misfires here. The availability heuristic is usually useful because events we can easily recall are typically common, but vivid disasters break the pattern, and our risk perception breaks with it."
+     },
+     "video": {
+      "id": "ReFqFPJHLhA",
+      "title": "Heuristics and biases in decision making, explained",
+      "channel": "Learn Liberty",
+      "dur": 229,
+      "why": "A quick tour of mental shortcuts and the predictable errors they cause.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "The two-mode picture is a model of convenience, not a complete account of judgment, and heuristics are sometimes smart rules that outperform slow analysis in the real world. Calling a shortcut a bias does not mean it is always wrong.",
+     "prompt": "Where did a mental shortcut steer you wrong this week, and why?",
+     "recallKeys": [
+      "I can explain what a heuristic is and why the mind uses shortcuts.",
+      "I can name one specific bias and give an example of it.",
+      "I can say why the fast/slow picture is a model, not the full story."
+     ],
+     "sourceIds": [
+      "kahneman-2002",
+      "openstax-psych"
+     ]
+    },
+    {
+     "id": "wm-minds-emotion",
+     "title": "Emotion, status, and identity drive people",
+     "summary": "People are moved as much by feeling, status, and belonging as by calculated self-interest.",
+     "minutes": 5,
+     "concepts": [
+      "psychology"
+     ],
+     "paragraphs": [
+      "Much of what people do is not the cool weighing of options that economic models imagine. Emotion sets priorities and gives urgency to decisions. Fear, hope, anger, and pride push people toward action faster than careful analysis ever could. Understanding people means taking these feelings seriously rather than treating them as noise.",
+      "Two social motives run especially deep: status and identity. People care intensely about their standing in a group and about belonging to groups that give their life meaning. These drives explain loyalty, rivalry, sacrifice, and much conflict that pure self-interest cannot. A person may give up money or even safety to protect their reputation or their group."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A person buys a costly branded item when a functionally identical generic one costs far less. The extra money buys not function but status: recognition, belonging to a group, a signal of identity. The purchase looks irrational only if you ignore the social motives, which are real and often decisive. Marketers understand this well: they rarely sell the product's specifications. They sell the identity and status the product is meant to signal."
+     },
+     "video": {
+      "id": "mBDULN6Jtn0",
+      "title": "Social Identity Theory - Definition + 3 Components",
+      "channel": "Practical Psychology",
+      "dur": 428,
+      "why": "How belonging to a group shapes identity, loyalty, and rivalry.",
+      "checked": "2026-10-11: public and embeddable; captions not checked."
+     },
+     "limit": "Emotion is not the opposite of reason; it is often part of how we decide what matters. Models that reduce people to either pure calculators or pure feeling are both wrong. Status and identity also vary widely across cultures, so no single account fits everyone.",
+     "prompt": "Recall a decision of yours where status or identity mattered more than the rational cost.",
+     "recallKeys": [
+      "I can explain one way emotion shapes decisions rather than disrupting them.",
+      "I can give an example of status or identity overriding narrow self-interest.",
+      "I can say why neither pure calculator nor pure feeling fully describes people."
+     ],
+     "sourceIds": [
+      "openstax-psych"
+     ]
+    },
+    {
+     "id": "wm-minds-narratives",
+     "title": "Narratives, ideology, and legitimacy",
+     "summary": "Shared stories give strangers common meaning, justify authority, and can become as real in their effects as material facts.",
+     "minutes": 6,
+     "concepts": [
+      "narratives"
+     ],
+     "paragraphs": [
+      "Humans coordinate at large scale through shared stories. A nation, a religion, a corporation, and money itself all rest on ideas that exist because people hold them in common. These narratives give strangers a reason to trust one another and to accept arrangements they cannot personally verify.",
+      "Legitimacy is the belief that an arrangement is rightful and should be obeyed. It is what turns raw force into stable authority: a government seen as legitimate rules with far less effort than one that is merely feared. Ideologies are large narratives that organize this sense of rightness, telling people who they are, what is fair, and why things are the way they are."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A banknote buys goods partly because buyers and sellers expect others to accept it. But acceptance is not belief floating free of institutions: fiat currency also operates within legal rules, banking arrangements, and obligations denominated in that currency. Inflation or distrust can weaken purchasing power; paper does not become valuable through storytelling alone. Money illustrates how shared expectations and institutional practices reinforce each other. To understand its value, examine the arrangements that sustain use as well as the stories people tell."
+     },
+     "video": {
+      "id": "nzj7Wg4DAbs",
+      "title": "Why humans run the world | Yuval Noah Harari | TED",
+      "channel": "TED",
+      "dur": 1028,
+      "why": "Yuval Noah Harari on how shared stories let large numbers of strangers cooperate.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Narratives are powerful but not all-powerful. People can, and do, abandon stories when they conflict too sharply with lived experience. And legitimacy is a description of what people believe, not a claim that the arrangement is actually just; describing why people obey is not the same as endorsing it.",
+     "prompt": "Name a shared story you participate in, and what would happen if everyone stopped believing it.",
+     "recallKeys": [
+      "I can explain how a shared story coordinates people who do not know each other.",
+      "I can define legitimacy and say what it does to authority.",
+      "I can distinguish describing a belief from endorsing it."
+     ],
+     "sourceIds": [
+      "openstax-soc",
+      "sep-social-norms",
+      "openstax-econ"
+     ]
+    },
+    {
+     "id": "wm-minds-persuasion",
+     "title": "Persuasion and information asymmetry",
+     "summary": "Persuasion works through channels and credibility, and it thrives where one side knows much more than the other.",
+     "minutes": 6,
+     "concepts": [
+      "information"
+     ],
+     "paragraphs": [
+      "Persuasion is how one mind changes another. Research shows it works through two routes: a central route, where people are moved by the strength of arguments and evidence, and a peripheral route, where they are moved by cues like the speaker's attractiveness, authority, or sheer repetition. Which route wins depends on attention and motivation.",
+      "Unequal information can change incentives: a seller who knows a product's defects may benefit by hiding them. Inspections, disclosure, and reputation can reduce the gap, but none guarantees truth. Shannon's communication theory measures uncertainty and transmission, not whether a message is meaningful or correct. Persuasion uses credibility, emotion, and framing; evaluating its claims still requires evidence. More messages, better transmission, and stronger confidence are not the same as better knowledge."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "In a used-car sale, the seller knows the car's hidden faults; the buyer does not. This information asymmetry lets the seller talk up the car while the buyer, distrusting all sellers, offers less, so even honest sellers lose. Reputation systems, warranties, and independent inspections all exist to shrink exactly this gap between what each side knows. The wider the information gap, the more the weaker side must assume bad faith, and the whole market shrinks toward transactions only among people who already know and trust one another."
+     },
+     "video": {
+      "id": "o6oyCeYQWPE",
+      "title": "Persuasion, attitude change, and the elaboration likelihood model | MCAT | Khan Academy",
+      "channel": "khanacademymedicine",
+      "dur": 343,
+      "why": "The central and peripheral routes to persuasion, with everyday examples.",
+      "checked": "2026-10-11: public and embeddable; captions not checked."
+     },
+     "limit": "Information asymmetry explains opportunity for deception, not that deception always occurs. Markets and professions build reputation, certification, and warranties precisely to shrink the gap. And persuasion is not inherently bad; teaching, negotiation, and honest advocacy are persuasion too.",
+     "prompt": "Where have you been on the short end of an information gap, and how did you cope?",
+     "recallKeys": [
+      "I can name the two routes of persuasion and when each tends to win.",
+      "I can define information asymmetry and why it enables manipulation.",
+      "I can give one institution that exists to reduce information asymmetry."
+     ],
+     "sourceIds": [
+      "openstax-psych",
+      "hayek-1974",
+      "openstax-econ",
+      "shannon-1948"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "exchange-wealth",
+   "title": "Exchange and wealth",
+   "stage": "Coming of age",
+   "stageNote": "First work, first wages, first debt. Effort becomes income, and incentives start steering choices.",
+   "goal": "Understand how incentives, property, institutions, and capital turn scattered effort into wealth, and how that same machinery can produce inequality and waste.",
+   "checkpoint": "You can explain why incentives matter, why institutions and property rights exist, how credit and leverage work, and how rents and externalities distort outcomes.",
+   "lessons": [
+    {
+     "id": "wm-exchange-incentives",
+     "title": "Incentives and the principal-agent problem",
+     "summary": "People respond to incentives, and trouble appears whenever the person acting is not the person who bears the consequences.",
+     "minutes": 6,
+     "concepts": [
+      "incentives"
+     ],
+     "paragraphs": [
+      "People respond predictably to the costs and benefits they face. Raise the reward for an action and more people do it; raise the cost and fewer do. This sounds trivial, but it explains an enormous amount of behavior, from tax evasion to overfishing to how hard people work when their pay depends on it.",
+      "The sharpest version is the principal-agent problem. A principal, say a company's owners, hires an agent, say its managers, to act for them. The agent's interests only partly overlap with the principal's, and the agent usually knows more about what is really happening. The result is effort and risk shifted away from where they are deserved: managers taking risks with other people's money, or employees shirking when nobody watches."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A manager is paid on quarterly sales, so they push risky deals to hit the target and collect the bonus, while the losses, if they come, land on the owners later. The manager, the agent, knows more about the deals than the owners, the principals, and their incentives only partly align. The pay scheme produces effort and, sometimes, hidden risk. Solving this requires making the agent bear more of the risk, for example, through longer measurement periods or penalties for losses, so the short-term game loses its appeal."
+     },
+     "video": {
+      "id": "OWemVj_0v38",
+      "title": "The Principal Agent Problem I A Level and IB Economics",
+      "channel": "tutor2u",
+      "dur": 368,
+      "why": "What goes wrong when the person acting is not the one who bears the consequences.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Incentives explain tendencies, not every action. People also act from duty, habit, and identity, and badly designed incentives can crowd out the very motives they were meant to encourage. Designing incentives well is harder than simply aligning them.",
+     "prompt": "Describe an incentive at work or home that produced behavior nobody intended.",
+     "recallKeys": [
+      "I can state the basic logic of incentives in one sentence.",
+      "I can explain the principal-agent problem with my own example.",
+      "I can name one reason incentives sometimes backfire."
+     ],
+     "sourceIds": [
+      "openstax-econ",
+      "coase-1991"
+     ]
+    },
+    {
+     "id": "wm-exchange-institutions",
+     "title": "Property, transaction costs, and institutions",
+     "summary": "Rights, rules, and the cost of using them decide what gets done through markets and what gets done inside organizations.",
+     "minutes": 6,
+     "concepts": [
+      "institutions"
+     ],
+     "paragraphs": [
+      "Using a market is not free. You must find a trading partner, agree on a price, and trust that the deal will be honored; these are transaction costs. Ronald Coase showed that when these costs are high, it becomes cheaper to organize activity inside a firm, where one authority coordinates people, instead of through the market. The boundary of the firm sits where the two costs balance.",
+      "Institutions are the standing rules of the game: property rights, contracts, courts, and norms that say who owns what and how disputes are settled. Clear, enforceable property rights make it possible to invest, borrow, and trade with strangers. Where they are weak or unpredictable, exchange collapses into the small circle of people you personally trust."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A bakery could hire a freelancer for every task: one person for dough, another for ovens, another for sales, each negotiated and paid separately. Coordinating all that through repeated market deals is costly, so the owner instead hires staff under one roof and directs them by instruction. The firm exists to save those transaction costs. Every contract you sign relies on this background machinery, and the moment it weakens, people retreat to dealing only with relatives and close friends."
+     },
+     "video": {
+      "id": "00HPak2RLlQ",
+      "title": "The Coase Theorem",
+      "channel": "Marginal Revolution University",
+      "dur": 496,
+      "why": "How transaction costs and property rights decide who bargains and what gets done.",
+      "checked": "2026-10-11: public and embeddable; captions not checked."
+     },
+     "limit": "Coase himself framed this as a research program needing real-world study, not a finished law. Institutions can also entrench the powerful; well-defined rights are a tool that can serve fairness or its opposite, depending on who writes the rules.",
+     "prompt": "Name a transaction cost in your daily life and how an institution reduces it.",
+     "recallKeys": [
+      "I can define transaction costs and why firms exist.",
+      "I can explain what institutions do for exchange between strangers.",
+      "I can say why institutions are a tool, not automatically a good."
+     ],
+     "sourceIds": [
+      "coase-1991",
+      "openstax-econ"
+     ]
+    },
+    {
+     "id": "wm-exchange-capital",
+     "title": "Capital, credit, leverage, and risk",
+     "summary": "Saved-up productive resources, borrowed money, and the promise of repayment multiply what one person can build and, equally, what one can lose.",
+     "minutes": 6,
+     "concepts": [
+      "capital"
+     ],
+     "paragraphs": [
+      "Capital is the stock of produced things used to make more things: machines, tools, buildings, and the skills people carry. Because capital makes labor more productive, societies that accumulate it grow richer. Credit lets people spend today against future income, so capital can be built before it is earned.",
+      "Leverage means using borrowed money to amplify an investment. It magnifies both gains and losses: a small rise in asset value makes a big profit, but a small fall can wipe out the borrower and anyone who lent to them. Risk is the chance that the promise of repayment breaks, and much of finance is the business of measuring and pricing that risk."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A buyer puts down 20 percent on a house and borrows the other 80. If the house rises 10 percent, their own 20 becomes 30, a 50 percent gain on their money. But if it falls 10 percent, their stake drops by half. The loan, the leverage, magnifies both the win and the loss. That is why lenders demand a down payment in the first place: they want you to share the downside so your incentives do not turn reckless."
+     },
+     "video": {
+      "id": "WGF8lNPcl40",
+      "title": "How the Economic Machine Works Part 1",
+      "channel": "Principles by Ray Dalio",
+      "dur": 381,
+      "why": "Ray Dalio's animated explanation of credit, debt, and why borrowing amplifies booms and busts.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Credit and leverage are engines of growth and of crisis in equal measure; they do not create wealth by themselves, only bring it forward or concentrate its risks. Financial risk is often hidden until a downturn, which is why models of it repeatedly fail.",
+     "prompt": "Explain leverage to a friend using a small loan as an example.",
+     "recallKeys": [
+      "I can define capital and why it raises productivity.",
+      "I can explain how leverage amplifies both gains and losses.",
+      "I can say what risk means in credit and why it is hard to measure."
+     ],
+     "sourceIds": [
+      "openstax-econ"
+     ]
+    },
+    {
+     "id": "wm-exchange-externalities",
+     "title": "Inequality, rents, and externalities",
+     "summary": "Outcomes are shaped not only by effort but by unearned advantages and by costs pushed onto others.",
+     "minutes": 6,
+     "concepts": [
+      "incentives"
+     ],
+     "paragraphs": [
+      "Not all income reflects work or skill. A rent is a return that comes from holding something scarce and protected, like a monopoly license or a privileged position, rather than from creating value. Rents transfer wealth toward the holders and away from everyone else, and they invite people to spend effort grabbing the rent instead of producing.",
+      "An externality is a cost or benefit that falls on people who never agreed to it. Pollution is the classic case: a factory enjoys the full profit of its output while neighbors absorb the health costs. Because the price does not include these side effects, too much of the harmful activity happens. Inequality compounds when rents concentrate at the top and externalities fall on those least able to escape them."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A factory profits from its output but dumps waste into the river, and the cost of the pollution, sickness and dead fish, falls on people downstream who never agreed. Because the factory's price does not include that harm, it produces more than it would if it had to pay. The unpriced side effect is the externality. If the law forced the factory to compensate the people downstream, the price of its goods would rise and fewer would be sold, which is exactly the correction an externality tax aims to produce."
+     },
+     "video": {
+      "id": "iYaA_e0FMW4",
+      "title": "Rent Seeking: Taking Without Giving",
+      "channel": "Sprouts",
+      "dur": 293,
+      "why": "What a rent is, and why chasing rents takes wealth without creating it.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Calling something a rent or an externality is an analysis, not proof of injustice; reasonable people disagree about which advantages count and how much they matter. Measuring externalities is hard, and fixing them with taxes or rules brings its own distortions and disagreements.",
+     "prompt": "Identify one externality in your surroundings and who bears its cost.",
+     "recallKeys": [
+      "I can define a rent and give an example that is not simply profit.",
+      "I can define an externality and why it leads to too much or too little of an activity.",
+      "I can say why labeling something a rent is analysis, not a settled moral verdict."
+     ],
+     "sourceIds": [
+      "openstax-econ",
+      "coase-1991"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "power-coordination",
+   "title": "Power and coordination",
+   "stage": "Adulthood",
+   "stageNote": "Citizen, colleague, neighbor. You now help keep, or break, the rules and shared resources others depend on.",
+   "goal": "See power as dependence and coercion, and coordination as the hard problem of getting self-interested people to act together, solved imperfectly by commitments, commons rules, and the state.",
+   "checkpoint": "You can explain where power comes from, why commitments and collective action are hard, and how states both solve coordination and can be captured.",
+   "lessons": [
+    {
+     "id": "wm-power-dependence",
+     "title": "Power, dependence, coercion, and consent",
+     "summary": "Power is the ability to get others to do what they otherwise would not, and it rests on dependence and the threat of exit or force.",
+     "minutes": 5,
+     "concepts": [
+      "power"
+     ],
+     "paragraphs": [
+      "Power is relational, not a thing someone simply has. You have power over someone to the degree that they depend on you and lack good alternatives. A worker who can easily find another job is hard to dominate; one with no alternatives is not. Dependence can come from money, information, force, or legitimacy, and usually from a mix.",
+      "The two ends of power are coercion and consent. Coercion works by threat: do this or suffer. Consent works by agreement: I accept this because I see it as worthwhile or at least acceptable. Most stable authority mixes the two, leaning on consent where possible and on force in reserve, because rule by fear alone is fragile and expensive."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A skilled worker in a thriving market can quit a bad employer and be hired next week; their boss has little power over them. The same worker in a one-company town, with no other job and a mortgage, must accept worse terms. Their power depends not on personality but on alternatives. The difference between the two workers is not in their merit but in the structure of the market around them, and that structure is often shaped by past policy as much as by present effort."
+     },
+     "video": {
+      "id": "c_Eutci7ack",
+      "title": "How to understand power - Eric Liu",
+      "channel": "TED-Ed",
+      "dur": 422,
+      "why": "Where power comes from, and how to read who holds it and why.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Power is always contextual; someone powerful in one setting may be powerless in another. And the line between consent and coercion is often genuinely blurred, since what looks like a free choice may be made under severe constraint or manipulation.",
+     "prompt": "In one relationship in your life, where does each side's power come from?",
+     "recallKeys": [
+      "I can define power in terms of dependence and alternatives.",
+      "I can distinguish coercion from consent and explain why they blur.",
+      "I can give an example of power shifting when alternatives change."
+     ],
+     "sourceIds": [
+      "openstax-soc",
+      "sep-social-norms"
+     ]
+    },
+    {
+     "id": "wm-power-game-theory",
+     "title": "Game theory and credible commitments",
+     "summary": "Strategic situations show why cooperation is hard, and why being able to make a believable promise changes everything.",
+     "minutes": 6,
+     "concepts": [
+      "coordination"
+     ],
+     "paragraphs": [
+      "Game theory studies choices where the outcome for each person depends on what others do. The classic case is the prisoner's dilemma: each player does better by defecting no matter what the other does, yet both end up worse than if they had cooperated. This is not a story about criminals; it is the shape of many real problems, from arms races to overfishing.",
+      "The escape is a credible commitment: a way to make your promise to cooperate believable, often by tying your hands. Contracts, deposits, reputations, and punishments for breaking promises all serve this purpose. If others can trust that you will follow through, cooperation becomes possible where it was not before."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Two countries each prefer peace, but each also fears being disarmed while the other arms. So both build weapons and both end up poorer and less safe than if they had cooperated. A treaty with inspections makes disarmament credible by letting each side verify the other is keeping its promise, which is the lock that opens the trap. Without the inspections, each side suspects the other of cheating, and the suspicion alone, even if false, is enough to keep the trap shut."
+     },
+     "video": {
+      "id": "emyi4z-O0ls",
+      "title": "How to outsmart the Prisoner’s Dilemma - Lucas Husted",
+      "channel": "TED-Ed",
+      "dur": 344,
+      "why": "The prisoner's dilemma, and how repeated play and commitments make cooperation possible.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Game-theory models are simplified and assume a lot about what players know and want; real people are more complicated. Commitments also fail when they cannot be enforced, and the very institutions that enforce them can be captured by the powerful.",
+     "prompt": "Describe a real situation with the shape of a prisoner's dilemma, and what could make cooperation stick.",
+     "recallKeys": [
+      "I can explain the prisoner's dilemma and why individually rational choices can be collectively worse.",
+      "I can say what a credible commitment is and why it enables cooperation.",
+      "I can name one limit of game-theory models."
+     ],
+     "sourceIds": [
+      "sep-game-theory",
+      "ostrom-2009"
+     ]
+    },
+    {
+     "id": "wm-power-commons",
+     "title": "Collective action and governing the commons",
+     "summary": "Shared resources are hard to manage, but communities sometimes succeed where neither markets nor states do.",
+     "minutes": 6,
+     "concepts": [
+      "coordination"
+     ],
+     "paragraphs": [
+      "A commons is a resource everyone can use but that is rivalrous: my use leaves less for you, as with fish, forests, or clean water. Each user gains by taking more while the damage is shared, so the commons tends to be overused. This is a collective-action problem: individually sensible choices produce a collectively harmful result.",
+      "Elinor Ostrom showed that communities sometimes govern commons successfully without a private owner or a central state. Success tends to require clear boundaries, agreed rules, monitoring, and graduated penalties, with decisions made at the local level. Perhaps most striking, simply letting users communicate measurably raises cooperation above what models of isolated individuals predict."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Each fisher gains by taking more fish, while the shrinking stock is a cost borne by all. Left alone, the fleet overfishes and the resource collapses. But where communities set clear boundaries, agree on catch limits, and monitor each other, the same fishers can sustain the stock for generations without any outside authority. Ostrom documented dozens of such cases, from Swiss grazing pastures to Japanese forests, each showing that ordinary people can solve problems that simple theory said were unsolvable."
+     },
+     "video": {
+      "id": "Qr5Q3VvpI7w",
+      "title": "Ending The Tragedy of The Commons | Elinor Ostrom  | Big Think",
+      "channel": "Big Think",
+      "dur": 281,
+      "why": "Elinor Ostrom on how communities can govern shared resources without ruining them.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "These design principles are enabling conditions, not guarantees; many commons fail. And Ostrom stressed that one-size-fits-all rules do not work. Global commons like climate and oceans remain largely unsolved because their scale breaks the local conditions that make self-governance possible.",
+     "prompt": "Name a commons you rely on, and why it is hard to protect.",
+     "recallKeys": [
+      "I can explain the tragedy of the commons as a collective-action problem.",
+      "I can name two conditions that help communities govern a commons.",
+      "I can say why global commons are harder than local ones."
+     ],
+     "sourceIds": [
+      "ostrom-2009",
+      "sep-social-norms"
+     ]
+    },
+    {
+     "id": "wm-power-state",
+     "title": "The state, law, capture, and accountability",
+     "summary": "States solve coordination by monopolizing legitimate force, but that same power can be captured by private interests unless institutions hold it to account.",
+     "minutes": 6,
+     "concepts": [
+      "power"
+     ],
+     "paragraphs": [
+      "A state is an organization that claims the right to make and enforce binding rules over a territory, backed by a monopoly on legitimate force. That monopoly solves real problems: it enforces contracts, settles disputes, and protects people, all things that are hard to do privately at scale.",
+      "But power that can protect can also be turned to private ends. Regulatory capture happens when the bodies meant to regulate an industry come to serve that industry's interests instead of the public's, through lobbying, revolving-door jobs, or concentrated influence. Accountability is the counterweight: elections, courts, a free press, and audits that make the powerful answerable to someone."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "An agency is created to oversee an industry. Over time its staff socialize with industry people and hope for jobs there later, while the industry lobbies hard and funds sympathetic politicians. The regulator slowly begins writing rules the industry wants, and the original mission is quietly set aside. The watchdog has been captured by the watched. The original problem was real: the industry needed technical regulation. The capture happened not because anyone was evil but because concentrated effort beats scattered attention, every time."
+     },
+     "video": {
+      "id": "9i4jb5XBX5s",
+      "title": "POLITICAL THEORY - Thomas Hobbes",
+      "channel": "The School of Life",
+      "dur": 406,
+      "why": "Why Hobbes argued that people accept a powerful state, and what they get in return.",
+      "checked": "2026-10-11: public and embeddable; captions not checked."
+     },
+     "limit": "The state is neither automatically good nor automatically a threat; it is a tool whose character depends on who controls it and how it is constrained. Capture is a tendency to be guarded against, not an inevitable fate, and accountability institutions themselves can fail or be captured in turn.",
+     "prompt": "Identify one way the powerful could capture a rule meant to constrain them.",
+     "recallKeys": [
+      "I can explain what makes a state a state, and the problem it solves.",
+      "I can define regulatory capture and how it happens.",
+      "I can name two institutions that hold power accountable."
+     ],
+     "sourceIds": [
+      "openstax-soc",
+      "coase-1991"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "civilization-technology",
+   "title": "Civilization and technology",
+   "stage": "Midlife",
+   "stageNote": "You build on a web of farms, trade, science, and networks you rely on daily but did not make, and you add to it.",
+   "goal": "Trace how surplus, trade, science, and networks built the interdependent modern world, and see where those engines have hard limits.",
+   "checkpoint": "You can explain how agriculture produced states, how trade and specialization bind strangers together, how science and industry transformed production, and how networks and standards power (and limit) modern systems including AI.",
+   "lessons": [
+    {
+     "id": "wm-civ-agriculture",
+     "title": "Agriculture, surplus, and the rise of states",
+     "summary": "Farming produced a surplus that fed specialists and administrators, and out of that surplus came cities and states.",
+     "minutes": 6,
+     "concepts": [
+      "energy"
+     ],
+     "paragraphs": [
+      "For most of human history people lived by hunting and gathering in small bands. The shift to farming, the Neolithic Revolution, changed the energy equation: a patch of cultivated land could feed far more people than foraging the same area. That surplus of food meant not everyone had to farm.",
+      "Surplus freed people to become craftworkers, soldiers, priests, and rulers, and it made dense settlement possible. With more people and more stored wealth came the need for record-keeping, taxation, and organized defense, the building blocks of the first states. Cities and centralized government, in this view, are downstream of the ability to produce more food than the growers consume."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Imagine a community that produces and stores more grain than its growers consume. Some people can specialize in making tools, recording transactions, or organizing defense. Stored grain can support taxation, but who controls it depends on local rules and power. Farming does not automatically produce a king, and foraging communities are not all constantly moving or socially identical. This illustrative sequence connects surplus, specialization, and administration while leaving room for different historical paths rather than pretending every early society followed one formula."
+     },
+     "video": {
+      "id": "Yocja_N5s1I",
+      "title": "The Agricultural Revolution: Crash Course World History #1",
+      "channel": "CrashCourse",
+      "dur": 670,
+      "why": "How farming created surpluses, cities, and the first states, and what it cost.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "This is a sketch of one widely held story, not a law of history. The shift to farming was slow, uneven, and sometimes bad for individual health, and states emerged by many paths, not one. Surplus made states possible; it did not make them inevitable or identical.",
+     "prompt": "Why did farming change what kinds of society were possible?",
+     "recallKeys": [
+      "I can explain what a food surplus is and why it matters.",
+      "I can connect surplus to specialization and the rise of states.",
+      "I can say why this is a tendency, not an iron law."
+     ],
+     "sourceIds": [
+      "openstax-wh1",
+      "openstax-soc"
+     ]
+    },
+    {
+     "id": "wm-civ-trade",
+     "title": "Trade, specialization, and interdependence",
+     "summary": "When people specialize and trade, everyone can do more with less, but everyone also comes to depend on strangers.",
+     "minutes": 5,
+     "concepts": [
+      "coordination"
+     ],
+     "paragraphs": [
+      "Trade allows specialization instead of making everything alone. Comparative advantage means producing something at a lower opportunity cost, not simply being fastest or best at it. Even someone more productive at every task can gain from trade by focusing on their relative advantage. Under the model's assumptions, total output can rise from the same resources, although the gains need not be shared equally.",
+      "The price of specialization is interdependence. A modern person consumes the labor of thousands of strangers, and a break in the chain, a port closed, a crop failure, a credit freeze, ripples across the world. Markets coordinate this vast web through prices, carrying information about what is scarce and what is wanted to millions of people who never meet."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A single phone assembles a screen from one country, chips from several, software from another, and metals mined on several continents. No single person could make it, and no single place holds all the skills. Comparative advantage and trade made it possible, and the phone in your hand is the labor of thousands of strangers. That is the miracle and the fragility of specialization: it raises the ceiling of what we can all enjoy, but it also raises a vast, invisible web of trust that a single shock can tear."
+     },
+     "video": {
+      "id": "NI9TLDIPVcs",
+      "title": "Specialization and Trade: Crash Course Economics #2",
+      "channel": "CrashCourse",
+      "dur": 543,
+      "why": "Why specialization and trade let everyone produce more, with simple examples.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Comparative advantage describes gains from trade in idealized models; real trade also produces losers, and adjustment is often painful and uneven. And markets are not omniscient: prices can fail to reflect real costs.",
+     "prompt": "List the strangers whose work made your last meal possible.",
+     "recallKeys": [
+      "I can explain comparative advantage in plain terms.",
+      "I can say how interdependence is both a strength and a vulnerability.",
+      "I can name one way trade can produce losers, not just gains."
+     ],
+     "sourceIds": [
+      "openstax-econ",
+      "hayek-1974"
+     ]
+    },
+    {
+     "id": "wm-civ-science",
+     "title": "Scientific and industrial transformation",
+     "summary": "The scientific method and fossil-fueled industry changed what societies could produce, but both rest on social conditions and have real costs.",
+     "minutes": 6,
+     "concepts": [
+      "information"
+     ],
+     "paragraphs": [
+      "The scientific method, testing ideas against evidence and allowing anyone to check the result, turned knowledge into a cumulative, self-correcting enterprise. Knowledge stopped being the property of a few and became something that could be built on by others, generation after generation. This was a change in how information is produced and trusted, as much as in what was discovered.",
+      "The Industrial Revolution, beginning in Britain around the eighteenth century, combined that new knowledge with new energy: coal, then steam, then electricity, powering machines that multiplied human labor enormously. Output that once took many hands could be produced by a few tending machines, and the share of humanity living in poverty began a long decline."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "The principles of heat and pressure had been known in many places, but the steam engine that drove industry emerged where coal was cheap and where inventors could patent and profit from their designs. The machine was a product of both new knowledge and the institutions that rewarded applying it. That combination, a new idea plus the incentive to commercialize it, turned science from a curiosity of gentlemen into an engine of material change."
+     },
+     "video": {
+      "id": "vzo8vnxSARg",
+      "title": "The Scientific Revolution: Crash Course History of Science #12",
+      "channel": "CrashCourse",
+      "dur": 766,
+      "why": "How a new way of testing ideas changed what people thought they could know.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Neither science nor industry was inevitable, and both depended on social conditions: institutions, markets, and political openness that varied by place. Industrial growth also carried large costs, from brutal working conditions to environmental damage, that the growth numbers did not count.",
+     "prompt": "Why is the scientific method a change in trust and information, not just a list of discoveries?",
+     "recallKeys": [
+      "I can explain what makes the scientific method self-correcting.",
+      "I can connect new energy sources to the jump in industrial output.",
+      "I can name one social condition industry depended on, and one cost it imposed."
+     ],
+     "sourceIds": [
+      "sep-scientific-method",
+      "openstax-wh2"
+     ]
+    },
+    {
+     "id": "wm-civ-networks",
+     "title": "Networks, standards, and distribution, with AI's limits",
+     "summary": "Network effects and standards can enable cooperation and concentration; AI capabilities must be tested, not inferred from fluency.",
+     "minutes": 6,
+     "concepts": [
+      "networks"
+     ],
+     "paragraphs": [
+      "Network effects occur when a service becomes more useful as relevant users join. A messaging app benefits when your contacts use it; a common technical standard makes different devices interoperable. Installed networks, switching costs, and distribution channels can advantage incumbents. More users do not always mean more value: congestion, spam, incompatible groups, and privacy costs can reverse benefits.",
+      "AI also depends on infrastructure, data, computation, and distribution. Generative systems can produce useful text, images, or code, but they can also confidently produce false statements or invented references. NIST calls this risk confabulation. Reliability must be evaluated on the actual task, and consequential outputs need independent checking. Neither fluent output nor a benchmark score settles whether a system understands or is conscious. Training and operation have resource costs that vary with model, hardware, workload, and energy supply."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A messaging app is useless when you are the only user. Each friend who joins makes it more useful, and once enough people are on it, leaving means losing contact with everyone, so people stay. That is the network effect in action, and it explains why early growth often compounds into lasting dominance in markets where the network itself is the value. Once the network tips, it becomes very difficult to compete on features alone, because the value people want is other people, not the software."
+     },
+     "video": {
+      "id": "LPZh9BOjkQs",
+      "title": "Large Language Models explained briefly",
+      "channel": "3Blue1Brown",
+      "dur": 478,
+      "why": "A short, clear look at how large language models produce text one predicted word at a time.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Network effects do not guarantee monopoly, and interoperability can reduce lock-in. AI risks and capabilities vary by task and system. Claims about consciousness or understanding remain debated; performance and factual reliability can be tested without pretending those philosophical questions are settled.",
+     "prompt": "Explain a network effect, what a standard enables, and one documented AI failure you would test for before trusting an output.",
+     "recallKeys": [
+      "I can explain the network effect and why it creates concentration.",
+      "I can say what a standard does and why it enables connection.",
+      "I can explain confabulation and propose an independent check of an AI-generated factual claim."
+     ],
+     "sourceIds": [
+      "sep-emergence",
+      "nist-generative-ai",
+      "openstax-econ"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "systems-history",
+   "title": "Systems across history",
+   "stage": "Later life",
+   "stageNote": "Looking back, small early choices have compounded. The long view reveals loops, lock-in, and turning points.",
+   "goal": "See change as feedback and compounding, not just events, and learn to spot path dependence, tipping points, and resilience in real histories.",
+   "checkpoint": "You can identify reinforcing and balancing loops, explain how the past constrains the present, and trace several mechanisms through one real historical case.",
+   "lessons": [
+    {
+     "id": "wm-systems-feedback",
+     "title": "Feedback loops and compounding",
+     "summary": "Systems change through loops that amplify or stabilize, and small differences compound into large ones over time.",
+     "minutes": 6,
+     "concepts": [
+      "feedback"
+     ],
+     "paragraphs": [
+      "A feedback loop is a circular chain of cause and effect. Reinforcing loops amplify: the rich get richer because wealth buys more wealth, and word of mouth grows a product's sales, which grows the word of mouth. Balancing loops stabilize: a thermostat cuts the heat as the room warms, and a predator's rising numbers eventually reduce its prey.",
+      "Compounding is reinforcing feedback applied over time. A fixed percentage of growth applied again and again produces results that look slow at first and explosive later. This is why interest, population, and epidemics can stay small for a long time and then suddenly overwhelm. The shape of the curve, flat then steep, is the signature of feedback."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Word that a bank is in trouble makes depositors withdraw, which drains its reserves, which makes the trouble real, which makes more people withdraw. A rumor feeds a loop that feeds itself until the bank fails. That is a reinforcing loop, and it is why small fears can compound into collapse. This is not a story about dishonest bankers; even a perfectly sound bank can be destroyed by a rumor that becomes a loop that becomes the very fact it feared."
+     },
+     "video": {
+      "id": "inVZoI1AkC8",
+      "title": "Feedback loops: How nature gets its rhythms - Anje-Margriet Neutel",
+      "channel": "TED-Ed",
+      "dur": 310,
+      "why": "How reinforcing and balancing loops create the rhythms of natural systems.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Real systems resist clean classification into loops; experts often disagree about which loops matter, and every loop is an abstraction. Compounding also works both ways: the same curve that builds a fortune can drive a collapse.",
+     "prompt": "Find one reinforcing loop and one balancing loop in your own life.",
+     "recallKeys": [
+      "I can distinguish a reinforcing loop from a balancing loop with examples.",
+      "I can explain why compounding looks flat and then steep.",
+      "I can say why identifying loops in real systems is contested, not settled."
+     ],
+     "sourceIds": [
+      "meadows-leverage"
+     ]
+    },
+    {
+     "id": "wm-systems-path-dependence",
+     "title": "Path dependence and emergence",
+     "summary": "History is sticky: early choices lock in later ones, and complex wholes can behave in ways their parts never would.",
+     "minutes": 6,
+     "concepts": [
+      "feedback"
+     ],
+     "paragraphs": [
+      "Path dependence means the past constrains the present. Once a standard is adopted, like a railway gauge or a keyboard layout, it becomes ever more costly to switch, because everything else has been built around it. Small, even accidental early decisions can therefore shape outcomes long after their original reasons are forgotten.",
+      "Emergence is the flip side: when many parts interact, the whole can show properties no single part has. A single ant follows simple rules, but a colony builds elaborate structures; no neuron thinks, but a brain does. Emergent patterns are real and consequential even though they are not caused by any one element in the simple way we usually mean."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Imagine a company choosing a document format when it has only a few employees. Years later, its templates, training, archives, and suppliers all depend on that format. Another format might now suit its work better, yet migration would cost time and risk broken records. The original choice shapes current options without making change impossible. This is a hypothetical example of lock-in: evaluate the current switching costs rather than assuming an old standard was irrational or that everybody would reject it if starting again."
+     },
+     "video": {
+      "id": "16W7c0mb-rE",
+      "title": "Emergence – How Stupid Things Become Smart Together",
+      "channel": "Kurzgesagt – In a Nutshell",
+      "dur": 450,
+      "why": "How simple parts following simple rules create surprising wholes, from ants to brains.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Path dependence does not mean the past fully determines the future; at many points choices could have gone differently. And emergence is a label for a pattern we observe, not an explanation of how it works; naming it does not make it understood.",
+     "prompt": "Name one choice made long ago that still shapes how you or your society does things today.",
+     "recallKeys": [
+      "I can explain path dependence with an example of lock-in.",
+      "I can say what emergence means and why it is not magic.",
+      "I can distinguish constrains from determines when describing history."
+     ],
+     "sourceIds": [
+      "sep-emergence",
+      "meadows-leverage"
+     ]
+    },
+    {
+     "id": "wm-systems-tipping",
+     "title": "Tipping points, resilience, and contingency",
+     "summary": "Systems can hold steady for a long time and then flip suddenly, and how much they can absorb before flipping is their resilience.",
+     "minutes": 6,
+     "concepts": [
+      "feedback"
+     ],
+     "paragraphs": [
+      "Many systems do not change smoothly. They absorb pressure for a long time and then tip: a lake that stays clear as nutrients build up, then suddenly turns green with algae; a market that grinds along, then crashes. Tipping points occur where reinforcing feedback overtakes the balancing loops that had been holding the system stable.",
+      "Resilience is how much disturbance a system can absorb before it flips into a different state. A resilient system bends and returns; a brittle one looks strong until it shatters. Contingency is the reminder that which state a system lands in depends on accidents of timing and small events, so the outcome can feel inevitable only in hindsight."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "A lake absorbs fertilizer runoff for years and stays clear, because plants absorb the nutrients. Past a certain level, algae suddenly bloom, block light, and kill the plants, and the lake flips to a murky state that is hard to reverse. It looked stable right up until the moment it tipped. The fertilizer itself was not the tipping point; the system was. The same inputs that once kept it productive became the force that flipped it, once a hidden threshold was crossed."
+     },
+     "video": {
+      "id": "WLIQWVdgE5g",
+      "title": "Path Dependence and Tipping Points",
+      "channel": "Sabine Hossenfelder",
+      "dur": 702,
+      "why": "How systems hold steady and then flip, and why early choices lock in later ones.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Tipping points are easy to describe after the fact and very hard to predict beforehand. Claims that we are near a tipping point should be treated as hypotheses to be checked, not certainties, since many apparent tipping points never arrive.",
+     "prompt": "Describe a system that looks stable now but might be near a tipping point, and what would signal the flip.",
+     "recallKeys": [
+      "I can explain what a tipping point is and why systems resist change before one.",
+      "I can define resilience and contrast it with brittleness.",
+      "I can say why tipping points are easier to see after the fact."
+     ],
+     "sourceIds": [
+      "meadows-leverage",
+      "sep-emergence"
+     ]
+    },
+    {
+     "id": "wm-systems-case",
+     "title": "A worked case: energy, institutions, and the Industrial Revolution",
+     "summary": "One historical episode, the Industrial Revolution in Britain, shows several mechanisms, energy, institutions, and feedback, working together.",
+     "minutes": 6,
+     "concepts": [
+      "feedback"
+     ],
+     "paragraphs": [
+      "Industrialization in Britain combined several processes rather than one magic cause. Mechanized textile production, water power, coal and steam, finance, markets, technical skills, and institutional arrangements all mattered. Imperial trade and coerced labor were also part of the wider economic setting. These factors changed at different speeds; their interaction is more informative than a claim that earlier societies simply lacked good laws.",
+      "Investment in machinery could raise output, expand markets, and finance further investment: a reinforcing feedback loop. Transport and communication networks helped spread production methods and goods. But gains and costs were uneven, including dangerous work and pollution. Historians debate why industrialization began where and when it did and the relative importance of resources, wages, institutions, and global connections. Use this case to connect mechanisms, not to announce a settled ranking of causes."
+     ],
+     "example": {
+      "title": "Illustrative example within the historical case",
+      "text": "Follow a hypothetical textile firm's expansion within the industrializing economy. Machines raise output; more sales may finance new equipment; improved transport widens access to inputs and customers. Energy supply, credit, labor, and rules all shape whether the loop continues. Workers and nearby residents may face injuries or pollution even while owners profit. This miniature model illustrates interlocking mechanisms; it is not proof that every factory followed this path or that secure property rights alone explain Britain's earlier industrialization."
+     },
+     "video": {
+      "id": "zhL5DCizj5c",
+      "title": "Coal, Steam, and The Industrial Revolution: Crash Course World History #32",
+      "channel": "CrashCourse",
+      "dur": 664,
+      "why": "Why the Industrial Revolution began in Britain: coal, wages, and steam.",
+      "checked": "2026-10-11: public, embeddable, English captions."
+     },
+     "limit": "Even for this, the best-studied case, historians argue about why Britain and why then, and how much each factor mattered. The point of the case is not a settled answer but a demonstration of how to combine mechanisms; other episodes would need the same care and would yield different weights.",
+     "prompt": "List the distinct mechanisms you can see operating in the Industrial Revolution, and how they reinforced one another.",
+     "recallKeys": [
+      "I can name two distinct mechanisms, energy and institutions, in this case.",
+      "I can identify the reinforcing loop that drove industrial growth.",
+      "I can say why even this case has no single settled cause."
+     ],
+     "sourceIds": [
+      "openstax-wh2",
+      "coase-1991",
+      "meadows-leverage"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "frontiers",
+   "title": "Frontiers and synthesis",
+   "stage": "Death",
+   "stageNote": "The questions that remain at the end: what experience is, whether choices were free, and what a life meant.",
+   "goal": "Separate empirical mechanisms from philosophical and ethical questions, then apply the full toolkit with evidence.",
+   "checkpoint": "Can you compare claims about consciousness, existence, freedom, ethics, and meaning without pretending they are settled, then test your own system map?",
+   "lessons": [
+    {
+     "id": "wm-frontiers-consciousness",
+     "title": "Consciousness and the hard problem",
+     "summary": "We can map the brain in increasing detail, but why any physical process feels like something remains an open question.",
+     "minutes": 5,
+     "concepts": [
+      "epistemology"
+     ],
+     "paragraphs": [
+      "Consciousness includes subjective experience: what seeing color, feeling pain, or thinking is like. Neuroscience studies relationships between reports, behavior, and brain activity, and investigates mechanisms supporting awareness. These are real advances. Identifying a neural correlate, however, does not automatically explain why that activity accompanies an experience or establish which proposed theory is correct.",
+      "The hard problem asks why physical processes are accompanied by experience at all. Some philosophers argue that describing functions and information processing leaves an explanatory gap; others reject that framing or expect a physical explanation to close it. Imagining a system that behaves normally without experience is a disputed thought experiment, not proof that such a system is possible. Keep observed brain relationships separate from philosophical conclusions about what consciousness must be."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Imagine researchers measuring brain activity while a person reports seeing red. They can investigate which signals predict that report and whether disrupting a process changes perception. One philosopher asks whether this explains why red feels the way it does; another argues that a sufficiently complete mechanistic account would explain the experience. The measurement is evidence both can discuss. Their disagreement concerns what counts as explanation, not permission to ignore neuroscience or proof that experience exists outside the physical world."
+     },
+     "video": {
+      "id": "ocuYOawo_14",
+      "title": "PHILOSOPHY - NEUROSCIENCE AND PHILOSOPHY 2: The Hard Problem of Consciousness",
+      "channel": "Wireless Philosophy",
+      "dur": 344,
+      "why": "Why explaining experience is harder than explaining what the brain does.",
+      "checked": "2026-10-11: public and embeddable; captions not checked."
+     },
+     "limit": "Some philosophers argue the hard problem is a confusion that will dissolve, and others offer theories, but none has achieved consensus. The honest position is that we do not yet know how to explain consciousness, and no current AI or theory settles it.",
+     "prompt": "Why is explaining brain activity different from explaining the feeling of that activity?",
+     "recallKeys": [
+      "I can state the hard problem of consciousness in my own words.",
+      "I can distinguish correlating a mental state with the brain from explaining it.",
+      "I can say honestly that this question remains open."
+     ],
+     "sourceIds": [
+      "sep-consciousness"
+     ]
+    },
+    {
+     "id": "wm-frontiers-free-will",
+     "title": "Free will, ethics, and meaning",
+     "summary": "Whether our choices are free, and how we should live, are questions where descriptive facts and moral judgments must be kept apart.",
+     "minutes": 6,
+     "concepts": [
+      "psychology"
+     ],
+     "paragraphs": [
+      "Free will asks what makes actions genuinely ours. Compatibilists argue that meaningful freedom can coexist with determinism, for example when choices respond to reasons rather than coercion. Libertarian views require a form of freedom incompatible with determinism; skeptical views question whether we have the control needed for ultimate responsibility. Randomness alone would not establish control either.",
+      "Ethics asks how we ought to act. Consequentialist approaches emphasize outcomes, duty-based approaches emphasize obligations and constraints, and virtue approaches emphasize character. Describing what people do does not alone establish what they should do: a normative conclusion needs value premises as well as facts.",
+      "Meaning asks what makes a life significant or worthwhile, not merely pleasant. Views emphasize purpose beyond the individual, relationships, valuable achievement, or subjective commitment, and disagree about which matters. This introductory comparison separates three questions; scientific evidence can inform them without automatically selecting one philosophical answer."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Imagine choosing whether to help a colleague. A psychologist investigates the habits and circumstances influencing you. A compatibilist asks whether you acted voluntarily and for reasons; another philosopher asks whether stronger control was possible. Ethics evaluates the consequences, duties, and character involved. Meaning asks whether helping expresses a worthwhile commitment. These are related but distinct questions. An explanation of why you helped does not by itself prove that helping was right or that it made your life meaningful."
+     },
+     "video": {
+      "id": "vCGtkDzELAI",
+      "title": "Determinism vs Free Will: Crash Course Philosophy #24",
+      "channel": "CrashCourse",
+      "dur": 626,
+      "why": "Determinism, free will, and the main positions in between.",
+      "checked": "2026-10-11: public and embeddable; captions not checked."
+     },
+     "limit": "This lesson is an introductory comparison, not mastery of three large fields. The debates remain live; lack of consensus does not prove all answers equally good or that there is no right answer. Evaluate definitions, arguments, evidence, and value premises separately.",
+     "prompt": "Compare a free-will question, an ethical question, and a meaning question about one choice. Identify the facts and the value premises separately.",
+     "recallKeys": [
+      "I can distinguish compatibilist, libertarian, and skeptical positions without presenting one as settled.",
+      "I can distinguish a descriptive explanation from an ethical conclusion and identify its value premise.",
+      "I can explain how a question about meaning differs from a question about pleasure or causal explanation."
+     ],
+     "sourceIds": [
+      "sep-free-will",
+      "sep-life-meaning",
+      "sep-morality"
+     ]
+    },
+    {
+     "id": "wm-frontiers-questions",
+     "title": "Existence and testing competing explanations",
+     "summary": "Ask what exists, why there is anything at all, and how different kinds of explanation can be assessed.",
+     "minutes": 6,
+     "concepts": [
+      "epistemology"
+     ],
+     "paragraphs": [
+      "Ontology asks what exists and what kinds of things there are. A rock, a number, an institution, and an experience raise different questions about existence. A deeper question is: why is there something rather than nothing? Suggested answers appeal to necessity, a creator, fundamental laws, or a brute fact without further explanation. Each invites objections; the course does not present one as established.",
+      "For empirical explanations, ask what each predicts and what observation would favor a rival. A cosmological account of how the universe developed is not automatically an answer to why any universe or laws exist. A physical vacuum is not philosophical nothingness: it belongs to a physical framework. Where proposals have no distinguishing observable consequences, empirical tests alone cannot choose between them; clarity, logical consistency, explanatory scope, and explicit assumptions still matter. Keeping these questions separate prevents confidence in a scientific model from becoming an unsupported claim about ultimate reality."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Someone says that particles arising from a vacuum explain why anything exists. Ask what they mean by vacuum. If the account presupposes fields, laws, or a physical state, it may explain an event within an existing framework, not the absence of every framework. Another person proposes a necessary creator; ask why necessity applies there and what supports that premise. Neither a catchy scientific phrase nor a theological assertion settles the comparison without examining what each explanation actually assumes."
+     },
+     "video": {
+      "id": "-wrCpLJ1XAw",
+      "title": "How to Argue - Induction & Abduction: Crash Course Philosophy #3",
+      "channel": "CrashCourse",
+      "dur": 618,
+      "why": "How to weigh competing explanations: induction, abduction, and inference to the best explanation.",
+      "checked": "2026-10-11: public and embeddable; captions not checked."
+     },
+     "limit": "There is no generally accepted answer to why anything exists. Empirical testability is crucial for scientific claims, but it is not the sole criterion for every philosophical or normative question. Lack of a test is not itself proof that a view is true, false, or meaningless.",
+     "prompt": "Compare two answers to why there is something rather than nothing. State their assumptions, whether they make testable predictions, and what remains unexplained.",
+     "recallKeys": [
+      "I can distinguish ontology from a scientific account of how an existing system changes.",
+      "I can explain why a physical vacuum is not philosophical nothingness.",
+      "I can compare two explanations by their assumptions and possible tests without claiming the question is settled."
+     ],
+     "sourceIds": [
+      "sep-nothingness",
+      "sep-scientific-method"
+     ]
+    },
+    {
+     "id": "wm-frontiers-capstone",
+     "title": "The capstone: analyzing a real system with every tool",
+     "summary": "Bring the whole course to bear on one real system, tracing its energy, incentives, power, and feedback together.",
+     "minutes": 6,
+     "concepts": [
+      "feedback"
+     ],
+     "paragraphs": [
+      "The final exercise applies this toolkit to one bounded system: a food supply chain, a city's housing, or a platform. Draw a map connecting at least four mechanisms rather than listing terms. Trace resources and energy, incentives and information, institutions and power, and feedback. For each important connection, record an observation or source, your proposed explanation, and how confident you are.",
+      "Now challenge the map. Identify a counterexample, an alternative explanation, and missing evidence. Specify a change that your model predicts and what result would make you revise it. Separate observations from causal inferences and judgments about fairness. Finally transfer the framework to an unfamiliar system: which mechanisms still fit, and which need replacing? Exposure is not mastery; explaining a mechanism, confronting contrary evidence, and applying it outside the original example provide a stronger self-check."
+     ],
+     "example": {
+      "title": "Illustrative example",
+      "text": "Suppose you investigate local housing. Land and materials constrain supply; construction needs energy; developers respond to expected returns; planning rules distribute authority; and price expectations might reinforce speculation. Check planning records and other evidence rather than assuming this loop exists. Consider a rival explanation such as changing interest rates, and a counterexample where prices fell despite restricted building. Distinguish a claim about causation from your judgment about fairness. Then test the same framework on an unfamiliar system such as a water utility."
+     },
+     "video": {
+      "id": "17BP9n6g1F0",
+      "title": "Systems thinking: a cautionary tale (cats in Borneo)",
+      "channel": "Sustainability Illustrated",
+      "dur": 189,
+      "why": "A three-minute story of one well-meant fix rippling through a whole system.",
+      "checked": "2026-10-11: public and embeddable; captions not checked."
+     },
+     "limit": "No analysis is complete, and every real system has parts that resist these categories. The honest conclusion of the course is not mastery but a durable habit: ask what the model assumes, what the evidence says, what is being given up, and who bears the cost, and then update when the facts change.",
+     "prompt": "Choose a real system and connect at least four mechanisms. Give evidence for each important link, distinguish observation from inference and value judgment, identify a counterexample and a rival explanation, then apply the framework to an unfamiliar system and state what you would change.",
+     "recallKeys": [
+      "I can explain connections between at least four mechanisms using named evidence, not merely list concepts.",
+      "I can distinguish observation, causal inference, and value judgment, and state a counterexample or rival explanation.",
+      "I can apply the framework to an unfamiliar system and specify a prediction, missing evidence, or result that would change my model."
+     ],
+     "sourceIds": [
+      "meadows-leverage",
+      "sep-emergence"
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -2,7 +2,7 @@
    The key is pasted in Settings and stays in THIS browser only (its own localStorage entry):
    never in the app code, the repo, or a progress export. Research uses a stronger model
    offline (tools/research_video.py); the app only needs short, cheap explanations. */
-import { $, keyOf, esc } from './util.js';
+import { $, keyOf, esc, readStoredObject, fetchJSON } from './util.js';
 import { parseNextPick } from './tutor.js';
 
 export const AI_MODEL = 'anthropic/claude-haiku-4.5';
@@ -15,7 +15,7 @@ export function getKey(){ try { return localStorage.getItem(KEY_STORE) || ''; } 
 export function setKey(k){
   try { k ? localStorage.setItem(KEY_STORE, k) : localStorage.removeItem(KEY_STORE); } catch {}
 }
-function cache(){ try { return JSON.parse(localStorage.getItem(CACHE_STORE)) || {}; } catch { return {}; } }
+function cache(){ return readStoredObject(CACHE_STORE); }
 function remember(id, text){
   const c = cache(); c[id] = text;
   try { localStorage.setItem(CACHE_STORE, JSON.stringify(c)); } catch {}
@@ -37,20 +37,21 @@ export function explainMessages(v, lang){
   ];
 }
 
-export async function explainSimpler(v, lang, { fetchImpl = fetch } = {}){
+export async function explainSimpler(v, lang, { fetchImpl = fetch, timeoutMs = 20000 } = {}){
   const id = `${keyOf(v)}|${lang}`;
   const hit = cache()[id];
-  if (hit) return hit;
+  if (typeof hit === 'string' && hit.trim()) return hit;
   const key = getKey();
   if (!key) throw Object.assign(new Error('no-key'), { code:'no-key' });
   if (navigator.onLine === false) throw Object.assign(new Error('offline'), { code:'offline' });
-  const res = await fetchImpl(API, {
+  const res = await fetchJSON(API, {
     method:'POST',
     headers:{ 'Authorization':`Bearer ${key}`, 'Content-Type':'application/json', 'X-Title':'B.R.A.I.N.' },
     body: JSON.stringify({ model:AI_MODEL, max_tokens:300, temperature:0.3, messages:explainMessages(v, lang) }),
-  });
+  }, { fetchImpl, timeoutMs });
   if (!res.ok) throw Object.assign(new Error(`http-${res.status}`), { code:res.status });
-  const text = (await res.json()).choices?.[0]?.message?.content?.trim();
+  const content = res.data?.choices?.[0]?.message?.content;
+  const text = typeof content === 'string' ? content.trim() : '';
   if (!text) throw Object.assign(new Error('empty'), { code:'empty' });
   remember(id, text);
   return text;
@@ -77,13 +78,13 @@ export async function suggestNext(v, note, rating, candidates, lang, { fetchImpl
   const key = getKey();
   if (!key || candidates.length < 2 || navigator.onLine === false) return null;
   try {
-    const res = await fetchImpl(API, {
-      method:'POST', signal: AbortSignal.timeout(timeoutMs),
+    const res = await fetchJSON(API, {
+      method:'POST',
       headers:{ 'Authorization':`Bearer ${key}`, 'Content-Type':'application/json', 'X-Title':'B.R.A.I.N.' },
       body: JSON.stringify({ model:AI_MODEL, max_tokens:160, temperature:0.2, messages:nextMessages(v, note, rating, candidates, lang) }),
-    });
+    }, { fetchImpl, timeoutMs });
     if (!res.ok) return null;
-    return parseNextPick((await res.json()).choices?.[0]?.message?.content, candidates);
+    return parseNextPick(res.data?.choices?.[0]?.message?.content, candidates);
   } catch { return null; }
 }
 
@@ -97,6 +98,7 @@ const ERRORS = {
 
 /* ── UI: an [data-explain] panel sits in the Watch and Check steps (never in Recall) ── */
 let currentVideo = () => null;
+const panelRequests = new WeakMap();
 
 function render(panel, v, lang, text){
   const other = lang === 'hi' ? 'en' : 'hi';
@@ -108,20 +110,26 @@ function render(panel, v, lang, text){
 
 async function run(panel, lang){
   const v = currentVideo(); if (!v) return;
+  const token = (panelRequests.get(panel) || 0) + 1;
+  panelRequests.set(panel, token);
+  const isCurrent = () => currentVideo() === v && panelRequests.get(panel) === token;
   const out = panel.querySelector('.explain-out'), btn = panel.querySelector('.explain-btn');
   out.hidden = false; btn.disabled = true;
   out.innerHTML = '<p class="muted">Thinking…</p>';
   try {
     const text = await explainSimpler(v, lang);
-    if (currentVideo() === v) render(panel, v, lang, text);
+    if (isCurrent()) render(panel, v, lang, text);
   } catch (e) {
+    if (!isCurrent()) return;
     out.innerHTML = `<p class="muted">${esc(ERRORS[e.code] || 'Could not get an explanation. Try again.')}</p>` +
       (e.code === 'no-key' || e.code === 401 ? '<button class="linkish" data-open-sheet="settings">Open Settings</button>' : '');
-  } finally { btn.disabled = false; }
+  } finally { if (isCurrent()) btn.disabled = false; }
 }
 
 export function resetExplain(){
   document.querySelectorAll('[data-explain]').forEach(p => {
+    panelRequests.set(p, (panelRequests.get(p) || 0) + 1);
+    p.querySelector('.explain-btn').disabled = false;
     const out = p.querySelector('.explain-out'); out.hidden = true; out.innerHTML = '';
   });
 }

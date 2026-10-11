@@ -8,6 +8,28 @@ export const RANKS = ['Dull Blade','Awake','Sharp','Keen','Razor','Strategist','
 
 export const $ = s => document.querySelector(s);
 
+/* Browser preferences and caches are optional. Recover from valid JSON with an
+   unusable shape, and keep lesson IDs such as "constructor" ordinary map keys. */
+export function readStoredObject(key){
+  try {
+    const data = JSON.parse(localStorage.getItem(key));
+    if (data && typeof data === 'object' && !Array.isArray(data))
+      return Object.assign(Object.create(null), data);
+  } catch {}
+  return Object.create(null);
+}
+
+/* Use AbortController rather than the newer AbortSignal.timeout static method.
+   Keep the timer through JSON parsing so a stalled body also releases the UI. */
+export async function fetchJSON(url, options = {}, { fetchImpl = fetch, timeoutMs = 20000 } = {}){
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(new DOMException('Request timed out', 'TimeoutError')), timeoutMs);
+  try {
+    const res = await fetchImpl(url, { ...options, signal: controller.signal });
+    return { ok: res.ok, status: res.status, data: res.ok ? await res.json() : null };
+  } finally { clearTimeout(timer); }
+}
+
 export const todayKey = (d = new Date()) => {
   const x = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
   return x.toISOString().slice(0, 10);

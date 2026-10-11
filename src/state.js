@@ -10,14 +10,14 @@
  *   backupCurrent(reason)
  *   restoreLatestBackup(reason) → state | null
  */
-import { KEY, DRAFT_KEY, DAY, todayKey, toast } from './util.js';
+import { KEY, DRAFT_KEY, DAY, todayKey, toast, readStoredObject } from './util.js';
 import { localMidnight, EASE_START, DAY_MS } from './scheduler.js';
 
 const IMPORT_KEY_RE = /^[A-Za-z0-9_-]{5,40}$/;
 const LANGS = ['hi', 'en'];
 
 export function blank(){
-  return { v:2, xp:0, done:{}, log:[], notes:[], custom:[], order:[], actions:[],
+  return { v:2, xp:0, done:Object.create(null), log:[], notes:[], custom:[], order:[], actions:[],
            streak:{cur:0,best:0,last:null}, sessionDate:null, extra:0 };
 }
 
@@ -25,8 +25,16 @@ export function blank(){
  * some in-app webviews). A rep must never throw mid-flow because of it: the app
  * keeps running in memory and tells the user once. Returns false on failure. */
 let saveWarned = false;
+let storedSnapshot = null;
+export function storedStateChanged(){
+  try { return localStorage.getItem(KEY) !== storedSnapshot; } catch { return false; }
+}
 export function save(S){
-  try { localStorage.setItem(KEY, JSON.stringify(S)); saveWarned = false; return true; }
+  try {
+    const raw = JSON.stringify(S);
+    localStorage.setItem(KEY, raw); storedSnapshot = raw;
+    saveWarned = false; return true;
+  }
   catch {
     if (!saveWarned) toast('Could not save — storage is full or blocked. Export a backup.');
     saveWarned = true;
@@ -37,6 +45,7 @@ export function save(S){
 export function loadState(){
   let raw = null;
   try { raw = localStorage.getItem(KEY); } catch { return { S: blank(), event: 'blank' }; }
+  storedSnapshot = raw;
   if (!raw) return { S: blank(), event: 'blank' };
   try {
     const S = JSON.parse(raw);
@@ -88,7 +97,7 @@ function coerceDefaults(S){
     ? S.actions.filter(a => isObj(a) && typeof a.id === 'string' && typeof a.text === 'string')
     : [];
   const done = isObj(S.done) ? S.done : {};
-  S.done = {};
+  S.done = Object.create(null);
   for (const [k, d] of Object.entries(done)) if (isObj(d)) {
     for (const f of ['reps','lapses','sum','avg']) if (!Number.isFinite(d[f])) d[f] = 0;
     S.done[k] = d;
@@ -101,7 +110,7 @@ function coerceDefaults(S){
 
 /* ── drafts ─────────────────────────────────────────────── */
 export function loadDrafts(){
-  try { return JSON.parse(localStorage.getItem(DRAFT_KEY)) || {}; } catch { return {}; }
+  return readStoredObject(DRAFT_KEY);
 }
 function saveDrafts(d){ try { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } catch {} }
 
@@ -182,7 +191,7 @@ export function sanitizeState(raw, LIB){
   const kept = [], dropped = [];
   for (const c of rawCustom) {
     if (c && typeof c === 'object' && typeof c.id === 'string' && IMPORT_KEY_RE.test(c.id)
-        && typeof c.module === 'string' && LIB.modules[c.module]
+        && typeof c.module === 'string' && Object.prototype.hasOwnProperty.call(LIB.modules, c.module)
         && LANGS.includes(c.lang) && (c.src === undefined || c.src === 'ig'
           || (c.src === 'yt' && /^[A-Za-z0-9_-]{11}$/.test(c.id))))
       kept.push({ id:c.id, module:c.module, lang:c.lang,
@@ -239,6 +248,7 @@ export function migrateV1toV2(S){
   }
   for (const e of S.log)   if (!e.day && e.at) try { e.day = todayKey(new Date(e.at)); } catch {}
   for (const n of S.notes) if (!n.day && n.at) try { n.day = todayKey(new Date(n.at)); } catch {}
+  repairCards(S);
   S.v = 2;
   return { S, backedUp };
 }

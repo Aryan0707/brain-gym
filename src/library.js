@@ -1,7 +1,7 @@
 /* B.R.A.I.N. library: single global LIB, load from library.json, custom reels. */
-import { keyOf } from './util.js';
+import { keyOf, fetchJSON } from './util.js';
 import { NOTES } from './tutor.js';
-export const LIB = { modules:{}, videos:[] };
+export const LIB = { modules:{}, videos:[], curriculum:{} };
 
 export async function loadLibrary(){
   const r = await fetch('library.json');
@@ -9,6 +9,7 @@ export async function loadLibrary(){
   const data = await r.json();
   if (!data?.modules || !Array.isArray(data.videos)) throw new Error('library.json: bad shape');
   LIB.modules = data.modules;
+  LIB.curriculum = data.curriculum || {};
   LIB.videos  = data.videos.slice();
   return LIB;
 }
@@ -18,7 +19,14 @@ export async function loadNotes(){
   try {
     const r = await fetch('notes.json');
     const data = r.ok ? await r.json() : null;
-    if (data?.videos && typeof data.videos === 'object') Object.assign(NOTES, data.videos);
+    if (data?.videos && typeof data.videos === 'object' && !Array.isArray(data.videos)) {
+      for (const [id, entry] of Object.entries(data.videos)) {
+        if (!entry || !Array.isArray(entry.points)) continue;
+        const points = entry.points.filter(p => p && Number.isFinite(p.t) && p.t >= 0
+          && typeof p.text === 'string' && p.text.trim()).sort((a, b) => a.t - b.t);
+        if (points.length) NOTES[id] = { ...entry, summary: typeof entry.summary === 'string' ? entry.summary : '', points };
+      }
+    }
   } catch {}
   return NOTES;
 }
@@ -40,7 +48,7 @@ export function rehydrateReel(c){
   if (LIB.videos.find(v => v.id === c.id)) return;
   // A content update can rename or drop a module; re-file the video rather than
   // leave it pointing at a module every renderer would fail to look up.
-  if (!LIB.modules[c.module]) c.module = Object.keys(LIB.modules)[0];
+  if (!Object.prototype.hasOwnProperty.call(LIB.modules, c.module)) c.module = Object.keys(LIB.modules)[0];
   if (c.src === 'yt') {
     LIB.videos.push({
       id: c.id, module: c.module, lang: c.lang, custom: true, src: 'yt', vertical: !!c.shorts,
@@ -66,9 +74,9 @@ export function rehydrateReel(c){
 export async function fetchTitle(id, { fetchImpl = fetch, timeoutMs = 4000 } = {}){
   try {
     const url = `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)}`;
-    const res = await fetchImpl(url, { signal: AbortSignal.timeout(timeoutMs) });
+    const res = await fetchJSON(url, {}, { fetchImpl, timeoutMs });
     if (!res.ok) return null;
-    const t = String((await res.json())?.title ?? '').trim();
+    const t = typeof res.data?.title === 'string' ? res.data.title.trim() : '';
     return t ? t.slice(0, 200) : null;
   } catch { return null; }
 }

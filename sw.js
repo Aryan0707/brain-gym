@@ -10,13 +10,14 @@
 */
 
 // deploy.sh stamps CACHE with the build version so every deploy gets a fresh shell cache.
-const CACHE = 'brain-0d0bf9b-202610061755';
+const CACHE = 'brain-71f65b1-202610111442';
 const SHELL_CACHE = CACHE;
 const API_CACHE  = 'brain-api-v2';
 
 /* precached shell: everything the app needs to boot without a server */
 const SHELL = [
   './', 'index.html', 'style.css', 'manifest.json',
+  'world.html', 'world.css', 'src/world-map.js', 'src/world-state.js', 'courses/world-map.json',
   'src/main.js', 'src/util.js', 'src/library.js', 'src/state.js',
   'src/scheduler.js', 'src/session.js', 'src/watch.js',
   'src/intake.js', 'src/learn.js', 'src/notebook.js', 'src/ai.js', 'src/tutor.js', 'src/playlist.js', 'src/search.js', 'src/level.js',

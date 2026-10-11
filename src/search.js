@@ -2,7 +2,7 @@
    The words are matched locally first; the model only ranks a short list of lessons and says why each fits.
    It can only choose lessons from that list, so a wrong or hostile answer cannot invent a link or a lesson.
    Same OpenRouter key and cheap model as the explanations (src/ai.js); any failure leaves plain keyword search. */
-import { keyOf } from './util.js';
+import { keyOf, readStoredObject, fetchJSON } from './util.js';
 import { getKey, AI_MODEL, AI_API, AI_ERRORS } from './ai.js';
 
 export const MIN_QUERY = 3;        // characters before "Ask AI" appears
@@ -20,7 +20,7 @@ export const terms = q => [...new Set(String(q ?? '').toLowerCase().split(/[^\p{
   .filter(t => t.length >= 3 && !STOP.has(t)))];
 
 const haystack = (v, modules) =>
-  [v.title, v.channel, v.why, modules?.[v.module]?.[0], ...(v.recallKeys || [])].join(' ').toLowerCase();
+  [v.title, v.channel, v.why, v.concept, modules?.[v.module]?.[0], ...(v.recallKeys || [])].join(' ').toLowerCase();
 
 /* Which lessons the model gets to rank. A small library is sent whole; a long keyword-rich query narrows
    it to the best-matching few. `narrowed` says which happened. */
@@ -42,7 +42,7 @@ const hindi = q => /[ऀ-ॿ]/.test(q);
 
 export function searchMessages(query, items, modules){
   const list = items.map(v =>
-    `- id: ${keyOf(v)} | ${clip(v.title, 90) || '(untitled)'} | ${modules?.[v.module]?.[0] || v.module} | ${clip(v.why, 120)}`).join('\n');
+    `- id: ${keyOf(v)} | ${clip(v.title, 90) || '(untitled)'} | ${modules?.[v.module]?.[0] || v.module} | ${clip([v.concept, v.why].filter(Boolean).join(': '), 120)}`).join('\n');
   return [
     { role:'system', content:
       'You help a learner find lessons in their own library. Given a search request and a list of lessons ' +
@@ -76,7 +76,7 @@ export function parseMatches(text, items, max = MAX_PICKS){
 /* ── cache: one answer per query + candidate list, so repeating a search costs nothing ── */
 const sig = items => { let h = 0; for (const c of items.map(keyOf).join(',')) h = (h * 31 + c.charCodeAt(0)) | 0; return (h >>> 0).toString(36); };
 const cacheKey = (query, items) => `${sig(items)}|${query.toLowerCase().replace(/\s+/g, ' ').trim()}`;
-function cache(){ try { return JSON.parse(localStorage.getItem(CACHE_STORE)) || {}; } catch { return {}; } }
+function cache(){ return readStoredObject(CACHE_STORE); }
 function remember(k, picks){
   const c = cache(); delete c[k]; c[k] = picks.map(p => ({ id: keyOf(p.video), reason: p.reason }));
   for (const old of Object.keys(c).slice(0, Math.max(0, Object.keys(c).length - CACHE_MAX))) delete c[old];
@@ -88,20 +88,22 @@ const fail = (code, msg = code) => Object.assign(new Error(msg), { code });
 export async function aiSearch(query, items, modules, { fetchImpl = fetch, timeoutMs = 20000 } = {}){
   const k = cacheKey(query, items);
   const hit = cache()[k];
-  if (hit) {
+  if (Array.isArray(hit) && hit.every(h => h && typeof h.id === 'string' && typeof h.reason === 'string')) {
     const byId = new Map(items.map(v => [keyOf(v), v]));
-    return hit.filter(h => byId.has(h.id)).map(h => ({ video: byId.get(h.id), reason: h.reason }));
+    const seen = new Set();
+    return hit.filter(h => byId.has(h.id) && !seen.has(h.id) && seen.add(h.id)).slice(0, MAX_PICKS)
+      .map(h => ({ video: byId.get(h.id), reason: clip(h.reason, 200) }));
   }
   const key = getKey();
   if (!key) throw fail('no-key');
   if (navigator.onLine === false) throw fail('offline');
-  const res = await fetchImpl(AI_API, {
-    method:'POST', signal: AbortSignal.timeout(timeoutMs),
+  const res = await fetchJSON(AI_API, {
+    method:'POST',
     headers:{ 'Authorization':`Bearer ${key}`, 'Content-Type':'application/json', 'X-Title':'B.R.A.I.N.' },
     body: JSON.stringify({ model:AI_MODEL, max_tokens:600, temperature:0.2, messages:searchMessages(query, items, modules) }),
-  });
+  }, { fetchImpl, timeoutMs });
   if (!res.ok) throw fail(res.status, `http-${res.status}`);
-  const picks = parseMatches((await res.json()).choices?.[0]?.message?.content, items);
+  const picks = parseMatches(res.data?.choices?.[0]?.message?.content, items);
   if (!picks) throw fail('bad');
   remember(k, picks);
   return picks;

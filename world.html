@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0b14">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>World Map · B.R.A.I.N.</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="world.css">
+  <script type="module" src="src/world-map.js"></script>
+</head>
+<body class="world-page">
+<a class="world-skip" href="#worldMain">Skip to course</a>
+<header class="world-topbar">
+  <a class="world-library" href="./?go=library" aria-label="Back to B.R.A.I.N. Library">← Library</a>
+  <span class="world-brand">B.R.A.I.N. <span>/ WORLD MAP</span></span>
+  <button id="worldMapBtn" class="world-button secondary" type="button" hidden>All layers</button>
+</header>
+<main id="worldMain" class="world-main">
+  <div id="worldLoading" class="world-loading" role="status">Loading your learning map…</div>
+  <section id="worldError" class="world-error" role="alert" hidden>
+    <h1>The course could not load.</h1>
+    <p id="worldErrorText">Check your connection, then try again.</p>
+    <button class="world-button" type="button" onclick="location.reload()">Try again</button>
+    <a href="./?go=library">Return to Library</a>
+  </section>
+  <div id="worldApp" hidden>
+    <p id="worldWarning" class="world-warning" role="status" hidden></p>
+    <div class="world-grid">
+      <aside class="world-sidebar" aria-label="Learning map">
+        <div class="world-course-head">
+          <p class="world-eyebrow">A course in causal literacy</p>
+          <h1 id="courseTitle">World Map</h1>
+          <p id="courseSubtitle" class="world-subtitle">From reality to civilization</p>
+          <p id="courseCounts" class="world-course-counts"></p>
+        </div>
+        <div class="world-progress-wrap">
+          <div class="world-progress-label"><span id="worldProgressText">No lessons self-checked yet</span><span id="worldDueText"></span></div>
+          <progress id="worldProgress" value="0" max="1" aria-label="Lessons with a self-checked recall"></progress>
+          <small>Practice recorded, not proof of mastery.</small>
+        </div>
+        <div class="world-actions">
+          <button id="worldContinue" class="world-button" type="button">Start at Layer 1 →</button>
+          <button id="worldReview" class="world-button secondary" type="button" disabled>Review due</button>
+        </div>
+        <p id="worldOfflineStatus" class="world-small" role="status">Preparing an offline copy…</p>
+        <label class="world-search-label" for="worldSearch">Find a concept</label>
+        <div class="world-search-row"><input id="worldSearch" type="search" placeholder="Power, evolution, evidence…" autocomplete="off"><button id="worldClear" class="world-button secondary" type="button" hidden>Clear</button></div>
+        <p id="worldSearchStatus" class="world-small" role="status"></p>
+        <nav id="worldRoadmap" aria-label="Course layers"></nav>
+        <details class="world-data">
+          <summary>Your course data</summary>
+          <p>Saved on this device only. World Map progress is separate from video progress and does not add video XP or daily-goal credit.</p>
+          <button id="worldExport" class="world-button secondary" type="button">Export course progress</button>
+          <button id="worldImportBtn" class="world-button secondary" type="button">Import course progress</button>
+          <input id="worldImport" type="file" accept="application/json,.json" hidden>
+          <p id="worldDataStatus" role="status"></p>
+        </details>
+      </aside>
+      <div class="world-content">
+        <section id="worldOverview" class="world-overview">
+          <p class="world-eyebrow">The big picture</p>
+          <h2>Understand the world.<br>One layer at a time.</h2>
+          <p id="courseDescription"></p>
+          <div class="world-method">
+            <span><b>01</b> Read one idea</span><span><b>02</b> Recall from memory</span><span><b>03</b> Self-check & revisit</span>
+          </div>
+          <p class="world-small">Written lessons with sources. Optional explainer videos, when available, load only after you press Play and need internet. Written lessons and recall work offline. No AI grading, no claim to cover every event in history.</p>
+          <h3>What this map connects</h3>
+          <div id="worldCoverage" class="world-coverage"></div>
+          <div class="world-overview-note"><b>Depth is not darkness.</b><p>Learn the mechanism, its evidence, and where it fails. Then use it to analyze a real system without assuming a secret master explanation.</p></div>
+          <p class="world-small">The eight layers follow one life, from birth to death. Follow them in order, or browse freely. Every layer has a learning goal and a checkpoint.</p>
+        </section>
+        <section id="worldLesson" hidden aria-labelledby="lessonTitle">
+          <p id="lessonPosition" class="world-eyebrow"></p>
+          <h2 id="lessonTitle" tabindex="-1"></h2>
+          <p id="lessonSummary" class="world-lesson-summary"></p>
+          <p id="lessonMeta" class="world-small"></p>
+          <ol class="world-stepper" aria-label="Lesson steps"><li id="worldStepRead" aria-current="step">Read</li><li id="worldStepRecall">Recall</li><li id="worldStepCheck">Self-check</li></ol>
+          <article id="lessonBody" class="world-reading"></article>
+          <section id="worldRecall" class="world-recall" hidden>
+            <h3>Explain it from memory</h3>
+            <p id="worldPrompt"></p>
+            <label for="worldNote">Your explanation, an example, and a limitation</label>
+            <textarea id="worldNote" rows="7" maxlength="12000" placeholder="Close the lesson. What was the mechanism? Where would it fail?"></textarea>
+            <p class="world-small">At least 15 characters. Drafts save locally. No automatic grading.</p>
+            <button id="worldReveal" class="world-button" type="button" disabled>Lock answer & self-check →</button>
+          </section>
+          <section id="worldCheck" class="world-check" hidden>
+            <h3>Self-check, honestly</h3>
+            <p>Mark only the points already present in your locked answer. This is self-reported—not AI-graded or verified mastery.</p>
+            <div id="worldPoints" class="world-points"></div>
+            <fieldset class="world-rating"><legend>How well could you explain it?</legend>
+              <label><input type="radio" name="world-rating" value="1">1 · Lost</label>
+              <label><input type="radio" name="world-rating" value="2">2 · Shaky</label>
+              <label><input type="radio" name="world-rating" value="3">3 · Got it</label>
+              <label><input type="radio" name="world-rating" value="4">4 · Solid</label>
+              <label><input type="radio" name="world-rating" value="5">5 · Can teach</label>
+            </fieldset>
+            <p id="worldRatingHint" class="world-small" role="status">Choose a rating after checking your answer.</p>
+            <button id="worldSave" class="world-button" type="button" disabled>Save self-checked practice</button>
+            <details id="worldPrevious" class="world-previous" hidden><summary>Your previous answer</summary><p id="worldPreviousText"></p></details>
+          </section>
+          <section id="worldDone" class="world-done" role="status" hidden><h3>Practice recorded.</h3><p id="worldDoneText"></p></section>
+          <div class="world-lesson-actions">
+            <button id="worldBeginRecall" class="world-button" type="button">Close lesson & recall →</button>
+            <button id="worldReRead" class="world-button secondary" type="button" hidden>Read again</button>
+          </div>
+          <nav class="world-lesson-nav" aria-label="Previous and next lesson"><button id="worldPrev" class="world-button secondary" type="button">← Previous</button><button id="worldNext" class="world-button secondary" type="button">Next lesson →</button></nav>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="world-footer">Models, not master explanations. Evidence before certainty.</footer>
+</body>
+</html>

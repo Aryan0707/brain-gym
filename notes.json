@@ -3984,6 +3984,719 @@
    "captions": "hi",
    "model": "anthropic/claude-sonnet-5.5",
    "at": "2026-10-01"
+  },
+  "61V9tpuBUxU": {
+   "summary": "This video explains the core concepts of deductive and inductive arguments, including their types, validity, and soundness.",
+   "points": [
+    {
+     "t": 207,
+     "text": "Deductive reasoning moves from general statements to specific conclusions, while inductive reasoning moves from specific observations to general conclusions."
+    },
+    {
+     "t": 274,
+     "text": "A deductive argument is valid if its conclusion logically follows from its premises, regardless of whether the premises are true."
+    },
+    {
+     "t": 483,
+     "text": "A valid deductive argument is 'sound' if all its premises are true; otherwise, it is 'unsound'."
+    },
+    {
+     "t": 769,
+     "text": "An inductive argument is 'strong' if its conclusion is highly probable given its premises, and 'weak' if the conclusion is less probable."
+    },
+    {
+     "t": 972,
+     "text": "A weak inductive argument is always 'uncogent', regardless of the truth of its premises."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "-X8Xfl0JdTQ": {
+   "summary": "Karl Popper distinguished science from pseudoscience by proposing that scientific theories must be falsifiable, not just confirmable.",
+   "points": [
+    {
+     "t": 108,
+     "text": "Popper observed that Freud's psychoanalytic theories could explain any data, making them always seem confirmed, while Einstein's theories made risky, testable predictions."
+    },
+    {
+     "t": 216,
+     "text": "Traditional science believed in observing without preconceived notions, then forming hypotheses, but Popper argued everyone starts with hunches that influence what they observe."
+    },
+    {
+     "t": 272,
+     "text": "Pseudoscience seeks to confirm beliefs, while true science attempts to disconfirm them, as confirming evidence can be found for almost anything if you look for it."
+    },
+    {
+     "t": 293,
+     "text": "Genuine scientific tests are risky predictions that could potentially destroy the theory, because good scientific theories prohibit certain outcomes."
+    },
+    {
+     "t": 341,
+     "text": "Irrefutable theories are not scientific because they cannot be tested; a theory's value comes from its ability to be proven false."
+    },
+    {
+     "t": 386,
+     "text": "Scientists must be willing to abandon their theories when evidence disproves them, accepting the data and moving on to new beliefs."
+    },
+    {
+     "t": 422,
+     "text": "For Popper, knowledge is about probability and contingency, meaning beliefs should be based on current data and always open to revision with new evidence."
+    },
+    {
+     "t": 449,
+     "text": "Being certain of something closes the mind; remaining open to the possibility that current beliefs are wrong is the best way to approach truth."
+    }
+   ],
+   "captions": "en",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "QSryiroslwU": {
+   "summary": "Anchoring bias is when the first piece of information encountered heavily influences subsequent decisions and judgments.",
+   "points": [
+    {
+     "t": 19,
+     "text": "Anchoring bias means the first information or figure acts as an 'anchor' in our mind when making a decision."
+    },
+    {
+     "t": 60,
+     "text": "The anchor 'sticks' a point in your brain, and you compare subsequent items above or below this point."
+    },
+    {
+     "t": 72,
+     "text": "In behavioral science, anchoring bias affects emotional decision-making, where the first information strongly impacts how we value things."
+    },
+    {
+     "t": 88,
+     "text": "At a charity event, an initial donation of 10,000 can anchor others to donate similar or slightly higher amounts."
+    },
+    {
+     "t": 97,
+     "text": "People compare their decisions to the initial anchored amount, influencing their own contribution."
+    },
+    {
+     "t": 120,
+     "text": "Anchoring bias also applies to job offers; an initial offer of 8 lakhs makes a subsequent 7.5 lakh offer seem lower by comparison."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "gPg2sBCNzjc": {
+   "summary": "Survivorship bias is a cognitive error where we focus only on successful outcomes, ignoring failures, leading to skewed perceptions and poor decisions.",
+   "points": [
+    {
+     "t": 109,
+     "text": "Survivorship bias occurs when we only consider the stories and experiences of those who succeeded or survived, ignoring those who failed."
+    },
+    {
+     "t": 130,
+     "text": "This bias makes us form our understanding based on a narrow, visible sample, without seeing the complete picture."
+    },
+    {
+     "t": 197,
+     "text": "It happens when we look at winners or survivors and consider their experience as the whole picture, ignoring those who did not survive or win."
+    },
+    {
+     "t": 406,
+     "text": "When we only look at what survivors did to succeed, we miss crucial information about what others did that led to failure, or what survivors avoided."
+    },
+    {
+     "t": 458,
+     "text": "To make better decisions, consider both what successful people do and what unsuccessful people do or fail to do."
+    },
+    {
+     "t": 497,
+     "text": "Always ask yourself what information you might be missing when making a decision to avoid falling victim to survivorship bias."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "nxeutSkk6YE": {
+   "summary": "Working memory is not just a storage unit but an active workbench where information is handled, manipulated, and transformed.",
+   "points": [
+    {
+     "t": 315,
+     "text": "Psychologists suggest that short-term memory is not unitary but consists of many components, as proposed by Baddeley in 1986."
+    },
+    {
+     "t": 732,
+     "text": "Baddeley suggested that short-term memory is a 'work bench' that actively handles, manipulates, and transforms a wide variety of memory materials."
+    },
+    {
+     "t": 1632,
+     "text": "The central executive is the third component, organizing information from the phonological loop, visuospatial sketchpad, and long-term memory."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "tonUDPIlgvE": {
+   "summary": "Memory consolidation is the process by which unstable memories become stable and long-lasting in the brain.",
+   "points": [
+    {
+     "t": 33,
+     "text": "Consolidation means to gather something, or in psychology, to gather data or information."
+    },
+    {
+     "t": 49,
+     "text": "A Roman teacher proposed that information entering our mind matures through a process over time."
+    },
+    {
+     "t": 78,
+     "text": "The law of regression suggested that memory is progressive but can also fade if not rehearsed, moving from unstable to stable forms."
+    },
+    {
+     "t": 117,
+     "text": "Müller and Alphonese, German researchers, are credited with coining the term \"consolidation\" and stating that memory takes time to set."
+    },
+    {
+     "t": 332,
+     "text": "Memory processing involves information moving from sensory memory to short-term memory, and with rehearsal, finally to long-term memory."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "L5pAob9FbVA": {
+   "summary": "This video explains covariance, correlation, and causation, highlighting their differences in measuring relationships between variables.",
+   "points": [
+    {
+     "t": 10,
+     "text": "Covariance is a statistical measure that describes how much two variables change together, indicating the direction of their relationship."
+    },
+    {
+     "t": 57,
+     "text": "Covariance shows if variables increase or decrease together (positive) or if one increases while the other decreases (negative), but not the strength."
+    },
+    {
+     "t": 97,
+     "text": "Correlation is a statistical measure that describes the strength of the linear relationship between two variables, also indicating direction."
+    },
+    {
+     "t": 137,
+     "text": "Correlation values range from -1 to 1. Values near zero indicate a weak linear relationship, rather than ruling out every possible relationship."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10",
+   "reviewed_at": "2026-10-10"
+  },
+  "NJsK7wvDk6E": {
+   "summary": "An introduction to sampling distributions of means and the normal approximation.",
+   "points": [
+    {
+     "t": 222,
+     "text": "For sufficiently large samples in the lesson’s setup, the distribution of sample means is approximately normal."
+    },
+    {
+     "t": 241,
+     "text": "The CLT allows us to use normal distribution properties to solve problems involving sample means, even if the original population is not normally distributed."
+    },
+    {
+     "t": 278,
+     "text": "The mean of the distribution of sample means will be equal to the population mean."
+    },
+    {
+     "t": 285,
+     "text": "The variance of the distribution of sample means will be the population variance divided by the sample size (n)."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10",
+   "reviewed_at": "2026-10-10"
+  },
+  "MRX0yV_jkyA": {
+   "summary": "Improving listening skills is crucial for better relationships and overall life quality, using five simple techniques.",
+   "points": [
+    {
+     "t": 88,
+     "text": "Active listening means using all five senses to fully hear someone, and showing them you are engaged."
+    },
+    {
+     "t": 170,
+     "text": "Give feedback to the speaker to show you understand and are following their words."
+    },
+    {
+     "t": 241,
+     "text": "Avoid rehearsing your reply while someone else is speaking; listen to understand, not just to respond."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "aH-n4233M7k": {
+   "summary": "Aristotle's Ethos, Pathos, and Logos are techniques to persuade people by building trust, connecting emotionally, and using logic.",
+   "points": [
+    {
+     "t": 70,
+     "text": "Ethos is about building trust and credibility with your audience."
+    },
+    {
+     "t": 237,
+     "text": "You use Pathos by sharing personal experiences or evoking feelings like happiness or sadness."
+    },
+    {
+     "t": 351,
+     "text": "Logos is using logic and facts to convince your audience."
+    },
+    {
+     "t": 491,
+     "text": "Using all three techniques—Ethos, Pathos, and Logos—helps you effectively persuade your audience."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "k51g0WWZkh0": {
+   "summary": "The habit loop, as described in James Clear's 'Atomic Habits,' consists of four steps: cue, craving, response, and reward.",
+   "points": [
+    {
+     "t": 15,
+     "text": "A cue is anything that reminds you to perform an action, like a notification or seeing your phone."
+    },
+    {
+     "t": 100,
+     "text": "A craving is the desire or interest you feel to perform the action, like wanting to see who messaged you."
+    },
+    {
+     "t": 177,
+     "text": "The response is the actual action you take, such as picking up your phone, unlocking it, and using it."
+    },
+    {
+     "t": 198,
+     "text": "The reward is the satisfaction you feel after completing the action, which reduces your curiosity or craving."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "SA-m_v_pcFU": {
+   "summary": "The Implementation Intention technique helps build habits by specifying the exact time and location for a desired behavior.",
+   "points": [
+    {
+     "t": 56,
+     "text": "Specify when, where, and for how long you will perform a planned behavior."
+    },
+    {
+     "t": 94,
+     "text": "An implementation intention links a desired action to a specific time and location."
+    },
+    {
+     "t": 137,
+     "text": "Use the format: I will perform this behavior at this time in this location."
+    },
+    {
+     "t": 165,
+     "text": "A meditation plan can specify two minutes at 7 p.m. in the kitchen."
+    },
+    {
+     "t": 186,
+     "text": "A study plan can specify twenty minutes of Spanish at 8 p.m. in the bedroom."
+    }
+   ],
+   "captions": "hi",
+   "model": "manual-caption-review",
+   "at": "2026-10-10",
+   "reviewed_at": "2026-10-10"
+  },
+  "CervmCsaJWo": {
+   "summary": "Circadian rhythms are 24-hour biological cycles that regulate various bodily functions, crucial for overall health.",
+   "points": [
+    {
+     "t": 45,
+     "text": "Circadian rhythm is a 24-hour biological cycle that regulates daily bodily functions like sleep, hormone production, body temperature, and metabolism."
+    },
+    {
+     "t": 87,
+     "text": "This biological clock is located in the brain's suprachiasmatic nucleus (SCN) and receives input from light-sensitive cells in the eyes."
+    },
+    {
+     "t": 239,
+     "text": "Maintaining a healthy circadian rhythm is vital for overall health, as disruptions are linked to issues like obesity, diabetes, heart disease, and mental health problems."
+    },
+    {
+     "t": 279,
+     "text": "To maintain a healthy circadian rhythm, establish a consistent sleep schedule, create a comfortable sleep environment, and limit bright light exposure before bed."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "-ekNRgBOKkU": {
+   "summary": "Lactate threshold relates rising blood lactate during exercise to endurance performance.",
+   "points": [
+    {
+     "t": 38,
+     "text": "Lactate threshold is the point during increasing exercise intensity when blood lactate levels suddenly rise disproportionately."
+    },
+    {
+     "t": 81,
+     "text": "A higher lactate threshold improves aerobic performance because it allows individuals to use the aerobic system at higher intensities, delaying fatigue."
+    },
+    {
+     "t": 112,
+     "text": "Lactate threshold is measured as a percentage of VO2 max, which is the maximum oxygen uptake during exercise."
+    },
+    {
+     "t": 133,
+     "text": "Proper training can significantly improve an individual's lactate threshold, leading to better endurance performance."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10",
+   "reviewed_at": "2026-10-10"
+  },
+  "C1j3asSi2tA": {
+   "summary": "Diversification primarily reduces unsystematic risk in a stock portfolio, not systematic risk, and has diminishing returns after 20-30 stocks.",
+   "points": [
+    {
+     "t": 16,
+     "text": "Diversification helps reduce portfolio risk, which is the volatility of your investments."
+    },
+    {
+     "t": 24,
+     "text": "Systematic risk is market-wide risk affecting all investments, like bad monsoons, and cannot be diversified away."
+    },
+    {
+     "t": 37,
+     "text": "Unsystematic risk is specific to a particular stock or company, such as a stock price dropping due to high attrition rates."
+    },
+    {
+     "t": 57,
+     "text": "Diversifying a stock portfolio primarily mitigates or controls unsystematic risk."
+    },
+    {
+     "t": 376,
+     "text": "Adding more stocks to a portfolio reduces unsystematic risk, but this effect diminishes after a certain number of stocks (around 20-30)."
+    },
+    {
+     "t": 415,
+     "text": "To build a well-diversified portfolio, aim for 20-30 stocks, avoid concentrated bets, include multiple sectors and market capitalizations, and limit stocks from the same sector."
+    }
+   ],
+   "captions": "en",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "kivI2poLOL0": {
+   "summary": "Attachment theory describes patterns in early bonds and later relationships.",
+   "points": [
+    {
+     "t": 21,
+     "text": "Attachment is crucial for human survival, especially for children, as it ensures their needs are met and they can thrive."
+    },
+    {
+     "t": 241,
+     "text": "Securely attached individuals tend to have high self-esteem, form long-term intimate relationships, and are comfortable seeking social support."
+    },
+    {
+     "t": 289,
+     "text": "The lesson describes avoidant attachment as suppressing emotion and relying on oneself, with difficulty seeking support in relationships."
+    },
+    {
+     "t": 482,
+     "text": "The lesson describes ambivalent attachment as insecurity and a need for reassurance associated with inconsistent care."
+    },
+    {
+     "t": 607,
+     "text": "Disorganized attachment is characterized by extreme confusion due to unpredictable parental behavior, where caregivers are sometimes loving and sometimes frightening."
+    },
+    {
+     "t": 768,
+     "text": "Parents can foster secure attachment by being positive role models, setting boundaries, remaining calm during misbehavior, and apologizing for their mistakes."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10",
+   "reviewed_at": "2026-10-10"
+  },
+  "VBU_nccbst8": {
+   "summary": "Metacognition is thinking about one's own thinking, involving planning, monitoring, and evaluating one's understanding and performance.",
+   "points": [
+    {
+     "t": 42,
+     "text": "Metacognition is thinking about your own thoughts, reflecting on why you had a particular idea."
+    },
+    {
+     "t": 80,
+     "text": "More precisely, metacognition refers to processes used to plan, monitor, and evaluate one's understanding and performance."
+    },
+    {
+     "t": 117,
+     "text": "Metacognition involves awareness and understanding of one's own thought processes, enabling regulation of learning activities."
+    },
+    {
+     "t": 184,
+     "text": "The metacognition process has three key steps: planning your approach to learning, monitoring your understanding, and evaluating your learning outcomes."
+    },
+    {
+     "t": 194,
+     "text": "Planning involves deciding your approach to learning a topic and how you will assimilate information."
+    },
+    {
+     "t": 254,
+     "text": "Monitoring means checking your comprehension of a topic while studying, for example, by using practice tests."
+    },
+    {
+     "t": 307,
+     "text": "Evaluating is assessing your learning outcomes after studying and modifying your approach if needed."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "dFbTr8e2ols": {
+   "summary": "BATNA analysis helps you find the best alternative to a negotiated agreement, ensuring a favorable outcome.",
+   "points": [
+    {
+     "t": 146,
+     "text": "To determine your BATNA, identify all possible alternatives if the current negotiation fails and choose the best one."
+    },
+    {
+     "t": 166,
+     "text": "If the final offer is lower than your BATNA, you should reject it and pursue your best alternative."
+    },
+    {
+     "t": 229,
+     "text": "In negotiations, both buyer and seller aim to find an alternative that falls within their acceptable price range."
+    },
+    {
+     "t": 235,
+     "text": "First, determine your ideal price or reserve value, then estimate the other party's price and anticipate terms and conditions."
+    },
+    {
+     "t": 265,
+     "text": "A strong BATNA gives you more negotiation power and a wider range of alternative courses of action."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "l_Y65D7RoY4": {
+   "summary": "Cognitive Behavioral Therapy (CBT) helps manage mental health issues by changing negative thought patterns to improve feelings and behaviors.",
+   "points": [
+    {
+     "t": 132,
+     "text": "CBT works by balancing your thought processes, recognizing that thoughts lead to feelings, which then lead to actions or behaviors."
+    },
+    {
+     "t": 247,
+     "text": "The first step in CBT is to recognize your negative thoughts, as you cannot change what you don't identify."
+    },
+    {
+     "t": 264,
+     "text": "After identifying negative thoughts, the next step is to understand how many cognitive distortions you have, like seeing things in black and white."
+    },
+    {
+     "t": 401,
+     "text": "Only certified and experienced psychologists should practice CBT to avoid negative impacts, and practical training is essential."
+    },
+    {
+     "t": 543,
+     "text": "CBT involves gradually learning and practicing skills rather than expecting an instant change."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10",
+   "reviewed_at": "2026-10-10"
+  },
+  "f_yos_-taF4": {
+   "summary": "An introduction to monetary policy, reserve requirements, interest-rate tools, and open market operations.",
+   "points": [
+    {
+     "t": 158,
+     "text": "Monetary Policy is created by a six-member Monetary Policy Committee (MPC), with three members from the government and three from the RBI, chaired by the RBI Governor."
+    },
+    {
+     "t": 288,
+     "text": "The MPC is a statutory body, established under Section 45ZB of the RBI Act 1934, and was first set up in 2016 based on the Urjit Patel Committee's recommendations."
+    },
+    {
+     "t": 749,
+     "text": "Cash Reserve Ratio (CRR) requires banks to hold a proportion of their deposits as cash with the RBI."
+    },
+    {
+     "t": 920,
+     "text": "Statutory Liquidity Ratio (SLR) requires banks to maintain a proportion of their deposits in specified liquid assets."
+    },
+    {
+     "t": 1087,
+     "text": "The lesson introduces Bank Rate as a central-bank lending-rate tool."
+    },
+    {
+     "t": 1167,
+     "text": "Repo transactions involve lending against securities; the repo rate is an important monetary-policy rate."
+    },
+    {
+     "t": 1571,
+     "text": "Open Market Operations (OMO) involve the RBI buying and selling government securities in the market to control money supply and inflation."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10",
+   "reviewed_at": "2026-10-10"
+  },
+  "M44bM_Xw2R8": {
+   "summary": "STRIDE is a threat modeling framework created by Microsoft to classify and identify potential security threats in systems.",
+   "points": [
+    {
+     "t": 37,
+     "text": "Threat modeling is a process to identify system weaknesses that could lead to harm or damage to a computer system or application."
+    },
+    {
+     "t": 87,
+     "text": "STRIDE is a threat classification framework developed by Microsoft to help identify potential threats to a system."
+    },
+    {
+     "t": 145,
+     "text": "STRIDE helps answer three key questions: what can go wrong, what an attacker will use, and what security controls are needed."
+    },
+    {
+     "t": 189,
+     "text": "STRIDE was developed by Microsoft between 1999 and 2002 to secure Windows XP and future Windows products, and is now widely used by developers."
+    },
+    {
+     "t": 300,
+     "text": "Spoofing is when an attacker pretends to be someone else by stealing their identity to gain unauthorized access to a system."
+    },
+    {
+     "t": 402,
+     "text": "Tampering is when an attacker modifies or corrupts data without permission, such as changing URL parameters or database entries."
+    },
+    {
+     "t": 476,
+     "text": "Repudiation is when an attacker denies having performed an action after doing something wrong, often by clearing logs."
+    },
+    {
+     "t": 551,
+     "text": "Information Disclosure is the accidental or intentional revelation of sensitive data, which an attacker might steal or leak publicly."
+    },
+    {
+     "t": 616,
+     "text": "Denial of Service (DoS) is when an attacker stops a system from being used by its legitimate users, often by overwhelming it with fake requests."
+    },
+    {
+     "t": 705,
+     "text": "Elevation of Privilege is when an attacker increases their access level, for example, changing a guest account to an administrator account."
+    }
+   ],
+   "captions": "hi",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "5VUpo28aAks": {
+   "summary": "Paul Bloom argues that emotional empathy can be biased and contrasts it with compassion and rational decision-making.",
+   "points": [
+    {
+     "t": 23,
+     "text": "Emotional empathy is feeling what another person feels by putting yourself in their shoes, and many believe it's central to being a good person."
+    },
+    {
+     "t": 67,
+     "text": "Bloom argues that empathy is a poor moral guide because it is biased; we naturally feel it for people similar to us, making it parochial."
+    },
+    {
+     "t": 90,
+     "text": "Bloom argues that while empathy can have positive effects, its negative consequences, like bias or provoking violence, might outweigh them."
+    },
+    {
+     "t": 183,
+     "text": "In intimate relationships, sometimes shared feelings are desired, but other times, a calm, rational response is more helpful than mirroring anxiety."
+    },
+    {
+     "t": 222,
+     "text": "Bloom argues that rationality is one part of a better moral guide, helping determine the best way to help others and improve the world."
+    },
+    {
+     "t": 249,
+     "text": "Bloom argues that compassion is the second part of a better moral guide, providing the goals and caring needed, which rationality alone cannot."
+    }
+   ],
+   "captions": "en",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10",
+   "reviewed_at": "2026-10-10"
+  },
+  "V3vhXQy48jo": {
+   "summary": "Cognitive defusion is a skill to separate yourself from your thoughts, allowing you to choose which ones to believe and act on.",
+   "points": [
+    {
+     "t": 66,
+     "text": "Cognitive defusion is the skill of looking at your thoughts instead of through them, creating distance between you and your thoughts."
+    },
+    {
+     "t": 165,
+     "text": "Cognitive fusion is when you are stuck to your thoughts, believing everything your mind tells you without noticing it."
+    },
+    {
+     "t": 515,
+     "text": "One technique for cognitive defusion is to add phrases like \"I'm having the thought that...\" or \"I notice that I'm having the thought that...\" before your thoughts."
+    },
+    {
+     "t": 628,
+     "text": "Another technique is to name your thoughts, like giving them a character name, to create separation and recognize them as distinct from yourself."
+    },
+    {
+     "t": 687,
+     "text": "You can also thank your mind for the thought, acknowledging its presence without necessarily believing or acting on it."
+    },
+    {
+     "t": 735,
+     "text": "Saying a thought in silly voices or repeating a word until it loses its meaning can make the thought feel less powerful and more like a jumble of words."
+    },
+    {
+     "t": 796,
+     "text": "Symbolically putting your thoughts onto an object, like writing them on paper or a rock, can make them tangible and help you choose whether to carry or set them down."
+    },
+    {
+     "t": 924,
+     "text": "Cognitive defusion allows you to ask if a thought is helpful and aligns with your values, giving you the choice to believe and act on it or simply notice it."
+    }
+   ],
+   "captions": "en",
+   "model": "google/gemini-2.5-flash",
+   "at": "2026-10-10"
+  },
+  "qcvs0pwKt2g": {
+   "summary": "Opportunity cost is the value of the next-best alternative you give up when making a choice.",
+   "points": [
+    {
+     "t": 14,
+     "text": "Choosing one alternative can require giving up another alternative."
+    },
+    {
+     "t": 123,
+     "text": "Opportunity cost refers to the next-best alternative forgone, rather than every rejected option combined."
+    },
+    {
+     "t": 246,
+     "text": "If a home-cooked meal is your next-best option, choosing a restaurant meal gives up the value of that home-cooked meal."
+    }
+   ],
+   "captions": "hi",
+   "model": "manual-caption-review",
+   "at": "2026-10-10",
+   "reviewed_at": "2026-10-10"
   }
  }
 }

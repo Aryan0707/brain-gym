@@ -1,0 +1,138 @@
+/* World Map uses B.R.A.I.N.'s existing type and colour tokens. No new dependencies. */
+.world-page { padding-bottom:env(safe-area-inset-bottom); background:var(--bg); }
+.world-page :is(a,button,input,textarea,summary,[tabindex]) { scroll-margin-top:90px; }
+.world-page [hidden] { display:none !important; }
+.world-skip { position:absolute; left:16px; top:-100px; z-index:100; padding:12px; background:var(--primary); color:var(--bg); }
+.world-skip:focus { top:12px; }
+.world-topbar { position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:16px; min-height:66px; padding:calc(12px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-left)) 12px; background:var(--bar); border-bottom:1px solid var(--line); }
+.world-library { color:var(--fg); font-size:14px; text-decoration:none; display:inline-flex; align-items:center; min-height:44px; flex-shrink:0; }
+.world-brand { margin:auto; font-size:12px; font-weight:750; letter-spacing:.11em; }
+.world-brand span { color:var(--muted); font-weight:500; }
+.world-main { max-width:1260px; margin:0 auto; padding:36px 28px 48px; }
+.world-grid { display:grid; grid-template-columns:360px minmax(0, 1fr); gap:64px; }
+.world-sidebar, .world-content { min-width:0; }
+.world-content { padding-top:10px; }
+.world-eyebrow { color:var(--accent); font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:750; margin:0 0 12px; }
+.world-course-head h1 { font-size:36px; letter-spacing:-.045em; line-height:1.12; margin:0 0 10px; }
+.world-subtitle { margin:0; color:var(--muted); font-size:17px; }
+.world-course-counts { color:var(--fg-2); font-size:13px; margin:16px 0 24px; }
+.world-progress-wrap { padding:18px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.world-progress-label { display:flex; gap:8px; justify-content:space-between; font-size:12px; }
+.world-progress-wrap progress { appearance:none; width:100%; height:5px; border:none; display:block; margin:10px 0 8px; background:var(--surface-2); border-radius:8px; }
+.world-progress-wrap progress::-webkit-progress-bar { background:var(--surface-2); border-radius:8px; }
+.world-progress-wrap progress::-webkit-progress-value { background:var(--accent); border-radius:8px; }
+.world-progress-wrap progress::-moz-progress-bar { background:var(--accent); border-radius:8px; }
+.world-progress-wrap small { font-size:11px; color:var(--muted); }
+.world-actions { display:flex; flex-wrap:wrap; gap:8px; margin:18px 0 24px; }
+.world-button { appearance:none; border:1px solid transparent; border-radius:10px; background:var(--primary); color:var(--on-accent); font:600 14px/1.3 var(--font); cursor:pointer; min-height:44px; padding:12px 16px; text-align:center; }
+.world-button.secondary { background:var(--surface); border-color:var(--line-strong); color:var(--fg-2); }
+.world-button:disabled { opacity:.4; cursor:default; }
+.world-search-label { display:block; font-size:12px; color:var(--muted); margin-bottom:8px; }
+.world-search-row { display:flex; gap:8px; }
+.world-search-row input { width:100%; min-width:0; background:var(--surface); border:1px solid var(--line-strong); color:var(--fg); border-radius:10px; padding:12px; font-size:16px; min-height:46px; }
+.world-small { font-size:13px; color:var(--muted); line-height:1.6; }
+#worldSearchStatus { min-height:20px; margin:8px 0; }
+.world-layer { border-bottom:1px solid var(--line); }
+.world-layer > summary { display:flex; gap:14px; align-items:center; cursor:pointer; padding:18px 0; list-style:none; min-height:64px; }
+.world-layer > summary::-webkit-details-marker { display:none; }
+.world-layer > summary::after { content:'+'; color:var(--muted); font-size:20px; margin-left:auto; }
+.world-layer[open] > summary::after { content:'−'; }
+.world-layer-number { display:flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid var(--line-strong); border-radius:50%; color:var(--accent); font-size:12px; font-weight:700; flex-shrink:0; }
+.world-layer-title { display:block; font-size:15px; line-height:1.35; font-weight:650; }
+.world-layer-summary { display:block; font-size:11px; color:var(--muted); margin-top:4px; }
+.world-layer-stage { display:block; color:var(--accent); font-size:10px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; margin-bottom:3px; }
+.world-layer-stage-note { font-size:13px; color:var(--fg-2); line-height:1.6; margin:0 0 10px; font-style:italic; }
+.world-layer-content { padding:0 0 20px 46px; }
+.world-layer-goal { font-size:13px; color:var(--muted); line-height:1.6; margin:0 0 12px; }
+.world-lesson-link { display:flex; align-items:flex-start; gap:10px; padding:12px 10px; margin:0 -10px; min-height:50px; color:var(--fg-2); text-decoration:none; border-radius:8px; font-size:14px; }
+.world-lesson-link:hover, .world-lesson-link[aria-current='page'] { background:var(--accent-tint); }
+.world-lesson-number { font-size:11px; color:var(--accent); padding-top:2px; min-width:22px; }
+.world-lesson-copy { flex:1; min-width:0; }
+.world-lesson-copy small { display:block; font-size:11px; color:var(--muted); margin-top:4px; }
+.world-status { color:var(--accent); font-size:11px; white-space:nowrap; padding-top:2px; }
+.world-checkpoint { margin-top:10px; font-size:12px; }
+.world-checkpoint summary { cursor:pointer; color:var(--accent); min-height:40px; padding:10px 0; }
+.world-checkpoint p { margin-top:0; color:var(--muted); }
+.world-data { margin-top:24px; font-size:13px; color:var(--muted); }
+.world-data > summary { min-height:44px; padding:12px 0; cursor:pointer; }
+.world-data .world-button { margin:0 8px 8px 0; font-size:12px; }
+.world-overview h2 { font-size:clamp(30px, 4vw, 48px); line-height:1.16; letter-spacing:-.04em; margin:14px 0 24px; }
+.world-overview > p { color:var(--muted); line-height:1.8; }
+.world-method { display:flex; flex-wrap:wrap; gap:18px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:22px 0; margin:30px 0 18px; font-size:13px; }
+.world-method b { color:var(--accent); margin-right:7px; font-size:11px; }
+.world-overview h3 { font-size:16px; margin-top:34px; }
+.world-coverage { display:flex; flex-wrap:wrap; gap:8px; }
+.world-coverage span { color:var(--fg-2); font-size:12px; border:1px solid var(--line-strong); border-radius:7px; padding:6px 10px; }
+.world-overview-note { border-left:2px solid var(--accent); padding:4px 0 4px 20px; margin-top:32px; }
+.world-overview-note p { font-size:14px; color:var(--muted); margin-bottom:0; line-height:1.8; }
+#lessonTitle { font-size:clamp(27px, 3vw, 38px); line-height:1.2; letter-spacing:-.03em; margin:8px 0 14px; }
+.world-lesson-summary { font-size:18px; color:var(--fg-2); line-height:1.65; margin:0 0 12px; }
+.world-stepper { display:flex; list-style:none; counter-reset:step; padding:0; margin:26px 0; gap:18px; font-size:12px; color:var(--muted); }
+.world-stepper li { counter-increment:step; }
+.world-stepper li::before { content:counter(step); margin-right:7px; font-size:10px; border:1px solid var(--line-strong); padding:3px 6px; border-radius:50%; }
+.world-stepper [aria-current] { color:var(--accent); }
+.world-reading { font-size:17px; line-height:1.9; }
+.world-reading > p { margin:0 0 20px; }
+.world-reading h3 { font-size:15px; line-height:1.5; margin:0 0 12px; }
+.world-example, .world-limit { padding:20px; background:var(--surface); border:1px solid var(--line); border-radius:12px; margin:24px 0; font-size:15px; line-height:1.8; }
+.world-limit { background:none; border-left:2px solid var(--warn); border-radius:0; border-top:0; border-right:0; border-bottom:0; padding:4px 0 4px 18px; }
+.world-example p, .world-limit p { margin:0; }
+.world-video { margin:24px 0; }
+.world-video-frame iframe { display:block; width:100%; aspect-ratio:16/9; border:0; border-radius:12px; background:#000; }
+.world-video-play { appearance:none; display:flex; align-items:center; gap:14px; width:100%; min-height:64px; padding:16px; text-align:left; cursor:pointer; background:var(--surface); border:1px solid var(--line-strong); border-radius:12px; color:var(--fg); font:600 15px/1.4 var(--font); }
+.world-video-play:hover { border-color:var(--accent); }
+.world-video-play small { display:block; font-weight:400; font-size:12px; color:var(--muted); margin-top:4px; }
+.world-video-icon { display:flex; align-items:center; justify-content:center; width:40px; height:40px; flex-shrink:0; border-radius:50%; background:var(--primary); color:var(--on-accent); font-size:13px; }
+.world-video .world-small { margin:10px 0 0; }
+.world-video a { color:var(--accent); }
+.world-sources { margin:26px 0; border-top:1px solid var(--line); padding-top:16px; font-size:12px; }
+.world-sources summary { cursor:pointer; min-height:44px; }
+.world-sources li { margin:8px 0 16px; }
+.world-sources a { color:var(--accent); overflow-wrap:anywhere; }
+.world-sources p { color:var(--muted); margin:4px 0; line-height:1.6; }
+.world-recall, .world-check { margin-top:26px; }
+.world-recall h3, .world-check h3 { font-size:20px; margin:0 0 14px; }
+.world-recall label { display:block; font-size:12px; color:var(--muted); margin:18px 0 8px; }
+.world-recall textarea { width:100%; font:16px/1.7 var(--font); padding:16px; border:1px solid var(--line-strong); border-radius:12px; background:var(--surface); color:var(--fg); resize:vertical; min-height:180px; }
+.world-check > p { font-size:14px; color:var(--muted); line-height:1.7; }
+.world-points label { display:flex; gap:12px; align-items:flex-start; padding:14px 0; border-bottom:1px solid var(--line); font-size:15px; cursor:pointer; }
+.world-points input { width:20px; height:20px; flex-shrink:0; margin:2px 0 0; accent-color:var(--accent); }
+.world-rating { border:0; padding:0; margin:26px 0 12px; display:flex; flex-wrap:wrap; gap:8px; }
+.world-rating legend { margin-bottom:14px; font-size:13px; }
+.world-rating label { padding:12px 10px; border:1px solid var(--line-strong); border-radius:8px; font-size:12px; cursor:pointer; min-height:44px; }
+.world-rating label:has(input:checked) { border-color:var(--accent); background:var(--accent-tint); }
+.world-rating input { accent-color:var(--accent); }
+.world-previous { margin-top:24px; font-size:13px; }
+.world-previous summary { cursor:pointer; min-height:44px; padding:12px 0; }
+.world-previous p { white-space:pre-wrap; overflow-wrap:anywhere; color:var(--muted); }
+.world-done { border:1px solid var(--line-strong); padding:20px; border-radius:12px; margin-top:26px; }
+.world-done h3 { margin:0 0 8px; font-size:20px; }
+.world-done p { margin:0; color:var(--muted); font-size:14px; line-height:1.7; }
+.world-lesson-actions { display:flex; flex-wrap:wrap; gap:10px; margin:24px 0 32px; }
+.world-lesson-nav { display:flex; justify-content:space-between; gap:12px; border-top:1px solid var(--line); padding:24px 0; }
+.world-warning, .world-error { border:1px solid var(--warn); padding:18px; border-radius:12px; margin-bottom:24px; color:var(--warn); font-size:14px; }
+.world-loading { color:var(--muted); padding:40px 0; }
+.world-footer { border-top:1px solid var(--line); padding:24px 16px; text-align:center; color:var(--muted); font-size:11px; }
+@media (max-width:960px) { .world-grid { grid-template-columns:310px minmax(0,1fr); gap:36px; } .world-main { padding:28px 20px 36px; } }
+@media (max-width:720px) {
+  .world-topbar { gap:10px; }
+  .world-brand { font-size:10px; letter-spacing:.06em; }
+  .world-brand span { display:none; }
+  .world-topbar .world-button { font-size:12px; padding:10px 12px; }
+  .world-main { padding:28px 18px 32px; }
+  .world-grid { display:flex; flex-direction:column; gap:32px; }
+  .world-page:not(.reading) .world-content { padding-top:0; }
+  .world-overview h2 { font-size:32px; margin:8px 0 16px; }
+  .world-overview > p { font-size:14px; }
+  .world-method { gap:12px; padding:16px 0; margin:20px 0 12px; font-size:11px; }
+  .world-overview h3, .world-coverage, .world-overview-note, .world-overview > .world-small:last-child { display:none; }
+  .reading .world-sidebar { display:none; }
+  .reading .world-content { padding-top:0; }
+  .world-course-head h1 { font-size:26px; }
+  .world-subtitle { font-size:15px; }
+  .world-course-counts { margin:10px 0 18px; }
+  .world-reading { font-size:16px; }
+  .world-lesson-summary { font-size:16px; }
+  .world-lesson-nav .world-button { font-size:12px; padding:12px; }
+}
+@media (prefers-reduced-motion:reduce) { .world-page *, .world-page *::before, .world-page *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }

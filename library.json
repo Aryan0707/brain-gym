@@ -116,7 +116,7 @@
    "views": 41962,
    "tier": "deep",
    "level": 3,
-   "step": 11,
+   "step": 12,
    "why": "Formal logic delivered in Hindi - premises, validity, soundness.",
    "prompt": "A valid argument that is still false (its form):",
    "thumb": "https://i.ytimg.com/vi/DxcBdFZPXaQ/mqdefault.jpg",
@@ -189,7 +189,7 @@
    "views": 1145115,
    "tier": "drill",
    "level": 3,
-   "step": 10,
+   "step": 11,
    "why": "Interactive fallacy drill - you guess wrong, then you never forget it.",
    "prompt": "The slippery slope I hear most in real life:",
    "thumb": "https://i.ytimg.com/vi/Qt4f7QrfRRc/mqdefault.jpg",
@@ -279,7 +279,7 @@
    "views": 6114,
    "tier": "deep",
    "level": 3,
-   "step": 8,
+   "step": 10,
    "why": "Deep dive: System 1 vs System 2 explained in Hindi.",
    "prompt": "A System 1 call that should have been System 2:",
    "thumb": "https://i.ytimg.com/vi/FG_VWStchdk/mqdefault.jpg",
@@ -347,7 +347,7 @@
    "views": 7458730,
    "tier": "deep",
    "level": 3,
-   "step": 7,
+   "step": 9,
    "why": "Twenty-one thinking traps in one pass - a pattern library.",
    "prompt": "Three traps, one name each:",
    "thumb": "https://i.ytimg.com/vi/nYYkRaU0xh8/mqdefault.jpg",
@@ -449,7 +449,7 @@
    "views": 67551,
    "tier": "drill",
    "level": 3,
-   "step": 13,
+   "step": 14,
    "why": "Attention neuroscience with Dr Jennifer Groh.",
    "prompt": "One thing draining my focus this week:",
    "thumb": "https://i.ytimg.com/vi/5wHyklLr_FA/mqdefault.jpg",
@@ -466,7 +466,7 @@
    "views": 34773,
    "tier": "drill",
    "level": 3,
-   "step": 12,
+   "step": 13,
    "why": "Your attention span is trainable - here is how.",
    "prompt": "My honest current focus window (minutes):",
    "thumb": "https://i.ytimg.com/vi/JKAjotzSrwA/mqdefault.jpg",
@@ -534,7 +534,7 @@
    "views": 17260,
    "tier": "deep",
    "level": 3,
-   "step": 10,
+   "step": 11,
    "why": "Thinking in Systems (Donella Meadows) in Hindi.",
    "prompt": "A feedback loop running inside my own life:",
    "thumb": "https://i.ytimg.com/vi/KetW0-gURJc/mqdefault.jpg",
@@ -551,7 +551,7 @@
    "views": 2274,
    "tier": "deep",
    "level": 3,
-   "step": 11,
+   "step": 12,
    "why": "Deep dive: the great mental models, long-form Hindi.",
    "prompt": "What shifted after the deep dive:",
    "thumb": "https://i.ytimg.com/vi/WyEnodich1w/mqdefault.jpg",
@@ -721,7 +721,7 @@
    "views": 5905673,
    "tier": "deep",
    "level": 3,
-   "step": 8,
+   "step": 9,
    "why": "Bayes as geometry - intuition instead of formula.",
    "prompt": "Bayes' rule in one sentence:",
    "thumb": "https://i.ytimg.com/vi/HZGCoVF3YvM/mqdefault.jpg",
@@ -840,7 +840,7 @@
    "views": 16127536,
    "tier": "drill",
    "level": 3,
-   "step": 6,
+   "step": 7,
    "why": "Lera Boroditsky: language literally shapes what you can think.",
    "prompt": "How a language I speak changes what I notice:",
    "thumb": "https://i.ytimg.com/vi/RKK7wGAYP6k/mqdefault.jpg",
@@ -857,7 +857,7 @@
    "views": 104268,
    "tier": "drill",
    "level": 3,
-   "step": 7,
+   "step": 8,
    "why": "Same idea, tighter cut - language and thought.",
    "prompt": "A thought I can only have in one language:",
    "thumb": "https://i.ytimg.com/vi/0TFNVP6r_-o/mqdefault.jpg",
@@ -942,7 +942,7 @@
    "views": null,
    "tier": "reel",
    "level": 3,
-   "step": 14,
+   "step": 15,
    "src": "ig",
    "vertical": true,
    "why": "Huberman with Dr Jenny Groh: what a thought actually is, in about a minute.",
@@ -1129,7 +1129,7 @@
    "views": 303758,
    "tier": "deep",
    "level": 2,
-   "step": 4,
+   "step": 5,
    "why": "Warikoo breaks procrastination into its causes and gives concrete ways to start.",
    "prompt": "The reason I put things off, and the trick I'll try tomorrow:",
    "thumb": "https://i.ytimg.com/vi/7KBxvfz4mQk/mqdefault.jpg",
@@ -1214,7 +1214,7 @@
    "views": 1136175,
    "tier": "drill",
    "level": 1,
-   "step": 6,
+   "step": 5,
    "why": "Stress vs anxiety: what the signs are and what actually lowers them.",
    "prompt": "Stress aur anxiety mein farq, aur ek tareeka jo main try karunga:",
    "thumb": "https://i.ytimg.com/vi/UsnJvYq-2BM/mqdefault.jpg",
@@ -1367,7 +1367,7 @@
    "views": 5869263,
    "tier": "drill",
    "level": 2,
-   "step": 5,
+   "step": 6,
    "why": "Caffeine keeps you awake by blocking adenosine, the chemical that builds sleep pressure all day.",
    "prompt": "How caffeine tricks my brain into feeling awake, and the catch:",
    "thumb": "https://i.ytimg.com/vi/foLf5Bi9qXs/mqdefault.jpg",
@@ -1452,7 +1452,7 @@
    "views": 1711956,
    "tier": "deep",
    "level": 3,
-   "step": 5,
+   "step": 7,
    "why": "Good ideas rarely arrive as a flash; they grow from slow hunches colliding with other people's ideas.",
    "prompt": "Where good ideas really come from, in my own words:",
    "thumb": "https://i.ytimg.com/vi/0af00UcTO-c/mqdefault.jpg",
@@ -1503,7 +1503,7 @@
    "views": 738823,
    "tier": "drill",
    "level": 3,
-   "step": 5,
+   "step": 7,
    "why": "Cal Newport on deep work: protect long, undistracted blocks, because shallow busywork crowds out real output.",
    "prompt": "What deep work is, and how I'll protect one block of it:",
    "thumb": "https://i.ytimg.com/vi/f7V76Ky-_v8/mqdefault.jpg",
@@ -1520,7 +1520,7 @@
    "views": 2018995,
    "tier": "drill",
    "level": 2,
-   "step": 3,
+   "step": 5,
    "why": "Feedback lands when it is specific, about behaviour, and framed so the other person can act on it.",
    "prompt": "The formula for feedback that lands, with an example from my life:",
    "thumb": "https://i.ytimg.com/vi/wtl5UrrgU8c/mqdefault.jpg",
@@ -1554,7 +1554,7 @@
    "views": 397602,
    "tier": "drill",
    "level": 2,
-   "step": 2,
+   "step": 4,
    "why": "What to do — and avoid — in your first job so you grow fast.",
    "prompt": "Pehli job mein main kaunsi galti avoid karunga, aur kyun:",
    "thumb": "https://i.ytimg.com/vi/QPnPqNPHUEI/mqdefault.jpg",
@@ -1571,7 +1571,7 @@
    "views": 981968,
    "tier": "drill",
    "level": 2,
-   "step": 2,
+   "step": 6,
    "why": "When anxious, ask what you're really afraid of — naming the fear shrinks it.",
    "prompt": "The one question to ask when I'm anxious, and my honest answer:",
    "thumb": "https://i.ytimg.com/vi/D8Gc6_S6i0k/mqdefault.jpg",
@@ -1605,7 +1605,7 @@
    "views": 233326,
    "tier": "drill",
    "level": 1,
-   "step": 3,
+   "step": 2,
    "why": "Sadhguru: you don't have to fight bad thoughts — stop feeding them and they lose power.",
    "prompt": "Bure vichaaron ko rokna zaroori kyun nahi — mere shabdon mein:",
    "thumb": "https://i.ytimg.com/vi/kgVbCQZVWWw/mqdefault.jpg",
@@ -1622,7 +1622,7 @@
    "views": 864420,
    "tier": "drill",
    "level": 2,
-   "step": 4,
+   "step": 7,
    "why": "Sadhguru on taking charge of your own mind instead of being run by it.",
    "prompt": "Man par kaabu paane ka matlab kya hai — ek example ke saath:",
    "thumb": "https://i.ytimg.com/vi/A7RWzJZY160/mqdefault.jpg",
@@ -1690,7 +1690,7 @@
    "views": 579449,
    "tier": "drill",
    "level": 3,
-   "step": 7,
+   "step": 9,
    "why": "Discipline is built through the brain's reward system, not raw willpower.",
    "prompt": "One neuroscience trick for discipline that I'll use this week:",
    "thumb": "https://i.ytimg.com/vi/HBR1yemoDCs/mqdefault.jpg",
@@ -1707,7 +1707,7 @@
    "views": 61951020,
    "tier": "drill",
    "level": 1,
-   "step": 5,
+   "step": 4,
    "why": "Tim Urban's 'instant gratification monkey' — why procrastinators delay, and why deadlines don't save life goals.",
    "prompt": "The procrastinator's brain in my own words, and my own 'no deadline' goal:",
    "thumb": "https://i.ytimg.com/vi/arj7oStGLkU/mqdefault.jpg",
@@ -1741,7 +1741,7 @@
    "views": 12303506,
    "tier": "drill",
    "level": 3,
-   "step": 8,
+   "step": 9,
    "why": "Exercise immediately improves mood and focus, and over time protects the brain's memory centre.",
    "prompt": "What exercise does for my brain, and the minimum I'll commit to:",
    "thumb": "https://i.ytimg.com/vi/BHY0FxzoKZE/mqdefault.jpg",
@@ -1758,7 +1758,7 @@
    "views": 4593193,
    "tier": "deep",
    "level": 3,
-   "step": 7,
+   "step": 9,
    "why": "SIP vs lumpsum: when to invest every month and when to invest at once.",
    "prompt": "SIP aur lumpsum mein farq, aur mere liye kaunsa theek hai:",
    "thumb": "https://i.ytimg.com/vi/1DRq8N7SpYc/mqdefault.jpg",
@@ -2046,7 +2046,7 @@
    "views": 2831030,
    "tier": "deep",
    "level": 3,
-   "step": 27,
+   "step": 28,
    "why": "Why a reverse shell beats a bind shell. The payoff of every web bug I will find.",
    "prompt": "In my own words, a reverse shell beats a bind shell because...",
    "thumb": "https://i.ytimg.com/vi/bXCeFPNWjsM/mqdefault.jpg",
@@ -2070,7 +2070,7 @@
    "views": 37413,
    "tier": "drill",
    "level": 3,
-   "step": 28,
+   "step": 29,
    "why": "User to root - the phase where CTF boxes are actually won.",
    "prompt": "In my own words, the first three things I check for Linux privesc are...",
    "thumb": "https://i.ytimg.com/vi/RFebj52xrLU/mqdefault.jpg",
@@ -2175,7 +2175,7 @@
    "views": 2178298,
    "tier": "deep",
    "level": 3,
-   "step": 29,
+   "step": 30,
    "why": "Memory, the stack, and the founding bug of exploitation. Watch before Module 11.",
    "prompt": "In my own words, a buffer overflow lets an attacker control... because...",
    "thumb": "https://i.ytimg.com/vi/1S0aBV-Waeo/mqdefault.jpg",
@@ -2219,7 +2219,7 @@
    "views": 403107,
    "tier": "drill",
    "level": 3,
-   "step": 25,
+   "step": 26,
    "why": "Authentication for AD, and the source of half of red-team tradecraft.",
    "prompt": "In my own words, Kerberos proves identity using tickets by...",
    "thumb": "https://i.ytimg.com/vi/kp5d8Yv3-0c/mqdefault.jpg",
@@ -2439,7 +2439,7 @@
    "views": 56432,
    "tier": "deep",
    "level": 3,
-   "step": 26,
+   "step": 27,
    "why": "SSRF explained by NahamSec, a working bug-bounty hunter. Added because the Loi Liang Yang SSRF demo carries no caption track and so cannot be recall-keyed.",
    "prompt": "In my own words, SSRF makes the server request... and the impact is...",
    "thumb": "https://i.ytimg.com/vi/Gk3_Q-3R6jc/mqdefault.jpg",
@@ -2461,7 +2461,7 @@
    "views": 1641500,
    "tier": "drill",
    "level": 2,
-   "step": 6,
+   "step": 8,
    "why": "A psychiatrist's explanation of why negative thoughts keep coming in a chain, how they drain energy and focus, and what you can do about them.",
    "prompt": "One negative thought that keeps pulling others after it, and what I'll do to break the chain:",
    "thumb": "https://i.ytimg.com/vi/0P6gQw2XMVE/mqdefault.jpg",
@@ -2478,7 +2478,7 @@
    "views": 590515,
    "tier": "drill",
    "level": 1,
-   "step": 7,
+   "step": 4,
    "why": "A neurologist explains why the brain leans toward negative thoughts and gives a simple pause, observe, breathe and shift routine to try.",
    "prompt": "One negative thought I keep returning to, and how I'll pause, breathe and shift it this week:",
    "thumb": "https://i.ytimg.com/vi/-Rpf5onjueQ/mqdefault.jpg",
@@ -2495,7 +2495,7 @@
    "views": 36964,
    "tier": "drill",
    "level": 1,
-   "step": 5,
+   "step": 3,
    "why": "A simple introduction to why the brain slips into automatic negative thoughts and basic habits for steering it toward calmer thinking.",
    "prompt": "One negative thought I keep falling into, and the positive replacement I'll practise:",
    "thumb": "https://i.ytimg.com/vi/m9JczzJGYGo/mqdefault.jpg",
@@ -2512,7 +2512,7 @@
    "views": 846855,
    "tier": "drill",
    "level": 1,
-   "step": 8,
+   "step": 5,
    "why": "A plain, practical look at why too much information and constant phone checking tire the mind, and small ways to cut distraction.",
    "prompt": "One thing that keeps pulling my focus away, and how I'll put it out of reach this week:",
    "thumb": "https://i.ytimg.com/vi/7uRyqg2NT-k/mqdefault.jpg",
@@ -2597,7 +2597,7 @@
    "views": 316790,
    "tier": "deep",
    "level": 2,
-   "step": 6,
+   "step": 5,
    "why": "A Hindi summary of Maria Konnikova's Mastermind, covering how to sharpen observation, manage emotions and think more creatively the way Sherlock Holmes does.",
    "prompt": "One everyday situation where I'll observe more carefully before I jump to a conclusion:",
    "thumb": "https://i.ytimg.com/vi/nx7_adOHzPk/mqdefault.jpg",
@@ -2614,7 +2614,7 @@
    "views": 571931,
    "tier": "deep",
    "level": 2,
-   "step": 8,
+   "step": 7,
    "why": "A worked comparison of monthly SIP, lump sum and step-up SIP, showing how the way you invest changes long-term results.",
    "prompt": "The way I invest today, and whether a step-up or lump sum would suit me better:",
    "thumb": "https://i.ytimg.com/vi/QTkOdDaXJUA/mqdefault.jpg",
@@ -2631,7 +2631,7 @@
    "views": 64571,
    "tier": "drill",
    "level": 1,
-   "step": 4,
+   "step": 2,
    "why": "A simple, practical checklist for running a job interview so you are less likely to hire the wrong person.",
    "prompt": "The next time I interview someone, the open-ended, experience-based question I'll ask to see how they really work is:",
    "thumb": "https://i.ytimg.com/vi/1j6yFyjalJk/mqdefault.jpg",
@@ -2648,7 +2648,7 @@
    "views": 9905,
    "tier": "deep",
    "level": 3,
-   "step": 12,
+   "step": 13,
    "why": "Daniel Kahneman himself on System 1 and System 2: how fast intuition and slow reasoning shape, and misjudge, what we believe.",
    "prompt": "A judgement I made fast this week, and how slow thinking would have checked it:",
    "thumb": "https://i.ytimg.com/vi/HVMywUcH-Uk/mqdefault.jpg",
@@ -2665,7 +2665,7 @@
    "views": 990,
    "tier": "deep",
    "level": 3,
-   "step": 9,
+   "step": 11,
    "why": "A university-style Hindi lecture on how heuristics and biases shape the decisions we make.",
    "prompt": "One shortcut I used to decide something this week, and the bias it can cause:",
    "thumb": "https://i.ytimg.com/vi/pAyrTuWqvOk/mqdefault.jpg",
@@ -2682,7 +2682,7 @@
    "views": 524180,
    "tier": "deep",
    "level": 3,
-   "step": 13,
+   "step": 14,
    "why": "MIT's introduction to system dynamics: using stocks, flows and feedback loops to think about a complex world.",
    "prompt": "A feedback loop in my own life, and what it keeps reinforcing:",
    "thumb": "https://i.ytimg.com/vi/o-Yp8A7BPE8/mqdefault.jpg",
@@ -2699,7 +2699,7 @@
    "views": 437310,
    "tier": "deep",
    "level": 3,
-   "step": 12,
+   "step": 13,
    "why": "Donella Meadows' 1977 Dartmouth lecture on the philosophy behind systems thinking and how to become aware of how systems behave.",
    "prompt": "A system I'm part of that I usually see only in pieces:",
    "thumb": "https://i.ytimg.com/vi/XL_lOoomRTA/mqdefault.jpg",
@@ -2716,7 +2716,7 @@
    "views": 2858,
    "tier": "deep",
    "level": 3,
-   "step": 8,
+   "step": 10,
    "why": "Northwestern neuroscientists on how dopamine builds habits, and how the same wiring can drive compulsive behaviour.",
    "prompt": "One habit of mine, and the loop (cue, action, reward) that keeps it going:",
    "thumb": "https://i.ytimg.com/vi/IksR-DAbzVQ/mqdefault.jpg",
@@ -2733,7 +2733,7 @@
    "views": 1640,
    "tier": "deep",
    "level": 3,
-   "step": 9,
+   "step": 11,
    "why": "Caltech's Colin Camerer on new research linking machine learning and neuroscience to how habits form.",
    "prompt": "What the research says about why my habit sticks, in my own words:",
    "thumb": "https://i.ytimg.com/vi/3kHZS6xyKfo/mqdefault.jpg",
@@ -2750,7 +2750,7 @@
    "views": 748669,
    "tier": "deep",
    "level": 3,
-   "step": 10,
+   "step": 11,
    "why": "Sleep scientist Matthew Walker on what sleep does for the brain and body, and what goes wrong without it.",
    "prompt": "One thing I will change about my sleep, and why it should work:",
    "thumb": "https://i.ytimg.com/vi/aXflBZXAucQ/mqdefault.jpg",
@@ -2767,7 +2767,7 @@
    "views": 3761,
    "tier": "deep",
    "level": 3,
-   "step": 9,
+   "step": 10,
    "why": "A physiology class, in Hindi, on how the heart and circulation respond to exercise.",
    "prompt": "What happens in my body during a workout, step by step:",
    "thumb": "https://i.ytimg.com/vi/cDT3bx21UVo/mqdefault.jpg",
@@ -2801,7 +2801,7 @@
    "views": 489084,
    "tier": "deep",
    "level": 3,
-   "step": 10,
+   "step": 11,
    "why": "A Google tech talk on what cognitive neuroscience shows happens in the brain during mindfulness meditation.",
    "prompt": "What mindfulness changes in the brain, and how I could test it on myself:",
    "thumb": "https://i.ytimg.com/vi/sf6Q0G1iHBI/mqdefault.jpg",
@@ -2818,7 +2818,7 @@
    "views": 2031,
    "tier": "deep",
    "level": 3,
-   "step": 9,
+   "step": 10,
    "why": "A long, detailed walk through Stoic philosophy in Hindi: Marcus Aurelius, Seneca and Epictetus.",
    "prompt": "One Stoic idea I will use this week, and where it will be tested:",
    "thumb": "https://i.ytimg.com/vi/_S-LY08GwBY/mqdefault.jpg",
@@ -2835,7 +2835,7 @@
    "views": 79735,
    "tier": "deep",
    "level": 3,
-   "step": 5,
+   "step": 6,
    "why": "Why the stock market and the real economy can tell different stories, explained with CFA-level ideas.",
    "prompt": "Why a rising market does not always mean a healthy economy, in my words:",
    "thumb": "https://i.ytimg.com/vi/Xk4Cu17u9Bs/mqdefault.jpg",
@@ -2852,7 +2852,7 @@
    "views": 768,
    "tier": "deep",
    "level": 3,
-   "step": 15,
+   "step": 16,
    "why": "A university-course lecture, in Hindi, on how memories are consolidated, the hippocampus's role, and what Korsakoff's syndrome reveals.",
    "prompt": "How a memory becomes long-term, and what damage to the hippocampus shows:",
    "thumb": "https://i.ytimg.com/vi/MyazDgsQpB4/mqdefault.jpg",
@@ -2869,7 +2869,7 @@
    "views": 123787,
    "tier": "deep",
    "level": 3,
-   "step": 16,
+   "step": 17,
    "why": "MIT's Nancy Kanwisher on how the brain handles attention and awareness, from a university neuroscience course.",
    "prompt": "What attention does to what I perceive, and one way I could test it:",
    "thumb": "https://i.ytimg.com/vi/B4a0WdGp52g/mqdefault.jpg",
@@ -2886,7 +2886,7 @@
    "views": 28494,
    "tier": "deep",
    "level": 3,
-   "step": 9,
+   "step": 10,
    "why": "A Hindi statistics lecture on Bayes estimation: how Bayes estimates are defined and worked through with examples.",
    "prompt": "How a Bayes estimate differs from a plain average, with a small example:",
    "thumb": "https://i.ytimg.com/vi/KEwbJmtR2B0/mqdefault.jpg",
@@ -2903,7 +2903,7 @@
    "views": 193186,
    "tier": "deep",
    "level": 3,
-   "step": 10,
+   "step": 11,
    "why": "MIT's probabilistic systems course on Bayesian statistical inference: updating beliefs from data.",
    "prompt": "How prior belief and new data combine in a Bayesian update, in my own words:",
    "thumb": "https://i.ytimg.com/vi/1jDBM9UM9xk/mqdefault.jpg",
@@ -2920,7 +2920,7 @@
    "views": 54408615,
    "tier": "deep",
    "level": 3,
-   "step": 9,
+   "step": 10,
    "why": "Stanford lecturer Matt Abrahams on practical techniques for communicating clearly, including when you must speak on the spot.",
    "prompt": "One technique for speaking on the spot, and when I will use it:",
    "thumb": "https://i.ytimg.com/vi/HAnw168huqA/mqdefault.jpg",
@@ -2937,7 +2937,7 @@
    "views": 170489,
    "tier": "deep",
    "level": 3,
-   "step": 8,
+   "step": 9,
    "why": "A close look at ten rhetorical devices, from logos, ethos and pathos to thesis and distinction, and how each persuades.",
    "prompt": "One rhetorical device I will use in my next talk, and the effect it creates:",
    "thumb": "https://i.ytimg.com/vi/qAert4eHBRM/mqdefault.jpg",
@@ -2954,7 +2954,7 @@
    "views": 55494,
    "tier": "deep",
    "level": 3,
-   "step": 9,
+   "step": 10,
    "why": "A PPFAS lecture, in Hindi, on the biases of prospect theory and how they push investors into poor decisions.",
    "prompt": "A bias that has affected one of my money decisions, and how I would guard against it:",
    "thumb": "https://i.ytimg.com/vi/PeVn8gpOMZo/mqdefault.jpg",
@@ -2971,7 +2971,7 @@
    "views": 95642,
    "tier": "deep",
    "level": 3,
-   "step": 10,
+   "step": 11,
    "why": "Nobel laureate Daniel Kahneman on behavioural finance: how psychology explains the way people really handle money.",
    "prompt": "How my own judgement about money differs from a rational investor's:",
    "thumb": "https://i.ytimg.com/vi/RwdNeMD_-0c/mqdefault.jpg",
@@ -2988,7 +2988,7 @@
    "views": 5732758,
    "tier": "deep",
    "level": 3,
-   "step": 7,
+   "step": 9,
    "why": "A London Business School talk on six negotiation strategies, aimed at managers who negotiate for a living.",
    "prompt": "A negotiation I have coming up, and which strategy I will use in it:",
    "thumb": "https://i.ytimg.com/vi/uKbcmlKb81c/mqdefault.jpg",
@@ -3005,7 +3005,7 @@
    "views": 342901,
    "tier": "deep",
    "level": 3,
-   "step": 6,
+   "step": 8,
    "why": "Former FBI hostage negotiator Chris Voss teaches his negotiation method in a live MasterClass session.",
    "prompt": "One Voss tactic I will try in my next negotiation, and why:",
    "thumb": "https://i.ytimg.com/vi/18Dv4nW9veU/mqdefault.jpg",
@@ -3022,7 +3022,7 @@
    "views": 1519,
    "tier": "deep",
    "level": 3,
-   "step": 30,
+   "step": 31,
    "why": "A university lecture on dynamic malware analysis: running a sample safely and watching what it does.",
    "prompt": "What dynamic analysis shows that reading the code alone cannot:",
    "thumb": "https://i.ytimg.com/vi/VWXb0hritC8/mqdefault.jpg",
@@ -3039,7 +3039,7 @@
    "views": 23643,
    "tier": "deep",
    "level": 3,
-   "step": 31,
+   "step": 32,
    "why": "A college lecture opening the Practical Malware Analysis course: the primer and the basic static techniques.",
    "prompt": "What static analysis can tell me about a file before I ever run it:",
    "thumb": "https://i.ytimg.com/vi/ZE3sz-3-LPQ/mqdefault.jpg",
@@ -3056,7 +3056,7 @@
    "views": 1578,
    "tier": "deep",
    "level": 3,
-   "step": 7,
+   "step": 8,
    "why": "Anders Ericsson, the researcher behind deliberate practice, on how it works and why it builds expertise.",
    "prompt": "How my practice differs from deliberate practice, and one change to make:",
    "thumb": "https://i.ytimg.com/vi/WuViI9VvXX4/mqdefault.jpg",
@@ -3073,7 +3073,7 @@
    "views": 881,
    "tier": "deep",
    "level": 3,
-   "step": 6,
+   "step": 7,
    "why": "Economic historian Bob Allen's Tawney Lecture on why the Industrial Revolution happened in Britain.",
    "prompt": "What made Britain different, and how I would test that explanation:",
    "thumb": "https://i.ytimg.com/vi/1IwWkKAq9dk/mqdefault.jpg",
@@ -3431,7 +3431,841 @@
     "Needs split into material needs (survival, physical living conditions) and non-material needs (intellectual development, satisfaction); culture answers both.",
     "In sociology, science, religion and magic sit in the non-material culture, which is why magic is studied alongside religion rather than as a science."
    ]
+  },
+  {
+   "id": "61V9tpuBUxU",
+   "module": "think",
+   "lang": "hi",
+   "title": "UGC NET Paper 1 | UGC NET Paper1 Inductive and Deductive Argument | UGC NET Paper 1Classes",
+   "channel": "PW UGC NET",
+   "dur": 2141,
+   "views": 22076,
+   "tier": "deep",
+   "level": 2,
+   "why": "Compare arguments built from rules with arguments built from observations.",
+   "prompt": "Give one deductive and one inductive argument. What makes each convincing?",
+   "thumb": "https://i.ytimg.com/vi/61V9tpuBUxU/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Deduction and induction",
+   "step": 10
+  },
+  {
+   "id": "-X8Xfl0JdTQ",
+   "module": "think",
+   "lang": "en",
+   "title": "Karl Popper, Science, & Pseudoscience: Crash Course Philosophy #8",
+   "channel": "CrashCourse",
+   "dur": 537,
+   "views": 2929697,
+   "tier": "drill",
+   "level": 3,
+   "why": "Use Popper’s approach to ask whether a claim can be tested and challenged.",
+   "prompt": "What observation could show that a claim you believe is wrong?",
+   "thumb": "https://i.ytimg.com/vi/-X8Xfl0JdTQ/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Falsifiability",
+   "step": 14
+  },
+  {
+   "id": "QSryiroslwU",
+   "module": "judge",
+   "lang": "hi",
+   "title": "What is Anchoring Bias in Hindi | Behavioural Economics | Behavioural Science | The Brand Batti",
+   "channel": "BrandIns AI | Brand Insights AI",
+   "dur": 165,
+   "views": 182,
+   "tier": "drill",
+   "level": 2,
+   "why": "Study how an initial number can influence a later judgment.",
+   "prompt": "Describe an anchor you encountered and how you would estimate independently.",
+   "thumb": "https://i.ytimg.com/vi/QSryiroslwU/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Anchoring bias",
+   "step": 7
+  },
+  {
+   "id": "gPg2sBCNzjc",
+   "module": "judge",
+   "lang": "hi",
+   "title": "Survivorship Bias आप को चालाकी से जीना सिखा देगा | Psychology Facts and Logical Fallacies | Yebook",
+   "channel": "yebook",
+   "dur": 562,
+   "views": 270859,
+   "tier": "drill",
+   "level": 2,
+   "why": "Look for the missing failures when judging a success story.",
+   "prompt": "Whose outcomes are missing from a success story you recently heard?",
+   "thumb": "https://i.ytimg.com/vi/gPg2sBCNzjc/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Survivorship bias",
+   "step": 8
+  },
+  {
+   "id": "nxeutSkk6YE",
+   "module": "mind",
+   "lang": "hi",
+   "title": "Working Memory - Human Memory | Class 11 Psychology Chapter 7",
+   "channel": "Magnet Brains",
+   "dur": 2280,
+   "views": 12518,
+   "tier": "deep",
+   "level": 2,
+   "why": "Understand the limited workspace you use while thinking and learning.",
+   "prompt": "Explain working memory and give an example of a task that overloads it.",
+   "thumb": "https://i.ytimg.com/vi/nxeutSkk6YE/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Working memory",
+   "step": 12
+  },
+  {
+   "id": "tonUDPIlgvE",
+   "module": "mind",
+   "lang": "hi",
+   "title": "Memory Consolidation in Hindi 2020 #MemoryConsolidation2020",
+   "channel": "Achiever's Hive",
+   "dur": 463,
+   "views": 5607,
+   "tier": "drill",
+   "level": 3,
+   "why": "Go beyond memory tricks to study how memories become more stable.",
+   "prompt": "How does consolidation differ from initially taking in information?",
+   "thumb": "https://i.ytimg.com/vi/tonUDPIlgvE/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Memory consolidation",
+   "step": 18
+  },
+  {
+   "id": "LgnBSdcxPD0",
+   "module": "decide",
+   "lang": "en",
+   "title": "Systems Thinking: Causal Loop Diagrams",
+   "channel": "DonnaGurule",
+   "dur": 1001,
+   "views": 186283,
+   "tier": "deep",
+   "level": 2,
+   "why": "Learn to draw the feedback relationships inside a system.",
+   "prompt": "Draw a feedback loop with at least three variables. Explain its direction.",
+   "thumb": "https://i.ytimg.com/vi/LgnBSdcxPD0/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Causal loops",
+   "step": 10
+  },
+  {
+   "id": "aDRFKtdZ5RA",
+   "module": "decide",
+   "lang": "hi",
+   "title": "Nash Equilibrium in Hindi",
+   "channel": "Dr Naved Classes (Management Classes)",
+   "dur": 601,
+   "views": 92339,
+   "tier": "drill",
+   "level": 3,
+   "why": "Study decisions where your result depends on other people’s choices.",
+   "prompt": "Explain a Nash equilibrium using a simple two-person decision.",
+   "thumb": "https://i.ytimg.com/vi/aDRFKtdZ5RA/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Nash equilibrium",
+   "step": 15
+  },
+  {
+   "id": "L5pAob9FbVA",
+   "module": "numbers",
+   "lang": "hi",
+   "title": "Correlation | Covariance | Causation | Difference between them | Statistics",
+   "channel": "Tech Classes",
+   "dur": 556,
+   "views": 57131,
+   "tier": "drill",
+   "level": 2,
+   "why": "Separate an observed relationship from an explanation of its cause.",
+   "prompt": "Give a correlation that might have a third-variable explanation.",
+   "thumb": "https://i.ytimg.com/vi/L5pAob9FbVA/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Correlation and causation",
+   "step": 8
+  },
+  {
+   "id": "NJsK7wvDk6E",
+   "module": "numbers",
+   "lang": "hi",
+   "title": "Lec-43: Central Limit Theorem | Probability and Statistics",
+   "channel": "Gate Smashers",
+   "dur": 736,
+   "views": 139992,
+   "tier": "drill",
+   "level": 3,
+   "why": "Study sampling distributions after learning probability and conditional reasoning.",
+   "prompt": "What does the central limit theorem say about sample means? What conditions matter?",
+   "thumb": "https://i.ytimg.com/vi/NJsK7wvDk6E/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Central limit theorem",
+   "step": 12
+  },
+  {
+   "id": "MRX0yV_jkyA",
+   "module": "speak",
+   "lang": "hi",
+   "title": "How to Improve LISTENING SKILLS | 5 SECRET TIPS  to Increase Listening Power | DEEPAK BAJAJ",
+   "channel": "DEEPAK BAJAJ",
+   "dur": 485,
+   "views": 170691,
+   "tier": "drill",
+   "level": 2,
+   "why": "Practice listening before trying to persuade or respond.",
+   "prompt": "Name one listening habit you will practice in your next conversation.",
+   "thumb": "https://i.ytimg.com/vi/MRX0yV_jkyA/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Active listening",
+   "step": 6
+  },
+  {
+   "id": "aH-n4233M7k",
+   "module": "speak",
+   "lang": "hi",
+   "title": "Ethos, Pathos, Logos (HINDI)",
+   "channel": "Dr. Ramnath Dixit",
+   "dur": 514,
+   "views": 20883,
+   "tier": "drill",
+   "level": 3,
+   "why": "Build a speech using credibility, emotion, and reasoning.",
+   "prompt": "Make a short argument and identify its ethos, pathos, and logos.",
+   "thumb": "https://i.ytimg.com/vi/aH-n4233M7k/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Ethos, pathos, and logos",
+   "step": 11
+  },
+  {
+   "id": "k51g0WWZkh0",
+   "module": "habits",
+   "lang": "hi",
+   "title": "The 4 Steps to the Habit Loop in Atomic Habits by James Clear | Pramod Soni | in Hindi",
+   "channel": "Pramod Soni",
+   "dur": 234,
+   "views": 6598,
+   "tier": "drill",
+   "level": 2,
+   "why": "Break a habit into its cue, craving, response, and reward.",
+   "prompt": "Map one of your habits onto the four parts of the habit loop.",
+   "thumb": "https://i.ytimg.com/vi/k51g0WWZkh0/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Habit loop",
+   "step": 7
+  },
+  {
+   "id": "SA-m_v_pcFU",
+   "module": "habits",
+   "lang": "hi",
+   "title": "Simple & Easy way to build good habit |  आदत बनाने का आसान तरीका | The implementation intention",
+   "channel": "Sunny Saurya",
+   "dur": 261,
+   "views": 25,
+   "tier": "drill",
+   "level": 2,
+   "why": "Turn a vague intention into a specific situation and action.",
+   "prompt": "Write an if-then plan for one small behavior you want to repeat.",
+   "thumb": "https://i.ytimg.com/vi/SA-m_v_pcFU/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Implementation intentions",
+   "step": 8
+  },
+  {
+   "id": "CervmCsaJWo",
+   "module": "energy",
+   "lang": "hi",
+   "title": "Circadian Rhythms and Human Health in Hindi | Basic Science Series",
+   "channel": "Dr. Lokender Kumar हिन्दी",
+   "dur": 385,
+   "views": 18977,
+   "tier": "drill",
+   "level": 2,
+   "why": "Understand the body clock behind the sleep-wake cycle.",
+   "prompt": "Explain circadian rhythms and identify one everyday timing cue.",
+   "thumb": "https://i.ytimg.com/vi/CervmCsaJWo/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Circadian rhythms",
+   "step": 8
+  },
+  {
+   "id": "-ekNRgBOKkU",
+   "module": "energy",
+   "lang": "hi",
+   "title": "Lactate Threshold | Anaerobic Threshold | Simply Explained in Hindi",
+   "channel": "Kausik Chakraborty, Ph.D.",
+   "dur": 189,
+   "views": 7213,
+   "tier": "drill",
+   "level": 3,
+   "why": "Add an exercise-physiology concept to your understanding of energy and training.",
+   "prompt": "What is lactate threshold, and how is it related to aerobic performance?",
+   "thumb": "https://i.ytimg.com/vi/-ekNRgBOKkU/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Lactate threshold",
+   "step": 12
+  },
+  {
+   "id": "5aSlzwEx3vk",
+   "module": "money",
+   "lang": "hi",
+   "title": "What is Asset Allocation and its Importance (Hindi) - Franklin Templeton India",
+   "channel": "Franklin Templeton India",
+   "dur": 303,
+   "views": 3720,
+   "tier": "drill",
+   "level": 2,
+   "why": "Understand how money can be distributed across different asset classes.",
+   "prompt": "How is asset allocation different from choosing an individual investment?",
+   "thumb": "https://i.ytimg.com/vi/5aSlzwEx3vk/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Asset allocation",
+   "step": 8
+  },
+  {
+   "id": "C1j3asSi2tA",
+   "module": "money",
+   "lang": "en",
+   "title": "Does diversification increase your returns and reduce risk?",
+   "channel": "Zerodha Varsity",
+   "dur": 469,
+   "views": 13713,
+   "tier": "drill",
+   "level": 3,
+   "why": "Distinguish the kinds of portfolio risk diversification can address.",
+   "prompt": "Which risk can diversification reduce, and which risk can remain?",
+   "thumb": "https://i.ytimg.com/vi/C1j3asSi2tA/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Diversification and risk",
+   "step": 12
+  },
+  {
+   "id": "kivI2poLOL0",
+   "module": "people",
+   "lang": "hi",
+   "title": "Attachment Theory |  Learn Psychology in Hindi | Attachment Styles & Disorders| John Bowlby",
+   "channel": "Transform Life",
+   "dur": 840,
+   "views": 9755,
+   "tier": "drill",
+   "level": 3,
+   "why": "Study Bowlby’s theory as a framework for understanding relationships.",
+   "prompt": "What does attachment theory describe? Explain without labeling or diagnosing someone.",
+   "thumb": "https://i.ytimg.com/vi/kivI2poLOL0/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Attachment theory",
+   "step": 10
+  },
+  {
+   "id": "LciEwUtPb6s",
+   "module": "learn",
+   "lang": "en",
+   "title": "Why SPACING & INTERLEAVING work like magic for your learning",
+   "channel": "Senpai Learn",
+   "dur": 208,
+   "views": 28669,
+   "tier": "drill",
+   "level": 2,
+   "why": "Compare study schedules instead of relying only on repeated rereading.",
+   "prompt": "Describe a study session that uses both spacing and interleaving.",
+   "thumb": "https://i.ytimg.com/vi/LciEwUtPb6s/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Spacing and interleaving",
+   "step": 6
+  },
+  {
+   "id": "VBU_nccbst8",
+   "module": "learn",
+   "lang": "hi",
+   "title": "Meta Cognition Theory | मेटा संज्ञान / बहु संज्ञान / परा संज्ञान | CTET | CDP | Exam 8080",
+   "channel": "Exam 8080",
+   "dur": 942,
+   "views": 5147,
+   "tier": "deep",
+   "level": 3,
+   "why": "Learn to examine and adjust your own thinking and learning process.",
+   "prompt": "How would you plan, monitor, and evaluate learning a difficult topic?",
+   "thumb": "https://i.ytimg.com/vi/VBU_nccbst8/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Metacognition",
+   "step": 9
+  },
+  {
+   "id": "qcvs0pwKt2g",
+   "module": "career",
+   "lang": "hi",
+   "title": "Opportunity Cost - Introduction | Class 11 Economics (Microeconomics) Chapter 1",
+   "channel": "Magnet Brains",
+   "dur": 299,
+   "views": 83494,
+   "tier": "drill",
+   "level": 1,
+   "why": "Give career choices a foundation in the alternatives you give up.",
+   "prompt": "What is the opportunity cost of one choice about your work or study time?",
+   "thumb": "https://i.ytimg.com/vi/qcvs0pwKt2g/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Opportunity cost",
+   "step": 3
+  },
+  {
+   "id": "dFbTr8e2ols",
+   "module": "career",
+   "lang": "hi",
+   "title": "How to Negotiate : Batna Analysis in Hindi/English",
+   "channel": "Marketing Mad",
+   "dur": 322,
+   "views": 3729,
+   "tier": "drill",
+   "level": 2,
+   "why": "Prepare a fallback before entering a negotiation.",
+   "prompt": "What is your best alternative if a negotiation produces no agreement?",
+   "thumb": "https://i.ytimg.com/vi/dFbTr8e2ols/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "BATNA",
+   "step": 6
+  },
+  {
+   "id": "l_Y65D7RoY4",
+   "module": "calm",
+   "lang": "hi",
+   "title": "Explained Cognitive Behavioral Therapy in Hindi for Anxiety, Negativity #CBT",
+   "channel": "Dr Neha Mehta",
+   "dur": 679,
+   "views": 104531,
+   "tier": "drill",
+   "level": 2,
+   "why": "Learn the CBT framework connecting thoughts, feelings, and behavior.",
+   "prompt": "Describe the thought-feeling-behavior link using a small everyday example.",
+   "thumb": "https://i.ytimg.com/vi/l_Y65D7RoY4/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Cognitive behavioral therapy",
+   "step": 9
+  },
+  {
+   "id": "w0bNrcvVhDk",
+   "module": "world",
+   "lang": "hi",
+   "title": "Comparative Advantage Theory (Hindi) | Davis Ricardo Theory | International Economics | Sanat Sir",
+   "channel": "ECOHOLICS - Largest Platform for Economics",
+   "dur": 386,
+   "views": 273746,
+   "tier": "drill",
+   "level": 2,
+   "why": "Understand trade through relative opportunity costs.",
+   "prompt": "Why can two people benefit from trade even if one is better at both tasks?",
+   "thumb": "https://i.ytimg.com/vi/w0bNrcvVhDk/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Comparative advantage",
+   "step": 5
+  },
+  {
+   "id": "f_yos_-taF4",
+   "module": "world",
+   "lang": "hi",
+   "title": "Economics for All Govt. Exams | Monetary Policy | Economics Concept Videos | By Rashid Sir",
+   "channel": "Careerwill SSC",
+   "dur": 1969,
+   "views": 12501,
+   "tier": "deep",
+   "level": 3,
+   "why": "Connect inflation and banking to central-bank policy mechanisms.",
+   "prompt": "Explain one route through which a change in interest rates can affect the economy.",
+   "thumb": "https://i.ytimg.com/vi/f_yos_-taF4/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Monetary policy",
+   "step": 8
+  },
+  {
+   "id": "yUeI4nqvNs8",
+   "module": "cyber",
+   "lang": "hi",
+   "title": "Basics Of Digital Signature Explained in Hindi",
+   "channel": "5 Minutes Engineering",
+   "dur": 481,
+   "views": 837068,
+   "tier": "drill",
+   "level": 2,
+   "why": "Build on hashing and public-key cryptography to understand authenticity.",
+   "prompt": "What does a digital signature check, and how does it differ from encryption?",
+   "thumb": "https://i.ytimg.com/vi/yUeI4nqvNs8/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Digital signatures",
+   "step": 25
+  },
+  {
+   "id": "M44bM_Xw2R8",
+   "module": "cyber",
+   "lang": "hi",
+   "title": "Lect 35: STRIDE Threat Model explained| Cyber Security Full Course in Hindi/Urdu",
+   "channel": "CodeGuard Academy ",
+   "dur": 815,
+   "views": 504,
+   "tier": "drill",
+   "level": 3,
+   "why": "Move from individual vulnerabilities to reviewing a system’s design.",
+   "prompt": "Choose a simple app and describe one STRIDE threat and a possible mitigation.",
+   "thumb": "https://i.ytimg.com/vi/M44bM_Xw2R8/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "STRIDE threat modeling",
+   "step": 33
+  },
+  {
+   "id": "w447Rjf31mM",
+   "module": "dark",
+   "lang": "hi",
+   "title": "Sociology for UPSC : Durkheim - RELIGION - Lecture 73",
+   "channel": "Sleepy Classes IAS",
+   "dur": 1487,
+   "views": 264286,
+   "tier": "deep",
+   "level": 3,
+   "why": "Study religion through a sociological framework after symbols, cults, and history.",
+   "prompt": "Explain Durkheim’s sacred/profane distinction and its social role.",
+   "thumb": "https://i.ytimg.com/vi/w447Rjf31mM/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Durkheim: religion and society",
+   "step": 17
+  },
+  {
+   "id": "8oXa-3WOyB4",
+   "module": "dark",
+   "lang": "hi",
+   "title": "Sociology for UPSC : WEBER - Protestant Ethics and Spirit of Capitalism - Lecture 76",
+   "channel": "Sleepy Classes IAS",
+   "dur": 1245,
+   "views": 230842,
+   "tier": "deep",
+   "level": 3,
+   "why": "Compare a second sociological perspective on religion and social change.",
+   "prompt": "Compare Weber’s question about religion and economic life with Durkheim’s approach.",
+   "thumb": "https://i.ytimg.com/vi/8oXa-3WOyB4/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Weber: religion and economic life",
+   "step": 18
+  },
+  {
+   "id": "5VUpo28aAks",
+   "module": "people",
+   "lang": "en",
+   "title": "Why I’m against empathy | Paul Bloom",
+   "channel": "Big Think",
+   "dur": 295,
+   "views": 519894,
+   "tier": "drill",
+   "level": 3,
+   "why": "Examine Paul Bloom’s critique of emotional empathy alongside earlier emotional-intelligence lessons.",
+   "prompt": "What distinction does Bloom draw between emotional empathy and compassion? Evaluate his argument.",
+   "thumb": "https://i.ytimg.com/vi/5VUpo28aAks/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Empathy and compassion",
+   "step": 11
+  },
+  {
+   "id": "V3vhXQy48jo",
+   "module": "calm",
+   "lang": "en",
+   "title": "Intrusive Thoughts and Overthinking: The Skill of Cognitive Defusion 20/30",
+   "channel": "Therapy in a Nutshell",
+   "dur": 1204,
+   "views": 6803403,
+   "tier": "deep",
+   "level": 3,
+   "why": "Explore an ACT concept about your relationship with difficult thoughts.",
+   "prompt": "How is observing a thought different from treating it as a fact?",
+   "thumb": "https://i.ytimg.com/vi/V3vhXQy48jo/mqdefault.jpg",
+   "src": "yt",
+   "vertical": false,
+   "concept": "Cognitive defusion",
+   "step": 12
   }
  ],
- "reel_note": "Instagram embeds verified in-browser (video element rendered). Signed IG CDN thumbnail URLs expire, so reels render a text tile instead."
+ "reel_note": "Instagram embeds verified in-browser (video element rendered). Signed IG CDN thumbnail URLs expire, so reels render a text tile instead.",
+ "curriculum": {
+  "think": {
+   "layers": [
+    {
+     "goal": "Ask clear questions and separate a claim from its supporting evidence.",
+     "checkpoint": "Take a claim you heard today. State the question, evidence, and one assumption."
+    },
+    {
+     "goal": "Build arguments and recognize weak reasoning, deduction, and induction.",
+     "checkpoint": "Give a deductive argument and an inductive argument. Identify a possible weakness in each."
+    },
+    {
+     "goal": "Evaluate logical structure and test whether a claim could be disproved.",
+     "checkpoint": "Choose a claim. Explain what would count as evidence against it and check for a fallacy."
+    }
+   ]
+  },
+  "judge": {
+   "layers": [
+    {
+     "goal": "Notice that judgment can be biased, including toward evidence you already agree with.",
+     "checkpoint": "Explain confirmation bias using an example from your own life."
+    },
+    {
+     "goal": "Recognize specific traps: anchors, missing failures, and misleading first impressions.",
+     "checkpoint": "Describe an anchor and a survivorship bias. What information would you seek before deciding?"
+    },
+    {
+     "goal": "Compare heuristics and reflect on how several biases can shape one decision.",
+     "checkpoint": "Analyze a past decision using two biases. Explain a change you would make to the process."
+    }
+   ]
+  },
+  "mind": {
+   "layers": [
+    {
+     "goal": "Understand what memory and attention do before trying improvement techniques.",
+     "checkpoint": "Explain how remembering differs from paying attention."
+    },
+    {
+     "goal": "Practice recall and understand the limits of working memory.",
+     "checkpoint": "Recall a lesson with the video closed. Explain how you would reduce overload while studying."
+    },
+    {
+     "goal": "Explore memory consolidation and the neuroscience of attention.",
+     "checkpoint": "Explain consolidation and connect it to one idea from a deeper attention lesson."
+    }
+   ]
+  },
+  "decide": {
+   "layers": [
+    {
+     "goal": "Use mental models and see a problem as part of a system.",
+     "checkpoint": "List the parts of one everyday system and explain how two parts affect each other."
+    },
+    {
+     "goal": "Draw feedback loops and use inversion to examine a decision.",
+     "checkpoint": "Draw one reinforcing or balancing loop. Name a change that could alter it."
+    },
+    {
+     "goal": "Reason about system dynamics and decisions involving other people’s choices.",
+     "checkpoint": "Explain a Nash equilibrium, then describe a feedback or delay that complicates a real decision."
+    }
+   ]
+  },
+  "numbers": {
+   "layers": [
+    {
+     "goal": "Read basic probability, compounding, and statistical claims carefully.",
+     "checkpoint": "Explain a probability in plain language and name one misleading way to present a number."
+    },
+    {
+     "goal": "Use conditional probability and distinguish correlation from causation.",
+     "checkpoint": "Give a conditional-probability example. Explain why an observed correlation alone is insufficient."
+    },
+    {
+     "goal": "Connect sampling distributions with Bayesian inference.",
+     "checkpoint": "Describe a distribution of sample means and explain how Bayesian inference updates a belief."
+    }
+   ]
+  },
+  "speak": {
+   "layers": [
+    {
+     "goal": "Build a useful vocabulary and express a simple idea clearly.",
+     "checkpoint": "Explain one idea in three sentences using familiar words."
+    },
+    {
+     "goal": "Listen actively and practice clear conversational responses.",
+     "checkpoint": "Paraphrase someone’s point before answering. Describe what made your response clearer."
+    },
+    {
+     "goal": "Analyze persuasion, language, and structured public speaking.",
+     "checkpoint": "Make a short argument with credibility, emotion, and evidence. Identify each part."
+    }
+   ]
+  },
+  "habits": {
+   "layers": [
+    {
+     "goal": "Recognize procrastination and the difference between intention and action.",
+     "checkpoint": "Describe one situation in which you delay a task and what happens next."
+    },
+    {
+     "goal": "Map a habit loop and write a specific if-then plan.",
+     "checkpoint": "Name a cue, craving, response, and reward. Write an if-then plan that changes one part."
+    },
+    {
+     "goal": "Examine mechanisms behind habit formation and compulsive behavior.",
+     "checkpoint": "Connect a neuroscience concept from a lesson to a habit, and separate explanation from speculation."
+    }
+   ]
+  },
+  "energy": {
+   "layers": [
+    {
+     "goal": "Understand basic relationships among sleep, movement, stress, and energy.",
+     "checkpoint": "Explain one connection between sleep or movement and how you feel during the day."
+    },
+    {
+     "goal": "Understand circadian rhythms, caffeine, and stress mechanisms.",
+     "checkpoint": "Explain your body clock and compare its role with how caffeine affects wakefulness."
+    },
+    {
+     "goal": "Explore exercise physiology and the science of sleep.",
+     "checkpoint": "Explain lactate threshold and connect one exercise or sleep mechanism to an earlier lesson."
+    }
+   ]
+  },
+  "money": {
+   "layers": [
+    {
+     "goal": "Understand budgets and compounding before comparing investments.",
+     "checkpoint": "Describe a budget and explain compounding using a simple example."
+    },
+    {
+     "goal": "Connect inflation, spending decisions, and allocation across asset classes.",
+     "checkpoint": "Explain asset allocation and distinguish a budget decision from an investment decision."
+    },
+    {
+     "goal": "Study portfolio risk alongside behavioral finance.",
+     "checkpoint": "Explain a risk diversification can reduce and a judgment bias that could still affect an investor."
+    }
+   ]
+  },
+  "people": {
+   "layers": [
+    {
+     "goal": "Recognize emotions and basic emotional-intelligence concepts.",
+     "checkpoint": "Name an emotion, its trigger, and your response in a recent conversation."
+    },
+    {
+     "goal": "Compare forms of empathy and practice thoughtful emotional responses.",
+     "checkpoint": "Explain understanding someone’s feelings versus sharing them. Give an example of each."
+    },
+    {
+     "goal": "Study emotional-intelligence frameworks and attachment theory.",
+     "checkpoint": "Compare two relationship frameworks without treating them as diagnoses of a person."
+    }
+   ]
+  },
+  "learn": {
+   "layers": [
+    {
+     "goal": "Use curiosity and intentional study to begin learning a topic.",
+     "checkpoint": "Choose a topic and write a question that makes you want to understand it."
+    },
+    {
+     "goal": "Design practice using recall, deliberate practice, spacing, and interleaving.",
+     "checkpoint": "Plan a short study routine with feedback, spaced recall, and mixed problems."
+    },
+    {
+     "goal": "Monitor your learning and connect practice with creativity.",
+     "checkpoint": "Explain how you would notice a weak learning strategy, adjust it, and check improvement."
+    }
+   ]
+  },
+  "career": {
+   "layers": [
+    {
+     "goal": "Examine career options and the opportunity cost of time and choices.",
+     "checkpoint": "Compare two career or study choices. State what you give up with each."
+    },
+    {
+     "goal": "Prepare for work conversations, feedback, and negotiation alternatives.",
+     "checkpoint": "Write a useful feedback sentence and identify a BATNA for a negotiation."
+    },
+    {
+     "goal": "Combine deep work and negotiation frameworks in more complex situations.",
+     "checkpoint": "Prepare a negotiation with an alternative, interests, and questions. Protect time for focused work."
+    }
+   ]
+  },
+  "calm": {
+   "layers": [
+    {
+     "goal": "Recognize worry and notice thoughts without immediately reacting.",
+     "checkpoint": "Describe a worry and distinguish the thought from an observable event."
+    },
+    {
+     "goal": "Understand a thought-feeling-behavior framework and everyday coping ideas.",
+     "checkpoint": "Use a small example to show how thoughts, feelings, and behavior can influence each other."
+    },
+    {
+     "goal": "Compare cognitive defusion, mindfulness, and philosophical approaches.",
+     "checkpoint": "Explain how observing a thought differs from disputing it. Connect that distinction to a lesson."
+    }
+   ]
+  },
+  "world": {
+   "layers": [
+    {
+     "goal": "Understand money’s value and the basic role of financial markets.",
+     "checkpoint": "Explain why a currency has value and what a stock represents."
+    },
+    {
+     "goal": "Connect national income, inflation, opportunity costs, and trade.",
+     "checkpoint": "Explain comparative advantage using two people and two tasks."
+    },
+    {
+     "goal": "Analyze monetary policy and longer-term economic change.",
+     "checkpoint": "Trace one interest-rate mechanism and explain why an economic outcome can have several causes."
+    }
+   ]
+  },
+  "cyber": {
+   "layers": [
+    {
+     "goal": "Understand networks, operating systems, hashing, and common security threats.",
+     "checkpoint": "Explain DNS, a firewall, and hashing without using them interchangeably."
+    },
+    {
+     "goal": "Connect protocols, cryptography, permissions, and web vulnerabilities.",
+     "checkpoint": "Distinguish encryption from a digital signature. Explain one access-control failure."
+    },
+    {
+     "goal": "Model threats and study deeper attack and analysis mechanisms.",
+     "checkpoint": "Use STRIDE to review a simple app. Explain one threat, affected asset, and mitigation."
+    }
+   ]
+  },
+  "dark": {
+   "layers": [
+    {
+     "goal": "Distinguish symbols, historical events, and claims about supernatural practices.",
+     "checkpoint": "Separate a historical claim, a belief, and an evidence-based explanation in one example."
+    },
+    {
+     "goal": "Examine cult recruitment, group belonging, and competing interpretations.",
+     "checkpoint": "Explain a recruitment mechanism while distinguishing a group’s claims from independently checked facts."
+    },
+    {
+     "goal": "Compare historical and sociological explanations of religion and social change.",
+     "checkpoint": "Compare Durkheim and Weber. Identify what each tries to explain and what evidence you would examine."
+    }
+   ]
+  }
+ }
 }

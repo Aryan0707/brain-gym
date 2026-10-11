@@ -27,6 +27,10 @@ export const levelLabel = v => hasLevel(v) ? LEVELS[v.level] : '';
    the ordered ones in their level, so a new lesson never jumps ahead of the curriculum. */
 export const stepOf = v => Number.isInteger(v?.step) && v.step >= 1 ? v.step : Infinity;
 
+/* An added lesson without a reviewed difficulty belongs after the three layers.
+   Legacy curated lessons keep their existing length-based fallback. */
+export const pathLevelOf = v => v?.custom && !hasLevel(v) ? 4 : levelOf(v);
+
 /* Lessons per level in one module (and language): [basics, core, advanced]. Only approved levels count. */
 export function levelCounts(videos, module, lang = 'all'){
   const out = [0, 0, 0];

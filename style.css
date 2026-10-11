@@ -63,6 +63,13 @@
   --kb: 0px;
 }
 
+/* Written-course entry; existing video controls remain unchanged. */
+.world-entry { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px; margin-bottom:18px; border:1px solid var(--line-strong); border-radius:var(--r-md); background:var(--surface); color:var(--fg); text-decoration:none; min-height:72px; }
+.world-entry strong { display:block; font-size:17px; }
+.world-entry small { display:block; margin-top:4px; color:var(--muted); font-size:12px; line-height:1.5; }
+.world-entry > span:last-child { color:var(--accent); font-size:22px; }
+.world-entry small.world-entry-due { color:var(--accent); font-weight:600; }
+
 /* ── 2. BASE ───────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -2890,3 +2897,27 @@ button.module-row + button.module-row { border-top-color: var(--line); }
 .lib-seg button small { font-weight: 500; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .lib-seg button.on small { color: var(--fg-2, var(--muted)); }
 .lib-due { min-width: 18px; padding: 2px 5px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); color: var(--fg); font: 600 11px/1 var(--font); text-align: center; font-variant-numeric: tabular-nums; }
+
+/* Subject paths: ordered layers with goals and optional recall checkpoints. */
+.grid.learning-paths { display: block; }
+.library-toolbar { flex-wrap: wrap; }
+.library-toolbar #viewSeg { flex: 0 0 100%; margin-left: 0; display: flex; }
+.library-toolbar #viewSeg button { flex: 1; display: flex; gap: var(--s2); align-items: center; justify-content: center; min-height: 44px; }
+.path-guide { margin: var(--s2) 0 var(--s6); color: var(--muted); font-size: var(--t-foot); max-width: 70ch; }
+.learning-path { min-width: 0; margin-bottom: var(--s8); }
+.path-subject-heading, .path-layer-heading { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3); }
+.path-subject-heading h2.sh { font-size: var(--t-headline); margin: 0; color: var(--fg); }
+.path-subject-heading span, .path-layer-heading span { flex-shrink: 0; color: var(--muted); font-size: var(--t-cap); font-variant-numeric: tabular-nums; }
+.path-continue { margin-top: var(--s3); }
+.path-layer { margin-top: var(--s6); padding-top: var(--s4); border-top: 1px solid var(--line-strong); }
+.path-layer h3 { font-size: var(--t-sub); font-weight: 600; }
+.path-outcome { margin: var(--s2) 0; color: var(--fg-2); font-size: var(--t-foot); max-width: 70ch; }
+.path-prerequisite { margin: var(--s2) 0 var(--s3); color: var(--muted); font-size: var(--t-cap); }
+.path-checkpoint { margin-top: var(--s3); color: var(--fg-2); font-size: var(--t-foot); }
+.path-checkpoint summary { cursor: pointer; padding: var(--s2) 0; min-height: 44px; display: list-item; align-content: center; color: var(--accent); }
+.path-checkpoint p { margin: var(--s2) 0; max-width: 70ch; }
+.path-checkpoint small { display: block; color: var(--muted); }
+@media (max-width: 359px) {
+  .path-subject-heading { flex-wrap: wrap; gap: var(--s1); }
+  .path-layer-heading span { font-size: 12px; }
+}

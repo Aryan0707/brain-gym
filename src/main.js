@@ -8,12 +8,12 @@
  * at the end of boot(). Do not remove — tests target those names.
  */
 import { $, DAY, TARGET, KEY, RANKS, todayKey, days, mins, durLabel,
-         embedSrc, watchUrl, keyOf, segmentDuration, esc, toast } from './util.js';
+         embedSrc, watchUrl, keyOf, segmentDuration, esc, toast, readStoredObject } from './util.js';
 import { LIB, loadLibrary, loadNotes, vid, rehydrateReel, clearCustom, fetchTitle } from './library.js';
 import { parseLink, linkFromSearch } from './intake.js';
 import { blank, save, loadState, sanitizeState, migrateV1toV2,
          loadDraft, saveDraft, clearDraft, pruneDrafts,
-         backupCurrent, restoreLatestBackup } from './state.js';
+         backupCurrent, restoreLatestBackup, storedStateChanged } from './state.js';
 import { nextReview, previewText, dueLabel, retention, isDue, RELEARN_HOURS,
          HOUR_MS, DAY_MS, localMidnight } from './scheduler.js';
 import { firstRepsToday, repsToday, newRepsToday, repeatedToday, dueList, capacity,
@@ -24,9 +24,10 @@ import { PROMPT_MODES, choosePromptMode, promptFor, hasGuess, hintCues, hintCeil
 import { buildShelves, depthOf } from './notebook.js';
 import { initAi, resetExplain, suggestNext } from './ai.js';
 import { candidatesFor, aiSearch, searchError, MIN_QUERY } from './search.js';
-import { levelOf, hasLevel, levelLabel } from './level.js';
-import { notesFor, reachedIndex, pathAfter, stamp } from './tutor.js';
+import { LEVELS, hasLevel, levelLabel } from './level.js';
+import { notesFor, reachedIndex, pathFor, pathAfter, stamp } from './tutor.js';
 import { playlistOrder, moveBy, moveAfter, resumePoint, nextInPlaylist, parseMany } from './playlist.js';
+import { WORLD_KEY, worldDueCount } from './world-state.js';
 
 /* ── mutable UI/session state ──────────────────────────── */
 let S = null;
@@ -48,6 +49,7 @@ let trainerStep = '';
 let watch = { pct:0, ended:false, verified:false, override:false };
 let watchedSeconds = 0, previousVideoTime = null, pollWatch = null, ytPlayer = null;
 let ytAPIPromise = null, rewatching = false;
+let playerToken = 0;
 let activeTab = 'library', activeRoute = 'library', openSheetName = null, sheetOpener = null;
 let guess = '';              // the pre-video guess for this first rep ('' = none)
 let hintsUsed = 0, confidence = 0;   // hints shown on this rep; 1-3 confidence said before the check (0 = not said)
@@ -116,6 +118,7 @@ function loadFrame(url, { hidden = false } = {}){
   return frame;
 }
 function stopPlayer(){
+  playerToken++;
   clearInterval(pollWatch); pollWatch = null; previousVideoTime = null;
   if (ytPlayer) { try { ytPlayer.pauseVideo(); ytPlayer.destroy(); } catch {} ytPlayer = null; }
   const node = $('#ytPlayer');
@@ -177,12 +180,14 @@ function renderPathChip(v){
 
 async function startPlayer(v){
   stopPlayer();
+  const token = playerToken;
   const key = keyOf(v);
+  const isCurrent = () => token === playerToken && current && keyOf(current) === key && trainerStep === 'watch';
   loadFrame(embedSrc(v));
   if (v.src === 'ig') return;
   try {
     const YT = await youtubeAPI();
-    if (!current || keyOf(current) !== key || trainerStep !== 'watch') return;
+    if (!isCurrent()) return;
     const knownLength = segmentDuration(v);
     loadFrame('about:blank', { hidden: true });
     ytPlayer = new YT.Player('ytPlayer', {
@@ -191,14 +196,15 @@ async function startPlayer(v){
         ...(Number.isFinite(v.start) ? { start:v.start } : {}),
         ...(Number.isFinite(v.end) ? { end:v.end } : {}) },
       events:{
-        onReady(){ applyRate(); },
+        onReady(){ if (isCurrent()) applyRate(); },
         onStateChange(e){
+          if (!isCurrent()) return;
           if (e.data === YT.PlayerState.PLAYING) {
             applyRate();   // YouTube can reset the speed when quality changes
             previousVideoTime = e.target.getCurrentTime();
             clearInterval(pollWatch);
             pollWatch = setInterval(() => {
-              if (!current || keyOf(current) !== key || trainerStep !== 'watch') return;
+              if (!isCurrent()) return;
               try {
                 const t = e.target.getCurrentTime();
                 watchedSeconds = accumulateWatch(watchedSeconds, previousVideoTime, t, playRate);
@@ -217,14 +223,17 @@ async function startPlayer(v){
           }
         },
         onError(){
+          if (!isCurrent()) return;
           stopPlayer(); loadFrame(embedSrc(v));
           $('#watchStatus').textContent = 'Player unavailable. Use self-report after watching.';
           $('#btnWatchedExternal').textContent = 'I watched it (self-report)';
         },
       },
     });
-    $('#speed').hidden = false; applyRate();
+    if (isCurrent()) { $('#speed').hidden = false; applyRate(); }
   } catch {
+    if (!isCurrent()) return;
+    stopPlayer(); loadFrame(embedSrc(v));
     $('#watchStatus').textContent = 'Watch tracking unavailable. Use self-report after watching.';
     $('#btnWatchedExternal').textContent = 'I watched it (self-report)';
   }
@@ -394,8 +403,7 @@ function addLink(raw, module, langCode, msg = $('#addReelMsg')){
 }
 /* Prefill the add sheet: a shared link, plus the module/language used last time. */
 function openAddSheet(prefill = '', opener = document.activeElement){
-  let last = {};
-  try { last = JSON.parse(localStorage.getItem('braingym.lastAdd') || '{}'); } catch {}
+  const last = readStoredObject('braingym.lastAdd');
   $('#addReelUrl').value = prefill;
   if (LIB.modules[last.module]) $('#addReelMod').value = last.module;
   if (['hi','en'].includes(last.lang)) $('#addReelLang').value = last.lang;
@@ -470,13 +478,21 @@ function renderReviews(){
       + (due.length > 5 ? `<button class="btn ghost" data-tab-go="progress">See all ${due.length} in Progress</button>` : '')
     : '';
 }
+/* World Map keeps its own progress; the Library only reads how many of its reviews are due,
+   because spaced review needs a reminder where the learner already looks. */
+function renderWorldEntry(){
+  let raw = null; try { raw = localStorage.getItem(WORLD_KEY); } catch {}
+  const n = worldDueCount(raw, Date.now());
+  $('#worldMapDue').textContent = n ? `${n} review${n === 1 ? '' : 's'} due` : '';
+  $('#worldMapDue').hidden = !n;
+}
 const storeView = () => { try { localStorage.setItem('braingym.view', view); } catch {} };
 const passesFilters = v =>
   (modFilter === 'all' || v.module === modFilter) &&
   (lang === 'all' || v.lang === lang) &&
   inLibrary(v) &&
   (tierFilter === 'all' || v.tier === tierFilter || (tierFilter === 'drill' && !v.dur)) &&
-  (levelFilter === 'all' || levelOf(v) === +levelFilter);
+  (levelFilter === 'all' || (hasLevel(v) && v.level === +levelFilter));
 const filterSig = () => [library, modFilter, lang, tierFilter, levelFilter].join('|');
 const isFiltered = () => !!q || modFilter !== 'all' || tierFilter !== 'all' || levelFilter !== 'all' || lang !== 'all';
 
@@ -543,6 +559,7 @@ function renderLibTabs(){
 function renderLibrary(){
   if ($('#bootSkeleton')) $('#bootSkeleton').hidden = true;
   renderReviews();
+  renderWorldEntry();
   renderLibTabs();
   renderDailySummary();
   const mine = libVideos();
@@ -554,8 +571,9 @@ function renderLibrary(){
     return `<button data-mod="${esc(m)}" class="module-chip${modFilter === m ? ' on' : ''}" ${m==='all'?'':`style="--mod:${esc(LIB.modules[m][1])}"`}>${m==='all'?'':'<i aria-hidden="true"></i>'}${esc(label)}<small>${n}</small></button>`;
   }).join('');
   const matches = v => passesFilters(v) &&
-    (!q || (v.title + ' ' + v.channel + ' ' + v.why).toLowerCase().includes(q));
+    (!q || (v.title + ' ' + v.channel + ' ' + v.why + ' ' + (v.concept || '')).toLowerCase().includes(q));
   const playlist = view === 'playlist';
+  $('#libCards').classList.toggle('learning-paths', !playlist);
   const ordered = playlist ? orderList() : mine;
   const list = ordered.filter(matches);
   document.querySelectorAll('#viewSeg button').forEach(b => {
@@ -572,10 +590,10 @@ function renderLibrary(){
   $('#libCount').textContent = `${mine.filter(v => S.done[keyOf(v)]).length}/${mine.length}`;
   // A search that finds nothing here may well exist in the other library: say so instead of looking empty.
   const elsewhere = q ? LIB.videos.filter(v => !inLibrary(v) && (lang === 'all' || v.lang === lang)
-    && (v.title + ' ' + v.channel + ' ' + v.why).toLowerCase().includes(q)).length : 0;
+    && (v.title + ' ' + v.channel + ' ' + v.why + ' ' + (v.concept || '')).toLowerCase().includes(q)).length : 0;
   const empty = `<div class="emptystate">No ${LIBS[library].toLowerCase()} match ${q ? `“${esc(q)}”` : 'your filters'}.${elsewhere
     ? ` <button class="btn ghost" data-lib-go="${otherLib(library)}">${elsewhere} in ${LIBS[otherLib(library)]}</button>` : ''
-    } <button class="btn ghost" id="emptyClearSearch">Clear search</button></div>`;
+    } <button class="btn ghost" id="emptyClearSearch">Clear search and filters</button></div>`;
   if (!list.length) $('#libCards').innerHTML = empty;
   else if (playlist) {
     const place = new Map(ordered.map((v, i) => [keyOf(v), i]));
@@ -584,10 +602,8 @@ function renderLibrary(){
       return lessonRow(v, 'library', { num: i + 1, edit: reordering ? { first: i === 0, last: i === ordered.length - 1 } : null });
     }).join('')}</div>`;
   } else {
-    $('#libCards').innerHTML = modFilter === 'all' ? Object.keys(LIB.modules).map(m => {
-      const inMod = list.filter(v => v.module === m);
-      return inMod.length ? `<h2 class="sh">${esc(LIB.modules[m][0])}</h2><div class="row-group">${inMod.map(v=>lessonRow(v)).join('')}</div>` : '';
-    }).join('') : `<div class="row-group">${list.map(v=>lessonRow(v)).join('')}</div>`;
+    $('#libCards').innerHTML = `<p class="path-guide">Choose one subject. Follow its numbered lessons from Basics to Core to Advanced. After each layer, try the checkpoint from memory.</p>` +
+      Object.keys(LIB.modules).filter(m => modFilter === 'all' || m === modFilter).map(m => renderLearningPath(m, list)).join('');
   }
   if (aiq && aiq.sig !== filterSig()) aiq = null;
   renderAiSearch();
@@ -596,6 +612,36 @@ function renderLibrary(){
     const count = [tierFilter !== 'all',levelFilter !== 'all',lang !== 'all'].filter(Boolean).length;
     $('#filterCount').textContent = count; $('#filterCount').hidden = !count;
   }
+}
+
+/* Numbering comes from the complete subject path, so filters never renumber the course.
+   Unknown custom lessons stay in their own section instead of receiving a guessed difficulty. */
+function renderLearningPath(module, visible){
+  const path = pathFor(libVideos(), module);
+  const shown = new Set(visible.map(keyOf));
+  if (!path.some(v => shown.has(keyOf(v)))) return '';
+  const course = LIB.curriculum[module];
+  const learned = path.filter(v => S.done[keyOf(v)]).length;
+  const remaining = path.filter(v => shown.has(keyOf(v)) && !S.done[keyOf(v)]);
+  const next = remaining[0];
+  const layers = [1, 2, 3, null].map(n => {
+    const whole = path.filter(v => n === null ? !hasLevel(v) : hasLevel(v) && v.level === n);
+    const lessons = whole.filter(v => shown.has(keyOf(v)));
+    if (!lessons.length) return '';
+    const goal = n && course?.layers?.[n - 1];
+    const count = whole.filter(v => S.done[keyOf(v)]).length;
+    return `<section class="path-layer" aria-label="${esc(n ? `Layer ${n}: ${LEVELS[n]}` : 'Additional lessons')}">
+      <div class="path-layer-heading"><h3>${n ? `Layer ${n} · ${LEVELS[n]}` : 'Additional lessons'}</h3><span>${count}/${whole.length} learned</span></div>
+      ${goal ? `<p class="path-outcome">${esc(goal.goal)}</p>` : ''}
+      ${n ? `<p class="path-prerequisite">${n === 1 ? 'Start here.' : `Builds on ${LEVELS[n - 1]}.`}</p>` : ''}
+      <div class="row-group">${lessons.map(v => lessonRow(v, 'library', { num:path.indexOf(v) + 1 })).join('')}</div>
+      ${goal?.checkpoint ? `<details class="path-checkpoint"><summary>Layer ${n} checkpoint</summary><p>${esc(goal.checkpoint)}</p><small>Explain it in your own words. If you get stuck, review a lesson before moving on.</small></details>` : ''}
+    </section>`;
+  }).join('');
+  return `<section class="learning-path" style="--mod:${esc(LIB.modules[module][1])}">
+    <div class="path-subject-heading"><h2 class="sh">${esc(LIB.modules[module][0])}</h2><span>${learned}/${path.length} learned</span></div>
+    ${next ? `<button type="button" class="btn ghost path-continue" data-open="${esc(keyOf(next))}">${learned ? 'Continue' : 'Start'} this subject · Lesson ${path.indexOf(next) + 1}</button>` : `<p class="muted">${learned === path.length ? 'All lessons learned. Review the checkpoints to keep them fresh.' : 'Matching lessons learned. Clear your filters to continue this subject.'}</p>`}
+    ${layers}</section>`;
 }
 
 /* ── AI search: lessons by meaning, ranked by the model from a keyword-narrowed list ── */
@@ -934,7 +980,10 @@ async function showNextStep(v, { firstRep, isRepeat, note, rating }){
     return startAuto(token);
   }
   const kick = n => `Next step · ${LIB.modules[v.module][0]} · ${n} of ${info.total}`;
-  const plan = (video, reason = '') => paintNext(video, { kicker: kick(info.learned + 1), reason });
+  const plan = (video, reason = '') => {
+    const path = pathFor(libVideos(libOf(v)), v.module, lang);
+    paintNext(video, { kicker: kick(path.findIndex(x => keyOf(x) === keyOf(video)) + 1), reason });
+  };
   plan(info.next);
   const showMix = () => { const m = mixedNext(keyOf(v)); $('#btnMix').hidden = !m; $('#btnMix').dataset.next = m ? keyOf(m) : ''; };
   showMix();
@@ -1061,7 +1110,24 @@ function leaveTrainer(){
  * renderAll never touches the trainer, so an in-progress note is safe. */
 function onResume(){
   if (document.visibilityState !== 'visible' || !S) return;
+  syncStoredProgress();
   if (rollDay(S)) save(S);
+  renderAll();
+}
+
+/* Another tab or a resumed window may have newer progress. Adopt that snapshot
+   without touching the note being typed. Never replace unsaved in-memory progress
+   merely because its own storage write failed. */
+function syncStoredProgress(){
+  if (!S || !storedStateChanged()) return;
+  const loaded = loadState();
+  if (loaded.event === 'corrupt') { save(S); return; }
+  const pendingPlan = planTimer && current && !$('#plan').hidden ? $('#planText').value : null;
+  S = migrateV1toV2(loaded.S).S;
+  if (pendingPlan !== null && S.done[keyOf(current)])
+    savePlan(S.actions, keyOf(current), pendingPlan, todayKey(), new Date().toISOString());
+  clearCustom(); S.custom.forEach(rehydrateReel);
+  if (current?.custom && !vid(keyOf(current))) go('library', { historyMode:'replace' });
   renderAll();
 }
 
@@ -1096,7 +1162,7 @@ function onPlanInput(e){
   savePlan(S.actions, id, e.target.value, todayKey(), new Date().toISOString());
   const kept = S.actions.some(a => a.id === id && !a.outcome);
   $('#planSaved').textContent = kept ? 'Saved. I will ask whether it happened at your next review of this lesson.' : '';
-  clearTimeout(planTimer); planTimer = setTimeout(() => save(S), 400);
+  clearTimeout(planTimer); planTimer = setTimeout(() => { planTimer = null; save(S); }, 400);
 }
 function onPlanAnswer(e){
   const b = e.target.closest('[data-o]'); if (!b || !current) return;
@@ -1110,6 +1176,10 @@ function wire(){
   document.querySelectorAll('.tabbar .tab').forEach(b => b.onclick = () => go(b.dataset.tab));
   addEventListener('popstate', handlePopState);
   document.addEventListener('visibilitychange', onResume);
+  addEventListener('storage', e => {
+    if (e.key === KEY || e.key === null) syncStoredProgress();
+    if (e.key === WORLD_KEY) renderWorldEntry();   // a course tab saved a review
+  });
   addEventListener('pageshow', e => { if (e.persisted) onResume(); });
   window.visualViewport?.addEventListener('resize', keyboardInset);
   window.visualViewport?.addEventListener('scroll', keyboardInset);
@@ -1132,7 +1202,12 @@ function wire(){
     if (close) { closeSheet(); return; }
     const mod = e.target.closest('[data-module-go]');
     if (mod) { modFilter=mod.dataset.moduleGo; renderLibrary(); go('library'); return; }
-    if (e.target.id === 'emptyClearSearch' || e.target.id === 'clearSearch') {
+    if (e.target.closest('#emptyClearSearch')) {
+      clearAiSearch(); q=''; $('#q').value='';
+      modFilter='all'; tierFilter='all'; levelFilter='all'; lang='all';
+      renderAll(); return;
+    }
+    if (e.target.closest('#clearSearch')) {
       clearAiSearch(); q=''; $('#q').value=''; renderLibrary(); return;
     }
     if (e.target.id === 'aiSearchClear') { clearAiSearch(); return; }
@@ -1248,7 +1323,7 @@ function wire(){
     syncConfidence();
   };
   $('#planText').oninput = onPlanInput;
-  $('#planText').onblur = () => { clearTimeout(planTimer); save(S); };
+  $('#planText').onblur = () => { clearTimeout(planTimer); planTimer = null; save(S); };
   $('#planOutcomes').onclick = onPlanAnswer;
   $('#btnWatched').onclick = () => {
     if (trainerStep !== 'watch' || $('#btnWatched').disabled) return;
@@ -1311,8 +1386,8 @@ function wire(){
       try { candidate = sanitizeState(r.result, LIB); }
       catch { toast('bad file — nothing was changed'); e.target.value = ''; return; }
       const dropped = candidate.__droppedCustom || 0;
-      const summary = `Replace current progress with ${(candidate.log||[]).length} reps, ${(candidate.notes||[]).length} notes, ${(candidate.custom||[]).length} reels`
-        + (dropped ? ` (dropped ${dropped} invalid reel${dropped>1?'s':''})?` : '?');
+      const summary = `Replace current progress with ${(candidate.log||[]).length} reps, ${(candidate.notes||[]).length} notes, ${(candidate.custom||[]).length} custom lessons`
+        + (dropped ? ` (dropped ${dropped} invalid lesson${dropped>1?'s':''})?` : '?');
       $('#importSummary').textContent = summary;
       openSheet('import', $('#btnImport'));
       $('#importConfirmCancel').onclick = () => { closeSheet(); e.target.value = ''; };
@@ -1327,7 +1402,7 @@ function wire(){
           clearCustom(); S.custom.forEach(rehydrateReel);
           rollDay(S);
           save(S); renderAll();
-          toast(dropped ? `imported · ${dropped} invalid reel${dropped>1?'s':''} skipped` : 'imported');
+          toast(dropped ? `imported · ${dropped} invalid lesson${dropped>1?'s':''} skipped` : 'imported');
         } catch (err) {
           console.error(err);
           const restored = restoreLatestBackup('preimport');

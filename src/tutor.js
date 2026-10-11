@@ -2,7 +2,7 @@
    Pure: no DOM, no network (the AI call lives in ai.js). */
 import { keyOf, segmentDuration } from './util.js';
 import { depthOf } from './notebook.js';
-import { levelOf, stepOf } from './level.js';
+import { pathLevelOf, stepOf } from './level.js';
 
 /* notes.json → { [videoId]: { summary, points:[{ t, text }] } }. Filled by loadNotes() in library.js. */
 export const NOTES = {};
@@ -29,7 +29,7 @@ export function pathFor(videos, module, lang = 'all'){
   return videos
     .map((v, i) => ({ v, i }))
     .filter(({ v }) => v.module === module && (lang === 'all' || v.lang === lang))
-    .sort((a, b) => levelOf(a.v) - levelOf(b.v) || cmpStep(a.v, b.v) || depthOf(a.v) - depthOf(b.v)
+    .sort((a, b) => pathLevelOf(a.v) - pathLevelOf(b.v) || cmpStep(a.v, b.v) || depthOf(a.v) - depthOf(b.v)
       || (segmentDuration(a.v) || 0) - (segmentDuration(b.v) || 0) || a.i - b.i)
     .map(({ v }) => v);
 }
